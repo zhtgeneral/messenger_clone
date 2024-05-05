@@ -1,17 +1,29 @@
 import { v4 } from 'uuid';
 const randomId = v4();  
+
+const registerUrl = '/api/register';
+const name     = 'test' + randomId;
+const email    = `${name}@gmail.com`; 
+const password = name;
+
 describe('handles register', () => {
-  it('registers unique user', () => {
-    const registerUrl = '/api/register';
+  it.only('fails when any entry is blank', () => {
     cy.intercept('POST', registerUrl).as('register');
 
-    const name = 'test' + randomId;
-    cy.visit('/');
-    cy.contains('Create an account').click();
-    cy.get('input[id="name"]'    ).type(name);
-    cy.get('input[id="email"]'   ).type(name + '@gmail.com');
-    cy.get('input[id="password"]').type(name); 
-    cy.get('button[type="submit"]').click();
+    const testData = ['name', 'email', 'password'];
+  
+    testData.forEach(empty => {
+      cy.signupEmpty(name, email, password, empty);
+      cy.wait('@register').then((intercept) => {
+        expect(intercept.response?.statusCode).to.equal(400);
+      });
+      cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
+    });
+  })
+  it('registers unique user', () => {
+    cy.intercept('POST', registerUrl).as('register');
+
+    cy.signup(name, email, password);
 
     cy.wait('@register').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(200);
@@ -21,16 +33,9 @@ describe('handles register', () => {
     });
   })
   it('fails to register duplicate user', () => {
-    const registerUrl = '/api/register';
     cy.intercept('POST', registerUrl).as('register');
 
-    const name = 'test' + randomId;
-    cy.visit('/');
-    cy.contains('Create an account').click();
-    cy.get('input[id="name"]'    ).type(name);
-    cy.get('input[id="email"]'   ).type(name + '@gmail.com');
-    cy.get('input[id="password"]').type(name); 
-    cy.get('button[type="submit"]').click();
+    cy.signup(name, email, password);
 
     cy.wait('@register').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(500);      
