@@ -1,5 +1,5 @@
-describe('login page', () => {
-  it.only('loads brand', () => {
+describe('loads login page', () => {
+  it('loads brand', () => {
     cy.visit('/')
     cy.get('h2').should('have.text', 'Messenger clone')
   })
