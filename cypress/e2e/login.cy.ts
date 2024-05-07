@@ -24,6 +24,16 @@ describe('handles login', () => {
       expect(intercept.response?.statusCode).to.equal(200);
     })
   })
+  it.only('redirects logged in user to users page', () => {
+    cy.intercept('POST', loginUrl).as('login');
+
+    cy.login(email, password);
+    
+    cy.wait('@login').then((intercept) => {
+      expect(intercept.response?.statusCode).to.equal(200);
+    })
+    cy.url().should('eq', `${process.env.NEXT_PUBLIC_DOMAIN}/users`)
+  })
 
   // skip mocks for third party logins cuz its a pain
 })
