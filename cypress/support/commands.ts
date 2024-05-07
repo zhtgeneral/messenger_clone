@@ -38,8 +38,30 @@
 declare namespace Cypress {
   interface cy {}
   interface Chainable {
-    signup(name: string, email: string, password: string): void;
+    /**
+     * Registers a new user from user's view at '/'
+     *
+     * @param name     - The name of the person
+     * @param email    - The email of the person
+     * @param password - The password of the person
+     */
+    signup     (name: string, email: string, password: string): void;
+    /**
+     * Registers a new user from user's view at '/' but leaves a field blank
+     *
+     * @param name     - The name of the person
+     * @param email    - The email of the person
+     * @param password - The password of the person
+     * @param empty    - The field to leave blank
+     */
     signupEmpty(name: string, email: string, password: string, empty: string): void;
+    /**
+     * Logs a user in at '/'
+     *
+     * @param email    - The email of the person
+     * @param password - The password of the person
+     */
+    login(email: string, password: string): void;
   }
 }
 
@@ -58,5 +80,12 @@ Cypress.Commands.add('signupEmpty', (name: string, email: string, password: stri
   cy.get('input[id="name"]'    ).type((empty == 'name'    )? 'a{backspace}': name); 
   cy.get('input[id="email"]'   ).type((empty == 'email'   )? 'a{backspace}': email); 
   cy.get('input[id="password"]').type((empty == 'password')? 'a{backspace}': name); 
+  cy.get('button[type="submit"]').click();
+})
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+  cy.visit('/')
+  cy.get('input[id="email"]'    ).click().type(email);
+  cy.get('input[id="password"]' ).click().type(password);
   cy.get('button[type="submit"]').click();
 })

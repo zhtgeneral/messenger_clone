@@ -2,28 +2,28 @@ import { v4 } from 'uuid';
 const randomId = v4();  
 
 const registerUrl = '/api/register';
-const name     = 'test' + randomId;
-const email    = `${name}@gmail.com`; 
-const password = name;
+const randomName     = 'test' + randomId;
+const randomEmail    = `${randomName}@gmail.com`; 
+const ramdomPassword = randomName;
 
 describe('handles register', () => {
-  it.only('fails when any entry is blank', () => {
+  it('fails when any entry is blank', () => {
     cy.intercept('POST', registerUrl).as('register');
 
     const testData = ['name', 'email', 'password'];
   
     testData.forEach(empty => {
-      cy.signupEmpty(name, email, password, empty);
+      cy.signupEmpty(randomName, randomEmail, ramdomPassword, empty);
       cy.wait('@register').then((intercept) => {
         expect(intercept.response?.statusCode).to.equal(400);
       });
       cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
     });
   })
-  it('registers unique user', () => {
+  it.only('registers unique user', () => {
     cy.intercept('POST', registerUrl).as('register');
 
-    cy.signup(name, email, password);
+    cy.signup(randomName, randomEmail, ramdomPassword);
 
     cy.wait('@register').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(200);
@@ -35,12 +35,16 @@ describe('handles register', () => {
   it('fails to register duplicate user', () => {
     cy.intercept('POST', registerUrl).as('register');
 
-    cy.signup(name, email, password);
+    cy.signup(randomName, randomEmail, ramdomPassword);
 
     cy.wait('@register').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(500);      
     });
 
     cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
+  })
+  it.only('redirects registered user to users page', () => {
+    cy.signup(randomName, randomEmail, ramdomPassword)
+    cy.url().should('eq', `${process.env.NEXT_PUBLIC_DOMAIN}/users`)
   })
 })
