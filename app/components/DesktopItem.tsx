@@ -35,3 +35,4 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   )
 }
 export default DesktopItem
+
