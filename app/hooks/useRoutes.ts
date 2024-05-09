@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { HiArrowLeftOnRectangle } from "react-icons/hi2";
 
 
-const useRoutes = () => {
+export default function useRoutes() {
   const pathname           = usePathname();
   const { conversationId } = useConversation();
 
@@ -33,5 +33,3 @@ const useRoutes = () => {
 
   return routes
 }
-
-export default useRoutes;
