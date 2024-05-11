@@ -1,6 +1,6 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from '@/app/libs/prismadb' 
-import { FullConversationType } from "../types";
+import { FullConversationType } from "@/app/types";
 
 export default async function getConversations(): Promise<FullConversationType[]> {
   const currentUser = await getCurrentUser();

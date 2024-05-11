@@ -75,10 +75,10 @@ model Message {
   seenIds String[] @db.ObjectId
   seen    User  [] @relation("Seen", fields: [seenIds], references: [id])
 
-  conversationId String[]     @db.ObjectId
+  conversationId String       @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id])
 
   senderId String @db.ObjectId
-  sender   User @relation(fields: [conversationId], references: [id])
+  sender   User   @relation(fields: [conversationId], references: [id])
 }
 
