@@ -1,8 +1,13 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import prisma from '@/app/libs/prismadb' 
-import { Conversation } from "@prisma/client";
+import prisma from '@/app/libs/prismadb';
+import { Conversation, User } from "@prisma/client";
 
-export default async function getConversationById(conversationId: string): Promise<Conversation | null> {
+interface ConversationWithUsers extends Conversation {
+  users: User[]
+}
+
+
+export default async function getConversationById(conversationId: string): Promise<ConversationWithUsers | null> {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser?.email) return null
@@ -13,7 +18,7 @@ export default async function getConversationById(conversationId: string): Promi
       include: {
         users: true
       }
-    })
+    });
     return conversation
   } catch (error: any) {
     return null;
