@@ -20,7 +20,7 @@ describe('handles register', () => {
       cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
     });
   })
-  it.only('registers unique user', () => {
+  it('registers unique user and redirects to /users', () => {
     cy.intercept('POST', registerUrl).as('register');
 
     cy.signup(randomName, randomEmail, ramdomPassword);
@@ -31,6 +31,8 @@ describe('handles register', () => {
       expect(intercept.request?.body).to.have.property('email')
       expect(intercept.request?.body).to.have.property('password')
     });
+
+    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/users`)
   })
   it('fails to register duplicate user', () => {
     cy.intercept('POST', registerUrl).as('register');
@@ -42,9 +44,5 @@ describe('handles register', () => {
     });
 
     cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
-  })
-  it.only('redirects registered user to users page', () => {
-    cy.signup(randomName, randomEmail, ramdomPassword)
-    cy.url().should('eq', `${process.env.NEXT_PUBLIC_DOMAIN}/users`)
   })
 })

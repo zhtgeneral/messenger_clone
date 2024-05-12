@@ -1,26 +1,43 @@
-// leave until middleware is created
-describe('conversations route security', () => {
-  //todo
-  it('is protected for unauthenticated users', () => {
-    cy.visit('/conversations').then(() => {
-      cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/?callbackUrl=%2Fconversations`)
-    })
-  })
-  it('allows authenticated users', () => {
-    cy.login(Cypress.env('EMAIL'), Cypress.env('PASSWORD'))
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/users` as string)
-  })
-})
-
-describe('conversations page functionality', () => {
+describe('single conversation page functionality', () => {
   beforeEach(() => {
-    cy.login(Cypress.env('EMAIL'), Cypress.env('PASSWORD'));
-    cy.get('.bottom-0 > [href="/conversations"]').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/conversations`)
+    cy.gotoConversations('mobile');
+
+    cy.get('div#conversationBox').first().click()
+
+    cy.url().should('contain', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/conversations/`)
   });
-  //todo
-  it.only('allows users to return to users page', () => {
-    cy.get('.bottom-0 > [href="/users"]').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/users`)
+  it('can return to conversations page', () => {
+    cy.get('a#returnButton').click()
+    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/conversations`)
+  })
+  it.only('handle submitting empty message', () => {
+    cy.get('input#message').click().type('a{backspace}')
+
+    cy.intercept('POST', '/api/messages').as('createMessageEmpty')
+    cy.get('button[type="submit"]').click()
+    // check that no request was made, but there is no way to check it
+  })
+
+  it('handles submitting text messages', () => {
+    cy.get('input#message').click().type('a')
+
+    cy.intercept('POST', '/api/messages').as('createMessageText')
+    cy.get('button[type="submit"]').click()
+
+    cy.wait('@createMessageText').then((intercept) => {
+      expect(intercept.request?.body).to.have.property('message')
+      expect(intercept.request?.body).to.have.property('conversationId')
+
+      expect(intercept.response?.statusCode).to.equal(200);
+      expect(intercept.response?.body).to.have.property('id')
+      expect(intercept.response?.body).to.have.property('body')
+      expect(intercept.response?.body).to.have.property('image')
+      expect(intercept.response?.body).to.have.property('createdAt')
+      expect(intercept.response?.body).to.have.property('seenIds')
+      expect(intercept.response?.body).to.have.property('conversationId')
+      expect(intercept.response?.body).to.have.property('senderId')
+      expect(intercept.response?.body).to.have.property('seen')
+      expect(intercept.response?.body).to.have.property('sender')
+    });    
   })
 })

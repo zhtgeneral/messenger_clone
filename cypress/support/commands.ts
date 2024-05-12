@@ -62,6 +62,8 @@ declare namespace Cypress {
      * @param password - The password of the person
      */
     login(email: string, password: string): void;
+    /** Navigates to '/conversations' */ 
+    gotoConversations(viewPort: string): void;
   }
 }
 
@@ -84,8 +86,15 @@ Cypress.Commands.add('signupEmpty', (name: string, email: string, password: stri
 })
 
 Cypress.Commands.add('login', (email: string, password: string) => {
+  cy.intercept('GET', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/api/auth/session`).as('auth')
   cy.visit('/')
   cy.get('input[id="email"]'    ).click().type(email);
   cy.get('input[id="password"]' ).click().type(password);
   cy.get('button[type="submit"]').click();
+  cy.wait('@auth')
+})
+
+Cypress.Commands.add('gotoConversations', (viewPort: string): void => {
+  cy.login(Cypress.env('EMAIL'), Cypress.env('PASSWORD'))
+  cy.get(`a#${viewPort}Item[href="/conversations"]`).click()
 })
