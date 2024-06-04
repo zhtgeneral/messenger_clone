@@ -21,7 +21,7 @@ const Form = () => {
       message: ''
     }
   })
-  const uploadPreset: string = process.env.CLOUDINARY_UPLOAD_PRESET!;
+  const uploadPreset: string = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
   const onSubmit: SubmitHandler<FieldValues> = (data: FieldValues) => {
     setValue('message', '', {shouldValidate: true})
@@ -41,7 +41,7 @@ const Form = () => {
     <div className='py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full'>
       <CldUploadButton options={ {maxFiles: 1 }} onSuccess={handleUpload} uploadPreset={uploadPreset}>
         <HiPhoto size={30} className='text-sky-500'/>
-      </CldUploadButton>
+      </CldUploadButton> 
       <form onSubmit={handleSubmit(onSubmit)} className='flex items-center gap-2 lg:gap-4 w-full'>
         <MessageInput id='message' register={register} errors={errors} required placeholder='Type Message' />
         <button type='submit' className='rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition'>
