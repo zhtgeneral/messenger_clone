@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 const randomMessage = v4();  
 
-describe('single conversation page functionality', () => {
+describe('single user functionality', () => {
   beforeEach(() => {
     cy.gotoConversations('mobile');
     cy.get('div#conversationBox').contains('watcher').click()    
@@ -43,7 +43,7 @@ describe('single conversation page functionality', () => {
       expect(intercept.response?.body).to.have.property('sender')
     });    
   })
-  it.only('displays text messages', () => {
+  it('displays text messages', () => {
     cy.get('input#message').click().type(randomMessage)
     cy.intercept('POST', '/api/messages').as('createMessageText')
     cy.get('button[type="submit"]').click()
@@ -53,10 +53,23 @@ describe('single conversation page functionality', () => {
       cy.get('div[id="userMessage"]').last().contains(randomMessage)
     })
   })
+
+  it.only('handles sidebar', () => {
+    cy.get('svg[id="sidebarDrawer"]').click()
+    cy.get('dl[id="conversationInfo"]').should('be.visible') 
+    cy.get('button[id="closeSidebar"]').click(); // close via button
+
+    cy.get('svg[id="sidebarDrawer"]').click()
+    cy.get('body').click(60, 500) // close via clicking
+
+    cy.get('svg[id="sidebarDrawer"]').click()
+    cy.get('body').trigger('keydown', { key: 'Escape' }) // close via esc button
+    //todo test delete conversation opens modal and deletes
+  })
 })
 // only works when 'a new message was sent' was first run
-describe('single conversation page functionality', () => {
-  it.only('marks message as seen', () => {
+describe('multiple user functionality', () => {
+  it('marks message as seen', () => {
     const watcherName     = Cypress.env('WATCHER_NAME')
     const watcherEmail    = Cypress.env('WATCHER_EMAIL')
     const watcherPassword = Cypress.env('WATCHER_PASSWORD')

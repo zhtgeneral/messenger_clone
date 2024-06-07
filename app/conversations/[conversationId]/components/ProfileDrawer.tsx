@@ -58,7 +58,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                     <div className='px-4 sm:px-6'>
                       <div className='flex items-start justify-end'>
                         <div className='ml-3 flex h-7 items-center'>
-                          <button type='button' onClick={onClose}  className='rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline focus:ring-2 focus:ring-sky-500 focus:ring-offset-2'>
+                          <button id='closeSidebar' type='button' onClick={onClose}  className='rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline focus:ring-2 focus:ring-sky-500 focus:ring-offset-2'>
                             <span className='sr-only'>Close Panel</span>
                             <IoClose size={24}/>
                           </button>
@@ -71,13 +71,13 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                         <div>{title}</div>
                         <div className='text-sm text-gray-500'>{statusText}</div>
                         <div className='flex gap-10 my-8'>
-                          <div onClick={() => {}} className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'>
+                          <div id='deleteButton' onClick={() => {}} className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'>
                             <div className='w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center'><IoTrash size={20} /></div>
                             <div className='text-sm font-light text-neutral-600'>Delete</div>
                           </div>
                         </div>
                         <div className='w-full pb-5 pt-5 sm:px-0 sm:pt-0'>
-                          <dl className='space-y-8 px-4 sm:space-y-6 sm:px-6'>
+                          <dl id='conversationInfo' className='space-y-8 px-4 sm:space-y-6 sm:px-6'>
                             {!data.isGroup && (
                               <div>
                                 <dt className='text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0'>
