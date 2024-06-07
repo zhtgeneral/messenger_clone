@@ -4,9 +4,7 @@ const randomMessage = v4();
 describe('single conversation page functionality', () => {
   beforeEach(() => {
     cy.gotoConversations('mobile');
-    // cy.intercept('POST', '/api/conversations').as('loadConversation')
-    cy.get('div#conversationBox').contains('watcher').click()
-    // cy.wait('@loadConversation')
+    cy.get('div#conversationBox').contains('watcher').click()    
   });
   it('can return to conversations page', () => {
     cy.get('a#returnButton').click()
@@ -56,7 +54,7 @@ describe('single conversation page functionality', () => {
     })
   })
 })
-// only works when 'displays text messages' was first run
+// only works when 'a new message was sent' was first run
 describe('single conversation page functionality', () => {
   it.only('marks message as seen', () => {
     const watcherName     = Cypress.env('WATCHER_NAME')
@@ -84,4 +82,6 @@ describe('single conversation page functionality', () => {
     cy.get('div#conversationBox').contains(watcherName).click()
     cy.get('div[id="userLine"]').last().should('contain.text',`Seen by ${watcherName}`)
   })
+
+  // skip automatically testing image uploads (from now on manual test it)
 })
