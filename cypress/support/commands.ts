@@ -56,13 +56,13 @@ declare namespace Cypress {
      */
     signupEmpty(name: string, email: string, password: string, empty: string): void;
     /**
-     * Logs a user in at '/'
+     * Logs the test user in at '/'
      *
      * @param email    - The email of the person
      * @param password - The password of the person
      */
     login(email: string, password: string): void;
-    /** Navigates to '/conversations' */ 
+    /** Navigates to '/conversations' by first logging in with test account*/ 
     gotoConversations(viewPort: string): void;
   }
 }
@@ -95,6 +95,8 @@ Cypress.Commands.add('login', (email: string, password: string) => {
 })
 
 Cypress.Commands.add('gotoConversations', (viewPort: string): void => {
-  cy.login(Cypress.env('EMAIL'), Cypress.env('PASSWORD'))
+  const testEmail    = Cypress.env('TEST_EMAIL')
+  const testPassword = Cypress.env('TEST_PASSWORD')
+  cy.login(testEmail, testPassword)
   cy.get(`a#${viewPort}Item[href="/conversations"]`).click()
 })

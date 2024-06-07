@@ -25,7 +25,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   .join(', ')
 
   return (
-    <div className={clsx('flex gap-3 p-4', isOwn && "justify-end")}>
+    <div id='userLine' className={clsx('flex gap-3 p-4', isOwn && "justify-end")}>
       <div className={clsx(isOwn && "order-2")}>
         <Avatar user={data.sender}/>
       </div>
@@ -40,7 +40,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               <Image alt="Image" height="180" width="180" src={data.image} className='object-cover cursor-pointer hover:scale-105 transition translate' />
             </div>
           ): (
-            <div className={clsx('rounded-full py-2 px-3', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>{data.body}</div>
+            <div id='userMessage' className={clsx('rounded-full py-2 px-3', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>{data.body}</div>
           )}
         </div>
         {isLast && isOwn && seenList.length > 0 && (
