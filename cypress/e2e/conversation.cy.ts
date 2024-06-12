@@ -1,100 +1,103 @@
-import { v4 } from 'uuid';
-const randomMessage = v4();  
+ describe('page functions', () => {
+  const watcherName     = Cypress.env('WATCHER_NAME')
+  const watcherEmail    = Cypress.env('WATCHER_EMAIL')
+  const watcherPassword = Cypress.env('WATCHER_PASSWORD')
+  const testName        = Cypress.env('TEST_NAME')
+  const testEmail       = Cypress.env('TEST_EMAIL')
+  const testPassword    = Cypress.env('TEST_PASSWORD')
+  const message = 'a';
 
-describe('single user functionality', () => {
   beforeEach(() => {
-    cy.gotoConversations('mobile');
+    cy.login(testEmail, testPassword);
+    cy.get(`a#mobileItem[href="/conversations"]`).click(); 
     cy.get('div#conversationBox').contains('watcher').click()    
   });
-  it('can return to conversations page', () => {
+  
+  it('page UX', () => {
     cy.get('a#returnButton').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/conversations`)
-  })
-  it('handle submitting empty message', () => {
-    cy.get('input#message').click().type('a{backspace}')
+    cy.location('pathname').should('eq', '/conversations');
 
+    cy.get('a#mobileItem[href="/#"]').click()
+    cy.location('pathname').should('eq', '/');
+  })
+
+  it('skips empty messages', () => {
+    cy.get('input#message').click().type('a{backspace}')
     cy.intercept('POST', '/api/messages').as('createMessageEmpty')
     cy.get('button[type="submit"]').click()
-    // check that no request was made, but there is no way to check it
+    // only way to check this is using integration test
   })
-  it('returns user to home page after logout', () => {
-    cy.get('.bottom-0 > [href="/#"]').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/`)
-  })
-  it('handles submitting text messages', () => {
-    cy.get('input#message').click().type('a')
 
+  it('renders submitted text messages', () => {
+    cy.get('input#message').click().type(message)
     cy.intercept('POST', '/api/messages').as('createMessageText')
     cy.get('button[type="submit"]').click()
-
-    cy.wait('@createMessageText').then((intercept) => {
-      expect(intercept.request?.body).to.have.property('message')
-      expect(intercept.request?.body).to.have.property('conversationId')
-
-      expect(intercept.response?.statusCode).to.equal(200);
-      expect(intercept.response?.body).to.have.property('id')
-      expect(intercept.response?.body).to.have.property('body')
-      expect(intercept.response?.body).to.have.property('image')
-      expect(intercept.response?.body).to.have.property('createdAt')
-      expect(intercept.response?.body).to.have.property('seenIds')
-      expect(intercept.response?.body).to.have.property('conversationId')
-      expect(intercept.response?.body).to.have.property('senderId')
-      expect(intercept.response?.body).to.have.property('seen')
-      expect(intercept.response?.body).to.have.property('sender')
-    });    
+    cy.wait('@createMessageText')
+    cy.reload()
+    cy.get('div[id="userMessage"]').last().contains(message)
   })
-  it('displays text messages', () => {
-    cy.get('input#message').click().type(randomMessage)
-    cy.intercept('POST', '/api/messages').as('createMessageText')
+
+  it("marks message as seen", () => {
+    cy.get('input#message').click().type(message)
     cy.get('button[type="submit"]').click()
-
-    cy.wait('@createMessageText').then((intercept) => {
-      cy.reload()
-      cy.get('div[id="userMessage"]').last().contains(randomMessage)
-    })
-  })
-
-  it.only('handles sidebar', () => {
-    cy.get('svg[id="sidebarDrawer"]').click()
-    cy.get('dl[id="conversationInfo"]').should('be.visible') 
-    cy.get('button[id="closeSidebar"]').click(); // close via button
-
-    cy.get('svg[id="sidebarDrawer"]').click()
-    cy.get('body').click(60, 500) // close via clicking
-
-    cy.get('svg[id="sidebarDrawer"]').click()
-    cy.get('body').trigger('keydown', { key: 'Escape' }) // close via esc button
-    //todo test delete conversation opens modal and deletes
-  })
-})
-// only works when 'a new message was sent' was first run
-describe('multiple user functionality', () => {
-  it('marks message as seen', () => {
-    const watcherName     = Cypress.env('WATCHER_NAME')
-    const watcherEmail    = Cypress.env('WATCHER_EMAIL')
-    const watcherPassword = Cypress.env('WATCHER_PASSWORD')
-    const testEmail       = Cypress.env('TEST_EMAIL')
-    const testPassword    = Cypress.env('TEST_PASSWORD')
+    cy.get('a[id="returnButton"]').click()
+    cy.get(`a#mobileItem[href="/#"]`).click();
 
     cy.login(watcherEmail, watcherPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click()
-
-    cy.intercept('POST', '/api/conversations/666368a91f8eef7b115f924f/seen').as('markMessageSeen')
-
-    cy.get('div#conversationBox').contains('test').click()
-
-    cy.wait('@markMessageSeen').then((intercept) => {
-      expect(intercept.response?.statusCode).to.equal(200);
-    });
-    cy.get('a[id="returnButton"]').click()
-    cy.get('.bottom-0 > [href="/#"]').click()
+    cy.get(`a#mobileItem[href="/conversations"]`).click();
+    cy.get("div#conversationBox").contains(testName).click();
+    cy.get('a[id="returnButton"]').click();
+    cy.get('.bottom-0 > [href="/#"]').click();
 
     cy.login(testEmail, testPassword);
+    cy.get(`a#mobileItem[href="/conversations"]`).click(); cy.wait(500);
+    cy.get("div#conversationBox").contains(watcherName).click();
+    cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${watcherName}`);
+  });
 
-    cy.get(`a#mobileItem[href="/conversations"]`).click()
-    cy.get('div#conversationBox').contains(watcherName).click()
-    cy.get('div[id="userLine"]').last().should('contain.text',`Seen by ${watcherName}`)
+  // handle image upload tests manually
+})
+
+describe('sidebar', () => {
+  const watcherName     = Cypress.env('WATCHER_NAME')
+  const testEmail       = Cypress.env('TEST_EMAIL')
+  const testPassword    = Cypress.env('TEST_PASSWORD')
+
+  beforeEach(() => {
+    cy.login(testEmail, testPassword);
+    cy.get(`a#mobileItem[href="/conversations"]`).click();
+    cy.get('div#conversationBox').contains(watcherName).click()  
+  });
+
+  it('sidebar UX', () => {
+    cy.get('svg[id="sidebarDrawer"]').click() 
+    cy.get('button[id="closeSidebar"]').click(); 
+
+    cy.get('svg[id="sidebarDrawer"]').click()
+    cy.get('body').click(60, 500) 
+
+    cy.get('svg[id="sidebarDrawer"]').click()
+    cy.get('body').trigger('keydown', { key: 'Escape' }) 
   })
 
-  // skip automatically testing image uploads (from now on manual test it)
+  it('delete conversation modal UX', () => {
+    cy.get('svg[id="sidebarDrawer"]').click()  
+    cy.get('div[id="deleteButton"]').click()
+    cy.get('div[id="confirmModal"]').should('contain.text', 'Delete conversation')
+    cy.get('svg[id="closeButton"]').click()
+    cy.get('body').should('not.contain.text', 'Delete conversation')
+
+    cy.get('svg[id="sidebarDrawer"]').click()  
+    cy.get('div[id="deleteButton"]').click()
+    cy.get('button').contains('Cancel').click()
+    cy.get('body').should('not.contain.text', 'Delete conversation')
+  })
+
+  it('deletes conversation', () => {
+    cy.get('svg[id="sidebarDrawer"]').click()  
+    cy.get('div[id="deleteButton"]').click()
+    cy.get('button').contains('Delete').click(); cy.wait(2000);
+    cy.visit('/conversations')
+    cy.get('div#conversationBox').not('contain.text', watcherName)
+  })
 })

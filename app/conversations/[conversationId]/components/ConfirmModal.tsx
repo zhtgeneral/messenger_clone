@@ -26,7 +26,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     axios.delete(`/api/conversations/${conversationId}`)
     .then(() => {
       onClose();
-      router.push('/conversations/');
+      router.push('/conversations');
       router.refresh()
     })
     .catch(() => toast.error('Something went wrong'))
@@ -35,7 +35,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className='sm:flex sm:items-start'>
+      <div id='confirmModal' className='sm:flex sm:items-start'>
         <div className='mx-auto flex h-12 w-12 flex-shrink-0 items-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10 justify-center'>
           <FiAlertTriangle className='h-6 w-6 text-red-600' />
         </div>
