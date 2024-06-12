@@ -5,9 +5,9 @@ import React, { Fragment, ReactNode } from 'react';
 import { IoClose } from 'react-icons/io5';
 
 interface ModalProps {
-  isOpen? : boolean;
-  onClose : () => void;
-  children: React.ReactNode;
+  isOpen?  : boolean;
+  onClose  : () => void;
+  children?: React.ReactNode;
 }
 
 const Modal: React.FC<ModalProps> = ({ 

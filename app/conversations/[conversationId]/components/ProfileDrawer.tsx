@@ -7,7 +7,7 @@ import React, { Fragment, useMemo, useState } from "react";
 import { Transition, Dialog, TransitionChild, DialogPanel } from '@headlessui/react'
 import { IoClose, IoTrash} from 'react-icons/io5'
 import Avatar from "@/app/components/Avatar";
-import Modal from "@/app/components/Modal";
+import ConfirmModal from "@/app/conversations/[conversationId]/components/ConfirmModal";
 
 interface ProfileDrawerProps {
   data: Conversation & {
@@ -23,7 +23,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   onClose
 }) => {
   const otherUser = useOtherUser(data);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), 'PP')
@@ -40,11 +40,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   }, [data])
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} >
-        <div className='bg-white p-5'>
-          modal
-        </div>
-      </Modal>
+      <ConfirmModal isOpen={confirmOpen} onClose={() => setConfirmOpen(false)} />
       <Transition show={isOpen} as={Fragment}>
         <Dialog as="div" className='relative z-50' onClose={onClose}>
           <TransitionChild as={Fragment}
@@ -77,7 +73,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                         <div>{title}</div>
                         <div className='text-sm text-gray-500'>{statusText}</div>
                         <div className='flex gap-10 my-8'>
-                          <div id='deleteButton' onClick={() => setIsModalOpen(true)} className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'>
+                          <div id='deleteButton' onClick={() => setConfirmOpen(true)} className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'>
                             <div className='w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center'><IoTrash size={20} /></div>
                             <div className='text-sm font-light text-neutral-600'>Delete</div>
                           </div>
