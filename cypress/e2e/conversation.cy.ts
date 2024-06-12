@@ -1,3 +1,11 @@
+ describe('page security', () => {
+  it('page security', () => {
+    const randomId = 'asdabslj4h5k34jasd'
+    cy.visit(`/conversations/${randomId}`)
+    cy.location('pathname').should('eq', '/');
+  })
+ })
+ 
  describe('page functions', () => {
   const watcherName     = Cypress.env('WATCHER_NAME')
   const watcherEmail    = Cypress.env('WATCHER_EMAIL')

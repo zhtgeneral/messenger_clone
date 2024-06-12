@@ -1,26 +1,24 @@
-// leave until middleware is created
-describe('conversations route security', () => {
-  //todo
-  it('is protected for unauthenticated users', () => {
-    cy.visit('/conversations').then(() => {
-      cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/?callbackUrl=%2Fconversations`)
-    })
+describe('route security', () => {  
+  it('page security', () => {
+    cy.visit('/conversations')
+    cy.location('pathname').should('eq', '/');
   })
 })
 
-describe('conversations page functionality', () => {
+describe('page functions', () => {
+  const testEmail       = Cypress.env('TEST_EMAIL')
+  const testPassword    = Cypress.env('TEST_PASSWORD')
+
   beforeEach(() => {
-    cy.gotoConversations('mobile');
+    cy.login(testEmail, testPassword);
+    cy.get(`a#mobileItem[href="/conversations"]`).click(); 
   });
   
-  it('allows users to return to users page', () => {
-    cy.get('.bottom-0 > [href="/users"]').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/users`)
-  })
+  it('page UX', () => {
+    cy.get('a#mobileItem[href="/users"]').click()
+    cy.location('pathname').should('eq', '/users');
 
-  it('returns user to home page after logout', () => {
-    cy.get('.bottom-0 > [href="/#"]').click()
-    cy.url().should('eq', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/`)
+    cy.get('a#mobileItem[href="/#"]').click()
+    cy.location('pathname').should('eq', '/');
   })
-  
 })
