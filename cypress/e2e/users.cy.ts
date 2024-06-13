@@ -31,4 +31,14 @@ describe('page functions', () => {
       cy.location('pathname').should('eq', `/conversations/${conversationId}`);
     })
   })
+
+  it.only('update user', () => {
+    const settingsAPI = 'api/settings'
+    cy.intercept('POST', settingsAPI).as('UpdateUser')
+    cy.get('a#mobileItem[href="/settings"]').click()
+    cy.wait('@UpdateUser').then((intercept) => {
+      expect(intercept.response?.statusCode).to.equal(200);
+      // todo update user info not on mobile
+    })
+  })
 })
