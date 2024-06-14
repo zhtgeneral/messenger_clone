@@ -6,6 +6,8 @@ import clsx from "clsx";
 import Avatar from "@/app/components/Avatar";
 import { format } from "date-fns";
 import Image from 'next/image'
+import { useState } from "react";
+import ImageModal from "@/app/conversations/[conversationId]/components/ImageModal";
 
 interface MessageBoxProps {
   isLast?: boolean,
@@ -17,6 +19,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   data
 }) => {
   const session = useSession();
+  const [imageModalOpen, setImageModelOpen] = useState(false)
 
   const isOwn = session?.data?.user?.email == data?.sender?.email;
   const seenList = (data.seen || [])
@@ -35,9 +38,16 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           <div className='text-xs text-gray-400'>{format(new Date(data.createdAt), 'p')}</div>
         </div>
         <div className='text-sm w-fit overflow-hidden'>
+          <ImageModal isOpen={imageModalOpen} onClose={() => setImageModelOpen(false)} src={data.image}/>
           {data.image ? (
             <div className='rounded-md p-8'>
-              <Image alt="Image" height="180" width="180" src={data.image} className='object-cover cursor-pointer hover:scale-105 transition translate' />
+              <Image 
+                onClick={() => setImageModelOpen(true)} 
+                alt="Image" 
+                height="180" width="180" 
+                src={data.image} 
+                className='object-cover cursor-pointer hover:scale-105 transition translate rounded-md' 
+              />
             </div>
           ): (
             <div id='userMessage' className={clsx('rounded-full py-2 px-3', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>{data.body}</div>
