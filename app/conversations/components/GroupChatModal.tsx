@@ -56,7 +56,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form id='groupChatModal' onSubmit={handleSubmit(onSubmit)}>
         <div className='space-y-12'>
           <div className='border-b border-gray-900/10 pb-12'>
             <h2 className='text-base font-semibold leading-7 text-gray-900'>
@@ -74,18 +74,18 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
                 required
                 errors={errors}
                 />
-                <Select
-                  disabled={isLoading}
-                  label="Members"
-                  options={users.map((user) => ({
-                    value: user.id,
-                    label: user.name
-                  }))}
-                  onChange={(value) => setValue('members', value, {
-                    shouldValidate: true
-                  })}
-                  value={members}
-                />
+              <Select
+                disabled={isLoading}
+                label="Members"
+                options={users.map((user) => ({
+                  value: user.id,
+                  label: user.name
+                }))}
+                onChange={(value) => setValue('members', value, {
+                  shouldValidate: true
+                })}
+                value={members}
+              />
             </div>
           </div>
         </div>

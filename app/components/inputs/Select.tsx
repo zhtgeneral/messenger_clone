@@ -23,7 +23,7 @@ const Select: React.FC<SelectProps> = ({
       <label className="block text-sm font-medium leading-6 text-gray-900">
         {label}
       </label>
-      <div className="mt-2">
+      <div id='select' className="mt-2">
         <ReactSelect
           isDisabled={disabled}
           value={value}
