@@ -11,6 +11,9 @@ import Input from "@/app/components/inputs/Input";
 import Image from "next/image";
 import { CldUploadButton } from "next-cloudinary";
 import Button from "@/app/components/Button";
+import { TiUser } from "react-icons/ti";
+import { MdEdit } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
 
 interface SettingsModalProps {
   currentUser: User
@@ -48,6 +51,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       shouldValidate: true
     });
   }
+  const removeImage = () => {
+    setValue('image', null)
+  }
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     axios.post('/api/settings', data)
@@ -79,25 +85,52 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   Photo
                 </label>
                 <div className='mt-2 flex items-center gap-x-3'>
-                  <Image 
+                {/* <Image 
                     width="48" height="48" 
                     src={image || currentUser?.image || '/images/placeholder.png'}
                     alt="avatar"
                     className='rounded-full'
-                  />
-                  <CldUploadButton
-                    options={{maxFiles: 1}}
-                    onSuccess={handleUpload}
-                    uploadPreset={uploadPreset}
-                  >
-                    <Button 
-                      disabled={isLoading}
-                      secondary
-                      type='button'
+                  /> */}
+                  {currentUser?.image? (
+                    <Image 
+                      width="48" height="48" 
+                      src={image || currentUser?.image}
+                      alt="avatar"
+                      className='rounded-full'
+                    />
+                  ): (
+                    <div className="flex items-center justify-center h-16 w-16 bg-gray-200 rounded-full">
+                      <TiUser size={42} className="text-gray-500"/>
+                    </div>
+                  )}
+                  <div className="ml-auto flex flex-col gap-2">
+                    <CldUploadButton
+                      options={{maxFiles: 1}}
+                      onSuccess={handleUpload}
+                      uploadPreset={uploadPreset}
                     >
-                      Change
+                      <Button 
+                        disabled={isLoading}
+                        secondary
+                        type='button'
+                      >
+                        <div className="flex items-center justify-center">
+                          <div className='pr-2'>
+                            <MdEdit className='text-gray-500 hover:text-gray-600 w-4 h-4' />
+                          </div>
+                          <p className='text-xs'>Change Image</p>
+                        </div>                      
+                      </Button>
+                    </CldUploadButton>
+                    <Button type='button' disabled={isLoading} danger onClick={() => removeImage}>
+                      <div className="flex items-center justify-center">
+                        <div className='pr-2'>
+                          <FaTrash />
+                        </div>
+                        <p className='text-xs'>Reset Image</p>
+                      </div>
                     </Button>
-                  </CldUploadButton>
+                  </div>
                 </div>
               </div>
             </div>

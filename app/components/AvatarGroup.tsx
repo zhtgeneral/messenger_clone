@@ -2,6 +2,7 @@
 
 import { User } from "@prisma/client"
 import Image from 'next/image';
+import { TiUser } from "react-icons/ti";
 
 interface AvatarGroupProps {
   users: User[]
@@ -22,8 +23,16 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
         <div 
           key={user.id} 
           className={`absolute inine-block rounded-full overflow-hidden h-[21px] w-[21px] ${positionMap[index as keyof typeof positionMap]}`} 
-        >
-          <Image alt='avatar' src={user?.image || '/images/placeholder.png'} fill />
+        > 
+          {/* <Image alt='avatar' src={user?.image || '/images/placeholder.png'} fill /> */}
+          {user?.image? (
+            <Image alt='avatar' src={user?.image} fill />
+          ): (
+            <div className="flex items-center justify-center h-full w-full bg-gray-200">
+              <TiUser  size={30} className="text-gray-500"/>
+            </div>
+          )}
+          
         </div>
       ))}
     </div>

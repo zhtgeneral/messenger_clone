@@ -5,10 +5,11 @@ import { Conversation, User } from "@prisma/client"
 import { format } from "date-fns";
 import React, { Fragment, useMemo, useState } from "react";
 import { Transition, Dialog, TransitionChild, DialogPanel } from '@headlessui/react'
-import { IoClose, IoTrash} from 'react-icons/io5'
+import { IoClose } from 'react-icons/io5'
 import Avatar from "@/app/components/Avatar";
 import ConfirmModal from "@/app/conversations/[conversationId]/components/ConfirmModal";
 import AvatarGroup from "@/app/components/AvatarGroup";
+import { FaTrash } from "react-icons/fa";
 
 interface ProfileDrawerProps {
   data: Conversation & {
@@ -80,9 +81,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                         <div>{title}</div>
                         <div className='text-sm text-gray-500'>{statusText}</div>
                         <div className='flex gap-10 my-8'>
-                          <div id='deleteButton' onClick={() => setConfirmOpen(true)} className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'>
-                            <div className='w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center'><IoTrash size={20} /></div>
-                            <div className='text-sm font-light text-neutral-600'>Delete</div>
+                          <div id='deleteButton' onClick={() => setConfirmOpen(true)} className='flex flex-col gap-1 items-center cursor-pointer hover:opacity-75'>
+                            <div className='w-10 h-10 bg-rose-500 rounded-lg flex items-center justify-center'>
+                              <FaTrash size={20} className='text-white' />
+                            </div>
+                            <div className='text-sm text-neutral-600'>Delete</div>
                           </div>
                         </div>
                         <div className='w-full pb-5 pt-5 sm:px-0 sm:pt-0'>

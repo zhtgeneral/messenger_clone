@@ -1,9 +1,10 @@
 import { usePathname } from "next/navigation"
 import useConversation from "./useConversation";
-import { HiChat, HiUsers } from "react-icons/hi";
+import { HiUsers } from "react-icons/hi2";
+import { IoChatbubbles } from "react-icons/io5";
 import { useMemo } from "react";
 import { signOut } from "next-auth/react";
-import { HiArrowLeftOnRectangle } from "react-icons/hi2";
+import { BiLogOut } from "react-icons/bi";
 
 
 export default function useRoutes() {
@@ -14,20 +15,20 @@ export default function useRoutes() {
     {
       label : 'Chat',
       href  : '/conversations',
-      icon  : HiChat,
+      icon  : IoChatbubbles ,
       active: pathname == '/conversations' || conversationId as unknown as boolean
     },
     {
       label : 'Users',
       href  : '/users',
-      icon  : HiUsers,
+      icon  : HiUsers ,
       active: pathname == '/users'
     },
     {
       label : 'Logout',
       href  : '/#',
       onClick: () => signOut(),
-      icon  : HiArrowLeftOnRectangle,
+      icon  : BiLogOut ,
     }
   ], [pathname, conversationId])
 

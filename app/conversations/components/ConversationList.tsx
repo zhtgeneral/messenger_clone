@@ -6,7 +6,7 @@ import { FullConversationType } from "@/app/types"
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MdOutlineGroupAdd } from 'react-icons/md'
+import { TiUserAdd } from "react-icons/ti";
 import GroupChatModal from "@/app/conversations/components/GroupChatModal";
 import { User } from "@prisma/client";
 
@@ -32,10 +32,12 @@ const ConversationList: React.FC<ConversationListProps> = ({
           isOpen? 'hidden' : 'block w-full left-0'
         )
       }>
-        <div className='px-5'>
+        <div className='px-3'>
           <div className='flex justify-between mb-4 pt-4'> 
-            <div className='text-2xl font-bold text-neutral-800'>Messages</div>
-            <div id="groupChat" onClick={() => setIsModalOpen(true)} className='rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition'><MdOutlineGroupAdd size={20}/></div>
+            <div className='text-2xl font-bold text-neutral-800 pl-1'>Messages</div>
+            <div id="groupChat" onClick={() => setIsModalOpen(true)} className='rounded-full bg-gray-100 text-gray-500 cursor-pointer hover:opacity-75 transition h-10 w-10 flex justify-center items-center'>
+              <TiUserAdd size={30} />
+            </div>
           </div> 
           {items.map((item) => (
             <ConversationBox key={item.id} data={item} selected={conversationId == item.id} />

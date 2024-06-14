@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import useRoutes   from "@/app/hooks/useRoutes";
 import DesktopItem from "@/app/components/DesktopItem";
-import Avatar      from "@/app/components/Avatar";
 import SettingsModal from "@/app/components/sidebar/SettingsModal";
+import { IoMdSettings } from "react-icons/io";
 
 import { User } from "@prisma/client";
 
@@ -24,7 +24,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
       <SettingsModal currentUser={currentUser} isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <div className='hidden lg:fixed lg:inset-0 lg:left-0 lg:z-40 lg:w-20 xl:px-6 lg:overflow-y-auto lg:bg-white lg:border-r-[1px] lg:pb-4 lg:flex lg:flex-col justify-between'>
         <nav className="mt-4 flex flex-col justify-between">
-          <ul role="list" className="flex flex-col items-center space-y-1" >
+          <ul role="list" className="flex flex-col items-center space-y-2" >
             {routes.map((item) => (
               <DesktopItem 
                 key    ={item.label}
@@ -39,7 +39,8 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
         </nav>
         <nav className='mt-4 flex flex-col justify-between items-center'>
           <div onClick={() => setIsOpen(true)} className='cursor-pointer hover:opacity-75 transition'>
-            <Avatar user={currentUser} />
+            {/* <Avatar user={currentUser} /> */}
+            <IoMdSettings size="30" className='font-semibold text-gray-500 hover:text-black'/>
           </div>
         </nav>
       </div>
