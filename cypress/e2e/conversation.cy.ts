@@ -66,6 +66,7 @@ import { v4 } from "uuid";
   });
 
   // handle image upload tests manually
+  // handle image modal tests manually
 })
 
 describe('sidebar', () => {
