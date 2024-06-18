@@ -35,7 +35,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
         <div className='px-3'>
           <div className='flex justify-between mb-4 pt-4'> 
             <div className='text-2xl font-bold text-neutral-800 pl-1'>Messages</div>
-            <div id="groupChat" onClick={() => setIsModalOpen(true)} className='rounded-full bg-gray-100 text-gray-500 cursor-pointer hover:opacity-75 transition h-10 w-10 flex justify-center items-center'>
+            <div 
+              id="groupChat" 
+              onClick={() => setIsModalOpen(true)} 
+              className='rounded-full bg-gray-100 text-gray-500 cursor-pointer hover:opacity-75 transition h-10 w-10 flex justify-center items-center'
+            >
               <TiUserAdd size={30} />
             </div>
           </div> 
