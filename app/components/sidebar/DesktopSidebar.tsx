@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import useRoutes   from "@/app/hooks/useRoutes";
 import DesktopItem from "@/app/components/DesktopItem";
-import SettingsModal from "@/app/components/sidebar/SettingsModal";
-import { IoMdSettings } from "react-icons/io";
+import SettingsModal from "@/app/components/sidebar/SettingsModal"
 
 import { User } from "@prisma/client";
+import SettingsButton from "@/app/components/sidebar/SettingsButton";
 
 interface DesktopSidebarProps {
   currentUser: User
@@ -38,10 +38,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           </ul>
         </nav>
         <nav className='mt-4 flex flex-col justify-between items-center'>
-          <div onClick={() => setIsOpen(true)} className='cursor-pointer hover:opacity-75 transition'>
-            {/* <Avatar user={currentUser} /> */}
-            <IoMdSettings size="30" className='font-semibold text-gray-500 hover:text-black'/>
-          </div>
+          <SettingsButton setModalIsOpen={setIsOpen} />
         </nav>
       </div>
     </>
