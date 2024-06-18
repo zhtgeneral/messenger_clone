@@ -9,6 +9,7 @@ import { useState } from "react";
 import { TiUserAdd } from "react-icons/ti";
 import GroupChatModal from "@/app/conversations/components/GroupChatModal";
 import { User } from "@prisma/client";
+import Button from "@/app/components/Button";
 
 interface ConversationListProps {
   initialItems: FullConversationType[],
@@ -30,18 +31,18 @@ const ConversationList: React.FC<ConversationListProps> = ({
       <aside className={
         clsx('fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200',
           isOpen? 'hidden' : 'block w-full left-0'
-        )
-      }>
+        )}>
         <div className='px-3'>
           <div className='flex justify-between mb-4 pt-4'> 
             <div className='text-2xl font-bold text-neutral-800 pl-1'>Messages</div>
-            <div 
-              id="groupChat" 
-              onClick={() => setIsModalOpen(true)} 
-              className='rounded-full bg-gray-100 text-gray-500 cursor-pointer hover:opacity-75 transition h-10 w-10 flex justify-center items-center'
-            >
-              <TiUserAdd size={30} />
-            </div>
+            <Button type='button' onClick={() => setIsModalOpen(true)}>
+              <div id="groupChat" className="flex items-center justify-center">
+                <div className='pr-1'>
+                  <TiUserAdd size={16} />
+                </div>
+                <p className='text-xs'>Group Chat</p>
+              </div>
+            </Button>
           </div> 
           {items.map((item) => (
             <ConversationBox key={item.id} data={item} selected={conversationId == item.id} />
