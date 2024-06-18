@@ -24,7 +24,6 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
           key={user.id} 
           className={`absolute inine-block rounded-full overflow-hidden h-[21px] w-[21px] ${positionMap[index as keyof typeof positionMap]}`} 
         > 
-          {/* <Image alt='avatar' src={user?.image || '/images/placeholder.png'} fill /> */}
           {user?.image? (
             <Image alt='avatar' src={user?.image} fill />
           ): (

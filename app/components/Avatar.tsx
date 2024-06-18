@@ -14,9 +14,7 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
   return (
     <div className='relative'>
-      {/* <div className='relative inline-block rounded-full overflow-hidden h-11 w-11'> */}
       <div className='relative inline-block rounded-full overflow-hidden h-11 w-11'>
-        {/* <Image alt='avatar' src={user?.image || '/images/placeholder.png'} fill sizes='3' /> */}
         {user?.image? (
           <Image alt='avatar' src={user?.image} fill sizes='3' />
         ): (

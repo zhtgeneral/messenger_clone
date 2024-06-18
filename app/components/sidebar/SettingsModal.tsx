@@ -85,12 +85,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   Photo
                 </label>
                 <div className='mt-2 flex items-center gap-x-3'>
-                {/* <Image 
-                    width="48" height="48" 
-                    src={image || currentUser?.image || '/images/placeholder.png'}
-                    alt="avatar"
-                    className='rounded-full'
-                  /> */}
                   {currentUser?.image? (
                     <Image 
                       width="48" height="48" 
