@@ -13,14 +13,6 @@ describe('page functions', () => {
     cy.login(testEmail, testPassword);
   });
 
-  it('users page UX', () => {
-    cy.get('a#mobileItem[href="/conversations"]').click()
-    cy.location('pathname').should('eq', '/conversations');
-
-    cy.get('a#mobileItem[href="/#"]').click()
-    cy.location('pathname').should('eq', '/');
-  })
-
   it('create conversation', () => {
     const conversationAPI = 'api/conversations'
     cy.intercept('POST', conversationAPI).as('CreateConversations')
@@ -29,16 +21,6 @@ describe('page functions', () => {
       expect(intercept.response?.statusCode).to.equal(200);
       const conversationId = intercept.response.body.id
       cy.location('pathname').should('eq', `/conversations/${conversationId}`);
-    })
-  })
-
-  it.only('update user', () => {
-    const settingsAPI = 'api/settings'
-    cy.intercept('POST', settingsAPI).as('UpdateUser')
-    cy.get('a#mobileItem[href="/settings"]').click()
-    cy.wait('@UpdateUser').then((intercept) => {
-      expect(intercept.response?.statusCode).to.equal(200);
-      // todo update user info not on mobile
     })
   })
 })

@@ -9,7 +9,7 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({
   setModalIsOpen
 }) => {
   return (
-    <div onClick={() => setModalIsOpen(true)} className='cursor-pointer hover:opacity-75 transition sm:px-3 lg:px-0 lg:py-1'>
+    <div id="settingsButton" onClick={() => setModalIsOpen(true)} className='cursor-pointer hover:opacity-75 transition sm:px-3 lg:px-0 lg:py-1'>
       <IoMdSettings size="30" className='font-semibold text-gray-500 hover:text-black'/>
     </div>
   )

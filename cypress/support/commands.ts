@@ -90,7 +90,7 @@ Cypress.Commands.add('login', (email: string, password: string) => {
   cy.visit('/')
   cy.get('input[id="email"]'    ).click().type(email);
   cy.get('input[id="password"]' ).click().type(password);
-  cy.get('button[type="submit"]').click();
+  cy.get('button[type="submit"]').click(); cy.wait(1000);
   cy.wait('@auth')
 })
 
