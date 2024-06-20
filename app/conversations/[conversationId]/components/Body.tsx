@@ -29,6 +29,7 @@ const Body: React.FC<BodyProps> = ({
     pusherClient.subscribe(conversationId)
     bottomRef?.current?.scrollIntoView();
 
+    // display new messages
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`)
       // prevents duplicates
@@ -40,10 +41,21 @@ const Body: React.FC<BodyProps> = ({
       })
       bottomRef?.current?.scrollIntoView();
     }
+
+    // marks message as seen
+    const updateMessageHandler = (newMessage: FullMessageType) => {
+      setMessages((current): FullMessageType[] => current.map((currentMessage) => {
+        if (currentMessage.id == newMessage.id) 
+          return newMessage
+        return currentMessage
+      }))
+    }
     pusherClient.bind('messages:new', messageHandler)
+    pusherClient.bind('message:update', updateMessageHandler)
     return () => {
       pusherClient.unsubscribe(conversationId)
       pusherClient.unbind('messages:new', messageHandler)
+      pusherClient.unbind('message:update', updateMessageHandler)
     }
   }, [conversationId])
 

@@ -64,8 +64,9 @@ export async function POST(request: Request) {
         }
       }
     });
+    // render new messages in real time
     await pusherServer.trigger(conversationId, 'messages:new', newMessage)
-
+    // observers get notifications on the sidebar in real time
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
     updatedConversation.users.map((user) => {
       pusherServer.trigger(user.email!, 'conversation:update', {
