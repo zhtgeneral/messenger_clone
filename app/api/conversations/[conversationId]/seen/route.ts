@@ -52,7 +52,7 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
         }
       }
     })
-    // mark message as seen in real time
+    // mark message as seen in real time on sidebar
     await pusherServer.trigger(currentUser.email, 'conversation:update', {
       id: conversationId,
       messages: [updatedMessage]
