@@ -40,7 +40,7 @@
     cy.intercept('POST', '/api/messages').as('createMessageText')
     cy.get('button[type="submit"]').click()
     cy.wait('@createMessageText')
-    cy.reload()
+    cy.wait(5000);
     cy.get('div[id="userMessage"]').last().contains(message)
   })
 
@@ -73,8 +73,9 @@ describe('sidebar drawer', () => {
 
   beforeEach(() => {
     cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(watcherName).click()  
+    cy.intercept('POST', '/api/conversations').as('createConversation')
+    cy.get('div#userBox').contains(watcherName).click()  
+    cy.wait('@createConversation')
   });
 
   it('sidebar UX', () => {
@@ -105,7 +106,6 @@ describe('sidebar drawer', () => {
     cy.get('svg[id="sidebarDrawer"]').click()  
     cy.get('div[id="deleteButton"]').click()
     cy.get('button').contains('Delete').click(); cy.wait(2000);
-    cy.visit('/conversations')
     cy.get('div#conversationBox').not('contain.text', watcherName)
   })
 })

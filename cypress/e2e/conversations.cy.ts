@@ -61,7 +61,6 @@ describe('group chat functions', () => {
     cy.wait('@createGroupChat').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(200);
       cy.location('pathname').should('eq', '/conversations');
-      cy.reload();
       cy.get('div#conversationBox').first().should('contain.text', randomName)
     })
   })
@@ -98,5 +97,15 @@ describe('group chat functions', () => {
     cy.get(`a#mobileItem[href="/conversations"]`).click();
     cy.get('div#conversationBox').contains(randomName).click();
     cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${watcherName2}, ${watcherName3}`);
+  })
+
+  it('updates conversations upon deletion', () => {
+    cy.login(testEmail, testPassword);
+    cy.get(`a#mobileItem[href="/conversations"]`).click();
+    cy.get('div#conversationBox').contains(randomName).click();
+    cy.get('svg#sidebarDrawer').click()
+    cy.get('div#deleteButton').click()
+    cy.get('button').contains('Delete').click()
+    cy.get('div#conversationBox').should('not.contain.text', randomName)
   })
 })
