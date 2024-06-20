@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       });
       newConversation.users.forEach((user) => {
         if (user.email)
-          pusherServer.trigger(user.email, 'conversaton:new', newConversation)
+          pusherServer.trigger(user.email, 'conversation:new', newConversation)
       })
       return NextResponse.json(newConversation);
     }
