@@ -8,6 +8,7 @@ describe('route security', () => {
 })
 
 describe('group chat functions', () => {
+  // long group chat names cause an error for Pusher
   const randomId      = v4()
   const randomName    = `chat${randomId}`;  
   const randomMessage = `message${randomId}`;

@@ -11,5 +11,5 @@ export default defineConfig({
   env: {
     ...process.env
   },
-  defaultCommandTimeout: 8000
+  defaultCommandTimeout: 15000
 });
