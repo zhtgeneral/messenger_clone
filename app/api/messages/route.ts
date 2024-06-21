@@ -65,7 +65,12 @@ export async function POST(request: Request) {
       }
     });
     // render new messages in real time
-    await pusherServer.trigger(conversationId, 'messages:new', newMessage)
+    // await pusherServer.trigger(conversationId, 'messages:new', newMessage).catch((error) => 
+    //   console.log(error, 'ERROR_MESSAGES_RENDER')
+    // )
+    await pusherServer.trigger(conversationId, 'messages:new', newMessage.id).catch((error) => 
+      console.log(error, 'ERROR_MESSAGES_RENDER')
+    )
     // observers get notifications on the sidebar in real time
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
     updatedConversation.users.map((user) => {
@@ -77,7 +82,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newMessage);
   } catch (error: any) {
-    console.log(error, 'ERROR_MESSAGES')
+    console.log(error, 'ERROR_MESSAGES_POST')
     return new NextResponse('Internal Error', {status: 500})
   }
 }

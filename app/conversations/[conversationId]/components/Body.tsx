@@ -7,6 +7,7 @@ import { FullMessageType } from "@/app/types"
 import axios from "axios"
 import { pusherClient } from '@/app/libs/pusher'
 import { find } from "lodash"
+import prisma from '@/app/libs/prismadb';
 
 interface BodyProps {
   initialItems: FullMessageType[]
@@ -21,23 +22,33 @@ const Body: React.FC<BodyProps> = ({
 
   const {conversationId} = useConversation();
 
-  useEffect(() => {
-    axios.post(`/api/conversations/${conversationId}/seen`)
-  }, [conversationId])
+  // useEffect(() => {
+  //   axios.post(`/api/conversations/${conversationId}/seen`)
+  // }, [conversationId])
 
   useEffect(() => {
     pusherClient.subscribe(conversationId)
     bottomRef?.current?.scrollIntoView();
 
     // display new messages
-    const messageHandler = (message: FullMessageType) => {
-      axios.post(`/api/conversations/${conversationId}/seen`)
-      // prevents duplicates
-      setMessages((current) => {
-        if (find(current, {id: message.id})) {
+    // const messageHandler = (message: FullMessageType) => {
+    //   axios.post(`/api/conversations/${conversationId}/seen`)
+    //   // prevents duplicates
+    //   setMessages((current) => {
+    //     if (find(current, {id: message.id})) {
+    //       return current
+    //     }
+    //     return [...current, message]
+    //   })
+    //   bottomRef?.current?.scrollIntoView();
+    // }
+    const messageHandler = async (messageId: string) => {
+      await axios.post(`/api/conversations/${conversationId}/seen`)
+      const response = await axios.get(`/api/messages/${messageId}`)
+      setMessages((current): FullMessageType[] => {
+        if (find(current, {id: messageId})) 
           return current
-        }
-        return [...current, message]
+        return [...current, response.data!]
       })
       bottomRef?.current?.scrollIntoView();
     }

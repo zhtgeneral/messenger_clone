@@ -52,17 +52,21 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
         }
       }
     })
+    
     // mark message as seen in real time on sidebar
     await pusherServer.trigger(currentUser.email, 'conversation:update', {
       id: conversationId,
       messages: [updatedMessage]
-    })
+    }).catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
+
     // if message is seen, no need to update it
-    if (lastMessage.seenIds.indexOf(currentUser.id) != -1) {
-      return NextResponse.json(conversation)
-    }
+    if (lastMessage.seenIds.indexOf(currentUser.id) != -1) 
+      return NextResponse.json(lastMessage)
+    
     // message not seen so mark message as seen
-    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage).catch((error) => {
+      console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE')
+    })
     return NextResponse.json(updatedMessage)
   } catch (error: any) {
     console.log(error, 'ERROR_MESSAGES_SEEN');
