@@ -64,7 +64,10 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
       return NextResponse.json(lastMessage)
     
     // message not seen so mark message as seen todo
-    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage).catch((error) => {
+    // await pusherServer.trigger(conversationId!, 'message:update', updatedMessage).catch((error) => {
+    //   console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE')
+    // })
+    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage.id).catch((error) => {
       console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE')
     })
     return NextResponse.json(updatedMessage)

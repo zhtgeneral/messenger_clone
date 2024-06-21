@@ -54,7 +54,16 @@ const Body: React.FC<BodyProps> = ({
     }
 
     // marks message as seen
-    const updateMessageHandler = (newMessage: FullMessageType) => {
+    // const updateMessageHandler = (newMessage: FullMessageType) => {
+    //   setMessages((current): FullMessageType[] => current.map((currentMessage) => {
+    //     if (currentMessage.id == newMessage.id) 
+    //       return newMessage
+    //     return currentMessage
+    //   }))
+    // }
+    const updateMessageHandler = async (newMessageId: string) => {
+      const response = await axios.get(`/api/messages/${newMessageId}`)
+      const newMessage = response.data!
       setMessages((current): FullMessageType[] => current.map((currentMessage) => {
         if (currentMessage.id == newMessage.id) 
           return newMessage
