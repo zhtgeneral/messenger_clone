@@ -83,7 +83,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             <Avatar user={otherUser} />
                           )}
                         </div>
-                        <div>{title}</div>
+                        <div className='max-w-full'>
+                          <div className='break-words'>{title}</div>
+                        </div>
+                        
                         <div className='text-sm text-gray-500'>{statusText}</div>
                         <div className='flex gap-10 my-8'>
                           <div id='deleteButton' onClick={() => setConfirmOpen(true)} className='flex flex-col gap-1 items-center cursor-pointer hover:opacity-75'>
