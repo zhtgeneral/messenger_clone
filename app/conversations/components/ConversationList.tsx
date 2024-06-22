@@ -38,8 +38,9 @@ const ConversationList: React.FC<ConversationListProps> = ({
   useEffect(() => {
     if (!pusherKey) return
     pusherClient.subscribe(pusherKey)
-    // updates side bar to display new conversations at the top
-    const newHandler = (conversation: FullConversationType) => {
+    const newHandler = async (conversationId: string) => {
+      const response = await axios.get(`/api/conversations/${conversationId}`)
+      const conversation = response.data
       setItems((current): FullConversationType[] => {
         if (find(current, { id: conversation.id})) 
           return current

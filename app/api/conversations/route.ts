@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       });
       newConversation.users.forEach((user) => {
         if (user.email)
-          pusherServer.trigger(user.email, 'conversation:new', newConversation)
+          pusherServer.trigger(user.email, 'conversation:new', newConversation.id)
       })
       return NextResponse.json(newConversation);
     }
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
     // display new conversations on the sidebar
     newConversation.users.forEach(async (user) => {
       if (user.email)
-        await pusherServer.trigger(user.email, 'conversation:new', newConversation)
+        await pusherServer.trigger(user.email, 'conversation:new', newConversation.id)
     })
 
     return NextResponse.json(newConversation);
