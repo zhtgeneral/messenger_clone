@@ -12,9 +12,6 @@ export async function GET(
 ) {
   try {
     const currentUser = await getCurrentUser();
-    // const body        = await request.json();
-    // const { messageId } = body;
-    
     if (!currentUser?.id || !currentUser?.email) 
       return new NextResponse('Unauthorized', {status: 401});
     

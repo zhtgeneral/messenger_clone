@@ -53,11 +53,7 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
       }
     })
 
-    // mark message as seen in real time on sidebar todo
-    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //   id: conversationId,
-    //   messages: [updatedMessage]
-    // }).catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
+    // mark message as seen in real time on sidebar
     await pusherServer
     .trigger(currentUser.email, 'conversation:update', conversationId)
     .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
@@ -67,12 +63,10 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
       return NextResponse.json(lastMessage)
     
     // message not seen so mark message as seen 
-    // await pusherServer.trigger(conversationId!, 'message:update', updatedMessage).catch((error) => {
-    //   console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE')
-    // })
-    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage.id).catch((error) => {
-      console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE')
-    })
+    await pusherServer
+    .trigger(conversationId!, 'message:update', updatedMessage.id)
+    .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE'))
+    
     return NextResponse.json(updatedMessage)
   } catch (error: any) {
     console.log(error, 'ERROR_MESSAGES_SEEN');

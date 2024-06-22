@@ -64,21 +64,14 @@ export async function POST(request: Request) {
         }
       }
     });
-    // render new messages in real time
-    // await pusherServer.trigger(conversationId, 'messages:new', newMessage).catch((error) => 
-    //   console.log(error, 'ERROR_MESSAGES_RENDER')
-    // )
+
+    // observers get notifications for new messages in real time
     await pusherServer.trigger(conversationId, 'messages:new', newMessage.id).catch((error) => 
       console.log(error, 'ERROR_MESSAGES_RENDER')
     )
+
     // observers get notifications on the sidebar in real time
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1]
-    // updatedConversation.users.map((user) => {
-    //   pusherServer.trigger(user.email!, 'conversation:update', {
-    //     id: conversationId,
-    //     messages: [lastMessage]
-    //   })
-    // })
     updatedConversation.users.map((user) => {
       pusherServer.trigger(user.email!, 'conversation:update', conversationId)
     })

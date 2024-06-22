@@ -9,12 +9,11 @@ interface IParams {
 
 export async function DELETE(request: Request, { params }: { params: IParams }) {
   try {
-    const { conversationId } = params;
     const currentUser = await getCurrentUser();
-
     if (!currentUser?.id || !currentUser?.email)
       return new NextResponse('Unauthorized', { status: 401 })
-
+    
+    const { conversationId } = params;
     const existingConversation = await prisma.conversation.findUnique({
       where: {
         id: conversationId
@@ -34,10 +33,13 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
         }
       }
     })
+
+    // observers get notified of deleted conversations in real time
     existingConversation.users.forEach(async (user) => {
       if (user.email)
         await pusherServer.trigger(user.email, 'conversation:delete', existingConversation)
     })
+
     return NextResponse.json(deletedConversation);
   } catch (error: any) {
     console.log(error, 'ERROR_CONVERSATION_DELETE')
@@ -54,7 +56,6 @@ export async function GET(
     if (!currentUser?.id || !currentUser?.email)
       return new NextResponse('Unauthorized', { status: 401 })
     
-    console.log(params.conversationId, 'THIS IS THE PARAMS CONVERSATION ID');
     const conversation = await prisma.conversation.findUnique({
       where: {
         id: params.conversationId

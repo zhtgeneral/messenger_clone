@@ -86,6 +86,7 @@ export async function POST(request: Request) {
       }
     })
 
+    // display new conversations on the sidebar
     newConversation.users.forEach(async (user) => {
       if (user.email)
         await pusherServer.trigger(user.email, 'conversation:new', newConversation)
