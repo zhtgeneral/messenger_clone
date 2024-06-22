@@ -7,7 +7,6 @@ import { FullMessageType } from "@/app/types"
 import axios from "axios"
 import { pusherClient } from '@/app/libs/pusher'
 import { find } from "lodash"
-import prisma from '@/app/libs/prismadb';
 
 interface BodyProps {
   initialItems: FullMessageType[]
@@ -31,17 +30,6 @@ const Body: React.FC<BodyProps> = ({
     bottomRef?.current?.scrollIntoView();
 
     // display new messages
-    // const messageHandler = (message: FullMessageType) => {
-    //   axios.post(`/api/conversations/${conversationId}/seen`)
-    //   // prevents duplicates
-    //   setMessages((current) => {
-    //     if (find(current, {id: message.id})) {
-    //       return current
-    //     }
-    //     return [...current, message]
-    //   })
-    //   bottomRef?.current?.scrollIntoView();
-    // }
     const messageHandler = async (messageId: string) => {
       await axios.post(`/api/conversations/${conversationId}/seen`)
       const response = await axios.get(`/api/messages/${messageId}`)
@@ -54,13 +42,6 @@ const Body: React.FC<BodyProps> = ({
     }
 
     // marks message as seen
-    // const updateMessageHandler = (newMessage: FullMessageType) => {
-    //   setMessages((current): FullMessageType[] => current.map((currentMessage) => {
-    //     if (currentMessage.id == newMessage.id) 
-    //       return newMessage
-    //     return currentMessage
-    //   }))
-    // }
     const updateMessageHandler = async (newMessageId: string) => {
       const response = await axios.get(`/api/messages/${newMessageId}`)
       const newMessage = response.data!

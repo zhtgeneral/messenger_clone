@@ -45,18 +45,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
         return [conversation, ...current]
       })
     }
-    // updates side bar to display recent message
-    // const updateHandler = (conversation: FullConversationType) => {
-    //   setItems((current): FullConversationType[]  => current.map((currentConversation) => {
-    //     if (currentConversation.id == conversation.id)
-    //       return {
-    //         ...currentConversation,
-    //         messages: conversation.messages
-    //       }
-    //     return currentConversation
-    //   })
-    //   )
-    // }
     const updateHandler = async (conversationId: string) => {
       console.log(conversationId, 'THIS CONVERSATION ID WAS PASSED INTO CLIENT')
       const response = await axios.get(`/api/conversations/${conversationId}`)
