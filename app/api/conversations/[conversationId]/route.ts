@@ -37,7 +37,7 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
     // observers get notified of deleted conversations in real time
     existingConversation.users.forEach(async (user) => {
       if (user.email)
-        await pusherServer.trigger(user.email, 'conversation:delete', existingConversation)
+        await pusherServer.trigger(user.email, 'conversation:delete', existingConversation.id)
     })
 
     return NextResponse.json(deletedConversation);

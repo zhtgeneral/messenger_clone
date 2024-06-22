@@ -38,6 +38,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   useEffect(() => {
     if (!pusherKey) return
     pusherClient.subscribe(pusherKey)
+    // updates sidebar to display new conversations
     const newHandler = async (conversationId: string) => {
       const response = await axios.get(`/api/conversations/${conversationId}`)
       const conversation = response.data
@@ -47,8 +48,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
         return [conversation, ...current]
       })
     }
+    // updates sidebar to display newest message
     const updateHandler = async (conversationId: string) => {
-      console.log(conversationId, 'THIS CONVERSATION ID WAS PASSED INTO CLIENT')
       const response = await axios.get(`/api/conversations/${conversationId}`)
       const conversation = response.data
       setItems((current): FullConversationType[]  => current.map((currentConversation) => {
@@ -61,11 +62,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
       }))
     }
     // updates sidebar to remove deleted conversation
-    const deleteHandler = (conversation: FullConversationType) => {
+    const deleteHandler = (conversationId: string) => {
       setItems((current): FullConversationType[] => {
-        return [...current.filter((currentConversation) => currentConversation.id != conversation.id)]
+        return [...current.filter((currentConversation) => currentConversation.id != conversationId)]
       })
-      if (conversationId == conversation.id) 
+      if (conversationId == conversationId) 
         router.push('/conversations')
     }
     
