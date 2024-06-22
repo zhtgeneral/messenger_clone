@@ -13,6 +13,7 @@ import Button from "@/app/components/Button";
 import { useSession } from "next-auth/react";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
+import axios from "axios";
 
 interface ConversationListProps {
   initialItems: FullConversationType[],
@@ -45,7 +46,21 @@ const ConversationList: React.FC<ConversationListProps> = ({
       })
     }
     // updates side bar to display recent message
-    const updateHandler = (conversation: FullConversationType) => {
+    // const updateHandler = (conversation: FullConversationType) => {
+    //   setItems((current): FullConversationType[]  => current.map((currentConversation) => {
+    //     if (currentConversation.id == conversation.id)
+    //       return {
+    //         ...currentConversation,
+    //         messages: conversation.messages
+    //       }
+    //     return currentConversation
+    //   })
+    //   )
+    // }
+    const updateHandler = async (conversationId: string) => {
+      console.log(conversationId, 'THIS CONVERSATION ID WAS PASSED INTO CLIENT')
+      const response = await axios.get(`/api/conversations/${conversationId}`)
+      const conversation = response.data
       setItems((current): FullConversationType[]  => current.map((currentConversation) => {
         if (currentConversation.id == conversation.id)
           return {
@@ -53,8 +68,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             messages: conversation.messages
           }
         return currentConversation
-      })
-      )
+      }))
     }
     // updates sidebar to remove deleted conversation
     const deleteHandler = (conversation: FullConversationType) => {

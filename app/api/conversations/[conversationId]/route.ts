@@ -44,3 +44,29 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
     return new NextResponse('Internal Error', { status: 500 })
   }
 }
+
+export async function GET(
+  request: Request,
+  { params }: { params: IParams }
+) {
+  try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser?.id || !currentUser?.email)
+      return new NextResponse('Unauthorized', { status: 401 })
+    
+    console.log(params.conversationId, 'THIS IS THE PARAMS CONVERSATION ID');
+    const conversation = await prisma.conversation.findUnique({
+      where: {
+        id: params.conversationId
+      },
+      include: {
+        users: true,
+        messages: true
+      }
+    }).catch((error) => console.log(error, 'ERROR_CONVERSATION_GET_PRISMA'))
+    return NextResponse.json(conversation);
+  } catch (error: any) {
+    console.log(error, 'ERROR_CONVERSATION_GET')
+    return new NextResponse('Internal Error', { status: 500 })
+  }
+}

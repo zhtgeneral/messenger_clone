@@ -54,10 +54,13 @@ export async function POST(request: Request,  {params}: {params: IParams}) {
     })
 
     // mark message as seen in real time on sidebar todo
-    await pusherServer.trigger(currentUser.email, 'conversation:update', {
-      id: conversationId,
-      messages: [updatedMessage]
-    }).catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
+    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
+    //   id: conversationId,
+    //   messages: [updatedMessage]
+    // }).catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
+    await pusherServer
+    .trigger(currentUser.email, 'conversation:update', conversationId)
+    .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'))
 
     // if message is seen, no need to update it
     if (lastMessage.seenIds.indexOf(currentUser.id) != -1) 
