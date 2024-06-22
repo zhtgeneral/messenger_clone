@@ -51,7 +51,13 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               />
             </div>
           ): (
-            <div id='userMessage' className={clsx('rounded-full py-2 px-3', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>{data.body}</div>
+            <div className='max-w-[150px] xs:max-w-[240px] sm:max-w-[360px] md:max-w-[500px]'>
+              <div  
+                id='userMessage' 
+                className={clsx('rounded-lg py-2 px-3 break-words', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>
+                {data.body}
+              </div>
+            </div>
           )}
         </div>
         {isLast && isOwn && seenList.length > 0 && (
