@@ -1,4 +1,3 @@
-import { signOut } from "next-auth/react"
 import EmptyState from "@/app/components/EmptyState"
 
 const Users = () => {

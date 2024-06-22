@@ -1,15 +1,20 @@
 'use client'
 
-import useOtherUser from "@/app/hooks/useOtherUser";
-import { Conversation, User } from "@prisma/client"
+import { FaTrash } from "react-icons/fa";
 import { format } from "date-fns";
 import React, { Fragment, useMemo, useState } from "react";
-import { Transition, Dialog, TransitionChild, DialogPanel } from '@headlessui/react'
 import { IoClose } from 'react-icons/io5'
-import Avatar from "@/app/components/Avatar";
+
+import { Transition,
+  Dialog, 
+  TransitionChild, 
+  DialogPanel 
+} from '@headlessui/react'
+import { Conversation, User } from "@prisma/client"
+import useOtherUser from "@/app/hooks/useOtherUser";
+import Avatar       from "@/app/components/Avatar";
 import ConfirmModal from "@/app/conversations/[conversationId]/components/ConfirmModal";
-import AvatarGroup from "@/app/components/AvatarGroup";
-import { FaTrash } from "react-icons/fa";
+import AvatarGroup  from "@/app/components/AvatarGroup";
 
 interface ProfileDrawerProps {
   data: Conversation & {

@@ -1,9 +1,10 @@
 'use client'
 
-import { User } from "@prisma/client"
 import React from "react"
 import Image from 'next/image'
 import { TiUser } from "react-icons/ti";
+
+import { User } from "@prisma/client"
 
 interface AvatarProps {
   user?: User

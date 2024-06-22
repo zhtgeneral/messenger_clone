@@ -1,8 +1,9 @@
 'use client'
 
-import { User } from "@prisma/client"
 import Image from 'next/image';
 import { TiUser } from "react-icons/ti";
+
+import { User } from "@prisma/client"
 
 interface AvatarGroupProps {
   users: User[]

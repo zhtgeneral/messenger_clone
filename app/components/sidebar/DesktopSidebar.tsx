@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 
-import useRoutes   from "@/app/hooks/useRoutes";
-import DesktopItem from "@/app/components/DesktopItem";
-import SettingsModal from "@/app/components/sidebar/SettingsModal"
-
-import { User } from "@prisma/client";
+import { User }       from "@prisma/client";
+import useRoutes      from "@/app/hooks/useRoutes";
+import DesktopItem    from "@/app/components/DesktopItem";
+import SettingsModal  from "@/app/components/sidebar/SettingsModal"
 import SettingsButton from "@/app/components/sidebar/SettingsButton";
 
 interface DesktopSidebarProps {

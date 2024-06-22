@@ -1,19 +1,20 @@
 'use client'
 
-import Modal from "@/app/components/Modal"
-import { User } from "@prisma/client";
-import axios from "axios";
+import { CldUploadButton } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Input from "@/app/components/inputs/Input";
+import axios from "axios";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Image from "next/image";
-import { CldUploadButton } from "next-cloudinary";
-import Button from "@/app/components/Button";
 import { TiUser } from "react-icons/ti";
 import { MdEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
+
+import { User } from "@prisma/client";
+import Input    from "@/app/components/inputs/Input";
+import Button    from "@/app/components/Button";
+import Modal     from "@/app/components/Modal"
 
 interface SettingsModalProps {
   currentUser: User

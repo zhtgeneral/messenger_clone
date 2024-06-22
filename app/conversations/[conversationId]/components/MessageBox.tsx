@@ -1,13 +1,14 @@
 'use client'
 
 import { useSession } from "next-auth/react";
-import { FullMessageType } from "@/app/types";
-import clsx from "clsx";
-import Avatar from "@/app/components/Avatar";
-import { format } from "date-fns";
-import Image from 'next/image'
 import { useState } from "react";
-import ImageModal from "@/app/conversations/[conversationId]/components/ImageModal";
+import { format } from "date-fns";
+import clsx from "clsx";
+import Image from 'next/image'
+
+import Avatar              from "@/app/components/Avatar";
+import { FullMessageType } from "@/app/types";
+import ImageModal          from "@/app/conversations/[conversationId]/components/ImageModal";
 
 interface MessageBoxProps {
   isLast?: boolean,

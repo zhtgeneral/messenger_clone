@@ -1,8 +1,14 @@
 'use client'
 
-import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
-import React, { Fragment, ReactNode } from 'react';
+import React, { Fragment } from 'react';
 import { IoClose } from 'react-icons/io5';
+
+import { 
+  Dialog, 
+  DialogPanel, 
+  Transition, 
+  TransitionChild 
+} from '@headlessui/react';
 
 interface ModalProps {
   isOpen?  : boolean;
