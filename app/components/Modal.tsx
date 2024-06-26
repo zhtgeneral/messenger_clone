@@ -30,7 +30,6 @@ const Modal: React.FC<ModalProps> = ({
         > 
         <div id="modalBackground" className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
         </TransitionChild>
-        {/* <div className='fixed inset-0 z-10 overflow-y-auto'> */}
         <div className='fixed inset-0 z-10'>
           <div className='flex min-h-full items-center justify-center m-4 text-center sm:p-0'>
             <TransitionChild as={Fragment} 
@@ -63,7 +62,6 @@ const Modal: React.FC<ModalProps> = ({
                     <IoClose className='w-6 h-6' id="closeButton"/>
                   </button>
                 </div>
-                {/* <div className="overflow-y-auto max-h-[70vh] pr-4"> */}
                 <div className="overflow-y-auto max-h-[70vh] pl-2 pr-4">
                   {children}
                 </div>
