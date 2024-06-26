@@ -69,10 +69,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='space-y-12'>
-          <div className='border-b border-gray-900/10 pb-12'>
+          <div className='border-b border-gray-900/10 pb-4'>
             <h2 className='text-base font-semibold leading-7 text-gray-900'>Profile</h2>
             <p className='mt-1 text-sm text-gray-600 leading-6'>Enter your public info</p>
-            <div className='mt-10 flex flex-col gap-y-8'> 
+            <div className='mt-6 flex flex-col gap-y-8'> 
               <Input 
                 disabled={isLoading} 
                 label="Name" 
@@ -130,7 +130,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
             </div>
           </div>
-          <div className='mt-6 flex items-center justify-end gap-x-6'>
+          <div className='mt-0 flex items-center justify-end gap-x-6'>
             <Button disabled={isLoading} secondary onClick={onClose}>
               Cancel
             </Button>
