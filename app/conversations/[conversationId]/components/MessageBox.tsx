@@ -51,7 +51,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               />
             </div>
           ): (
-            <div className='max-w-[150px] xs:max-w-[240px] sm:max-w-[360px] md:max-w-[500px]'>
+            <div className='max-w-[80px] xxs:max-w-[150px] xs:max-w-[240px] sm:max-w-[360px] md:max-w-[500px] lg:max-w-[500px] xl:max-w-[700px] xxl:max-w-[800px] xxxl:max-w-[1400px] xxxxl:max-w-[1400px]'>
               <div  
                 id='userMessage' 
                 className={clsx('rounded-lg py-2 px-3 break-words', isOwn ? 'bg-sky-500 text-white': 'bg-gray-100')}>
