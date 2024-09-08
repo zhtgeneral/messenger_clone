@@ -1,3 +1,6 @@
+// if only I knew how to pull this from my a$$
+// https://next-auth.js.org/getting-started/example
+
 import bcrypt from 'bcrypt'
 import { AuthOptions } from "next-auth"
 import { PrismaAdapter }   from "@next-auth/prisma-adapter"
