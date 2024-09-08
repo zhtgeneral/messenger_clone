@@ -29,7 +29,7 @@ describe('page functions', () => {
             id: string 
           }
         } 
-      }
+      };
 
       expect(intercept_t.response.statusCode).to.equal(200)
       expect(intercept_t.response.body).to.exist
