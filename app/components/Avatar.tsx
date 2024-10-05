@@ -11,11 +11,26 @@ interface AvatarProps {
   user?: User
 }
 
+/**
+ * This component renders the icon of the current user.
+ * 
+ * If the user is online, render a small green dot 
+ * at the upper right of the user's profile picture.
+ * 
+ * Otherwise render just the user's profile picture.
+ * 
+ * If the user doesn't have a profile picture (default behaviour for a new account)
+ * render a grey anonymous user icon instead.
+ * 
+ * @param user the user of which to display the profile picture 
+ * @returns component
+ */
 const Avatar: React.FC<AvatarProps> = ({
   user
 }) => {
-  const {members} = useActiveList()
-  const isActive = members.indexOf(user?.email!) != -1
+  const { members } = useActiveList();
+  const isActive = members.indexOf(user?.email!) != -1;
+
   return (
     <div className='relative'>
       <div className='relative inline-block rounded-full overflow-hidden h-11 w-11'>
@@ -23,7 +38,7 @@ const Avatar: React.FC<AvatarProps> = ({
           <Image alt='avatar' src={user?.image} fill sizes='3' />
         ): (
           <div className="flex items-center justify-center h-full w-full bg-gray-200">
-            <TiUser  size={42} className="text-gray-500"/>
+            <TiUser size={42} className="text-gray-500"/>
           </div>
         )}
       </div>
@@ -34,4 +49,4 @@ const Avatar: React.FC<AvatarProps> = ({
   )
 }
 
-export default Avatar
+export default Avatar;

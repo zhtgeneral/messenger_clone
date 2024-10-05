@@ -3,7 +3,26 @@ import useActiveList from "./useActiveList";
 import { Channel, Members } from "pusher-js";
 import { pusherClient } from "../libs/pusher";
 
-const useActiveChannel = () => {
+/**
+ * This function lets zustand keep track of the channel related callbacks
+ * 
+ * @requires pusherClient needs to be set up first
+ * 
+ * It sets the active channel using the name `presence-messenger` (is the name required by Pusher account?)
+ * and marks an activeChannel using `useState`.
+ * While an active channel exists,
+ * 
+ * Add handlers to Pusher so that:
+ * 
+ * Whenever a subsciber subscribes to a channel, zustand handles the new subscriber.
+ * 
+ * Whenever a member gets added, zustand handles adding the member.
+ * 
+ * Whenever a mamber gets removed, zustand handles removing the member.
+ * 
+ * Then clear the activeChannel so it can no longer be accessed.
+ */
+export default function useActiveChannel() {
   const {set, add, remove} = useActiveList();
   const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
   
@@ -11,24 +30,22 @@ const useActiveChannel = () => {
     let channel = activeChannel;
     if (!channel) {
       channel = pusherClient.subscribe('presence-messenger');
-      setActiveChannel(channel)
+      setActiveChannel(channel);
     }
     channel.bind('pusher:subscription_succeeded', (members: Members) => {
       const initialMembers: string[] = [];
       members.each((member: Record<string, any>) => initialMembers.push(member.id))
-      set(initialMembers)
+      set(initialMembers);
     })
 
-    channel.bind('pusher:member_added'  , (member: Record<string, any>) => add   (member.id))
-    channel.bind('pusher:member_removed', (member: Record<string, any>) => remove(member.id))
+    channel.bind('pusher:member_added'  , (member: Record<string, any>) => add   (member.id));
+    channel.bind('pusher:member_removed', (member: Record<string, any>) => remove(member.id));
     
     return () => {
       if (activeChannel) {
         pusherClient.unsubscribe('presence-messenger');
-        setActiveChannel(null)
+        setActiveChannel(null);
       }
     }
   }, [activeChannel, set, add, remove])
 }
-
-export default useActiveChannel

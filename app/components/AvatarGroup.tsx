@@ -6,9 +6,21 @@ import { TiUser } from "react-icons/ti";
 import { User } from "@prisma/client"
 
 interface AvatarGroupProps {
-  users: User[]
+  users: User[];
 }
 
+/**
+ * This component renders the profile pictures of a group chat.
+ * 
+ * It renders the profile pictures of the first 3 users in a triangle
+ * where each profile picture is small. 
+ * 
+ * The stacked profile pictures should appear reasonable 
+ * in proportion to a single profile picture.
+ * 
+ * @param users the users which to display the first 3 profile pictures
+ * @returns component
+ */
 const AvatarGroup: React.FC<AvatarGroupProps> = ({
   users
 }) => {
@@ -29,7 +41,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
             <Image alt='avatar' src={user?.image} fill />
           ): (
             <div className="flex items-center justify-center h-full w-full bg-gray-200">
-              <TiUser  size={30} className="text-gray-500"/>
+              <TiUser size={30} className="text-gray-500"/>
             </div>
           )}
           
