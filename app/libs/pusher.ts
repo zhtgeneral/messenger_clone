@@ -1,12 +1,22 @@
-// boilerplate-ass code from https://dashboard.pusher.com/apps/1821447/getting_started
-// dumbass pusher doesn't support new version of react for pusher-websocket-react-native
-// and pusher-js will be deprecated for react
+/**
+ * Shows how to get instances of Pusher
+ * @link https://dashboard.pusher.com/apps/1821447/getting_started
+ */
 
 import PusherServer from 'pusher'
 import PusherClient from 'pusher-js'
 
 
-// why this pusher? this one triggers events https://pusher.com/docs/channels/server_api/overview/
+/**
+ * Pusher server object that triggers events.
+ * 
+ * This link descibes how to use Pusher channels.
+ * @link https://pusher.com/docs/channels/server_api/overview/
+ * 
+ * @requires PUSHER_APP_ID from env
+ * @requires NEXT_PUBLIC_PUSHER_APP_KEY from env
+ * @requires PUSHER_SECRET from env
+ */
 export const pusherServer = new PusherServer({
   appId  : process.env.PUSHER_APP_ID!,
   key    : process.env.NEXT_PUBLIC_PUSHER_APP_KEY!,
@@ -15,8 +25,16 @@ export const pusherServer = new PusherServer({
   useTLS : true
 })
 
-// why this pusher? this ones accepts events. Next time use react-native-websockets instead of pusher-js
-// https://pusher.com/docs/channels/getting_started/react-native/
+/**
+ * Pusher client object that recieves events.
+ * 
+ * This link descibes how to use Pusher Client.
+ * @link https://pusher.com/docs/channels/getting_started/react-native/
+ * 
+ * Next time use react-native-websockets instead of pusher-js
+ * 
+ * @requires NEXT_PUBLIC_PUSHER_APP_KEY from env
+ */
 export const pusherClient = new PusherClient(
   process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
     channelAuthorization: {

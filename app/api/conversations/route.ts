@@ -3,6 +3,31 @@ import { NextResponse } from "next/server";
 import prisma from '@/app/libs/prismadb' 
 import { pusherServer } from "@/app/libs/pusher";
 
+
+/**
+ * This API handles creating new conversations.
+ * 
+ * It checks that the user who triggered the request has an `id` and `email`. 
+ * If not, throw a `401` error for unauthorized.
+ * 
+ * If the conversation data is marked as a group conversation 
+ * but there are no members, not enough members, or missing a conversation name
+ * throw a `400` error for invalid data.
+ * 
+ * If the conversation type is group, create conversation to backend
+ * and send updates for each subscriber on channel `conversation:new`. 
+ * 
+ * If the conversation type isn't group, proceed to get existing conversations.
+ * If a previous conversation is found, return the conversation without creating a new one.
+ * 
+ * If no previous conversation involving the 2 users is found, create a new conversation
+ * and send updates for each subscriber on channel `conversation:new`.
+ * 
+ * If any other error occurs, throw a `500` error for internal error.
+ * 
+ * @param request the request with `userId`, `isGroup`, `members`, and `name` in the body
+ * @returns a `200` response with the new conversation
+ */
 export async function POST(request: Request) {
   try {
     const currentUser = await getCurrentUser();
@@ -15,10 +40,12 @@ export async function POST(request: Request) {
     } = body;
 
     // good luck on the integration tests that Im sure i'll totally not skip
-    if (!currentUser?.id || !currentUser?.email) 
+    if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 })
-    if (isGroup && (!members || members.length < 2 || !name))
+    }
+    if (isGroup && (!members || members.length < 2 || !name)) {
       return new NextResponse('Invalid Data', { status: 400 })
+    }
     if (isGroup) {
       const newConversation = await prisma.conversation.create({
         data: {
@@ -65,8 +92,9 @@ export async function POST(request: Request) {
 
     const singleConversation = existingConversations[0];
 
-    if (singleConversation)
+    if (singleConversation) {
       return NextResponse.json(singleConversation);
+    }
 
     const newConversation = await prisma.conversation.create({
       data: {

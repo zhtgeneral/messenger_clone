@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-// in case I forget where this boilerplate ass code came from
+
 // https://pusher.com/docs/channels/server_api/authenticating-users/
 // https://pusher.com/docs/channels/using_channels/presence-channels/
 

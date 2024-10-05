@@ -1,4 +1,3 @@
-// if only I knew how to pull this from my a$$
 // https://next-auth.js.org/getting-started/example
 
 import bcrypt from 'bcrypt'
@@ -10,6 +9,27 @@ import CredentialsProvider from "next-auth/providers/credentials"
 
 import prisma from '@/app/libs/prismadb' 
 
+/**
+ * Creates the auth options used for logging users in.
+ * 
+ * Options specified prisma as adapter.
+ * 
+ * Github, google and email are set as providers.
+ * 
+ * For email authentication, the email and password are required.
+ * If missing, throw an error.
+ * 
+ * If user is missing from backend, throw an error.
+ * 
+ * If the password is incorrect, throw an error.
+ * 
+ * @requires NEXTAUTH_SECRET variable from env file
+ * @requires GITHUB_ID variable from env file
+ * @requires GITHUB_SECRET variable from env file (gotten from github.com/settings/developers)
+ * @requires GOOGLE_CLIENT_ID variable from env file
+ * @requires GOOGLE_CLIENT_SECRET variable from env file (gotten from GCC)
+ * 
+ */
 const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -28,15 +48,21 @@ const authOptions: AuthOptions = {
         password: {label: 'password', type: 'password'}
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) throw new Error('Invalid Credentials');
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Invalid Credentials');
+        }
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
           }
         });
-        if (!user || !user?.hashedPassword) throw new Error('Invalid Credentials');
+        if (!user || !user?.hashedPassword) {
+          throw new Error('Invalid Credentials');
+        }
         const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword)
-        if (!isCorrectPassword) throw new Error('Invalid Credentials');
+        if (!isCorrectPassword) {
+          throw new Error('Invalid Credentials');
+        }
         return user;
       }
     })

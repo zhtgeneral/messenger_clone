@@ -1,12 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 
-
-// I wish I knew where to get this from (to copy and paste of course)
-// https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client
+/**
+ * Creates prisma as a global variable that can be accessed anywhere.
+ * 
+ * @link https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client
+ */
 declare global {
   var prisma: PrismaClient | undefined
 }
 
+/**
+ * Single object of prisma client
+ */
 const client = globalThis.prisma || new PrismaClient();
 if (process.env.NODE_ENV != 'production') globalThis.prisma = client;
 
