@@ -4,7 +4,12 @@ import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/re
 import { Fragment } from "react"
 import { ClipLoader } from 'react-spinners'
 
-
+/**
+ * This component renders a spinner that is displayed when a page is loading.
+ * 
+ * The spinner appears above all the elements and applies an opaque filter over the screen.
+ * @returns component
+ */
 const LoadingModal = () => {
   return (
     <Transition show as={Fragment}>

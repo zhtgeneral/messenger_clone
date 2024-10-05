@@ -2,21 +2,33 @@
 
 import { useState } from "react";
 
-import { User }       from "@prisma/client";
-import useRoutes      from "@/app/hooks/useRoutes";
-import DesktopItem    from "@/app/components/DesktopItem";
-import SettingsModal  from "@/app/components/sidebar/SettingsModal"
+import { User } from "@prisma/client";
+import useRoutes from "@/app/hooks/useRoutes";
+import DesktopItem from "@/app/components/DesktopItem";
+import SettingsModal from "@/app/components/sidebar/SettingsModal"
 import SettingsButton from "@/app/components/sidebar/SettingsButton";
 
 interface DesktopSidebarProps {
   currentUser: User
 }
 
+/**
+ * This component renders the sidebar and the available actions for desktop.
+ * 
+ * The sidebar appears on the left of the screen and displays
+ * a button to navigate to the conversations,
+ * a button to navigate to users,
+ * a button to logout,
+ * and a settings button.
+ * 
+ * @param currentUser the authenticated user
+ * @returns component
+ */
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   currentUser
 }) => {
-  const routes              = useRoutes();
-  const [isOpen, setIsOpen] = useState (false);
+  const routes = useRoutes();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -26,11 +38,11 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
           <ul role="list" className="flex flex-col items-center space-y-2" >
             {routes.map((item) => (
               <DesktopItem 
-                key    ={item.label}
-                href   ={item.href}
-                label  ={item.label}
-                icon   ={item.icon}
-                active ={item.active}
+                key={item.label}
+                href={item.href}
+                label={item.label}
+                icon={item.icon}
+                active={item.active}
                 onClick={item.onClick}
               />
             ))}
@@ -44,4 +56,4 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   )
 }
 
-export default DesktopSidebar
+export default DesktopSidebar;

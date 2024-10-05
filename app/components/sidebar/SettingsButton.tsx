@@ -5,6 +5,14 @@ interface SettingsButtonProps {
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+/**
+ * This component renders a settings icon.
+ * 
+ * When clicked on, it opens the settings modal where users can change their info.
+ * 
+ * @param setModalIsOpen determines if the settings modal should open
+ * @returns component
+ */
 const SettingsButton: React.FC<SettingsButtonProps> = ({
   setModalIsOpen
 }) => {

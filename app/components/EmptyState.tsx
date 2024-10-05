@@ -1,3 +1,11 @@
+
+/**
+ * This component is displayed when the user hasn't selected a conversation on desktop.
+ * 
+ * It renders a light grey background with the text 'Select a Chat or start a New Conversation'
+ * 
+ * @returns component
+ */
 const EmptyState = () => {
   return (
     <div className='px-4 py-10 sm:px-6 lg:px-8 h-full flex justify-center items-center bg-gray-100'>
@@ -10,4 +18,4 @@ const EmptyState = () => {
   )
 }
 
-export default EmptyState
+export default EmptyState;

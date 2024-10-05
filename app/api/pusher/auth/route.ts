@@ -16,19 +16,22 @@ export async function POST(
   const session = await getServerSession(
     request as unknown as NextApiRequest, 
     response as unknown as NextApiResponse, 
-    authOptions)
-  if (!session?.user?.email)
-    return new NextResponse('Unauthorized', { status: 401 })
+    authOptions
+  );
+  if (!session?.user?.email) {
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
 
-  const body = await request.json()
+  const body = await request.json();
   const socketId = body.socket_id;
   const channel = body.channel_name;
   const data = {
     user_id: session.user.email
   }
-  const authResponse = pusherServer.authorizeChannel(socketId, channel, data)
-  return NextResponse.json(authResponse)
+  const authResponse = pusherServer.authorizeChannel(socketId, channel, data);
+  return NextResponse.json(authResponse);
 }
+
 
 export async function GET(
   request: NextRequest,
@@ -37,18 +40,20 @@ export async function GET(
   const session = await getServerSession(
     request as unknown as NextApiRequest, 
     response as unknown as NextApiResponse, 
-    authOptions)
-  if (!session?.user?.email)
-    return new NextResponse('Unauthorized', { status: 401 })
+    authOptions
+  )
+  if (!session?.user?.email) {
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
 
-  const body = await request.json()
+  const body = await request.json();
   const socketId = body.socket_id;
   const channel = body.channel_name;
   const data = {
     user_id: session.user.email
   }
   const authResponse = pusherServer.authorizeChannel(socketId, channel, data)
-  return NextResponse.json(authResponse)
+  return NextResponse.json(authResponse);
 }
 
 // USE PAGES API ROUTE

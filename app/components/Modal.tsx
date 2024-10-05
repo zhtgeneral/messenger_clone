@@ -16,6 +16,20 @@ interface ModalProps {
   children?: React.ReactNode;
 }
 
+/**
+ * This component renders a general use modal with styling.
+ * 
+ * When the modal is opened, it fades into the screen.
+ * The background is opaque and darkened.
+ * 
+ * Clicking on the `x` in the top right 
+ * or clicking the backgound closes the modal.
+ * 
+ * @param isOpen determines if the modal should render
+ * @param onClose behavior for closing the modal
+ * @param children child components to render inside the modal
+ * @returns component
+ */
 const Modal: React.FC<ModalProps> = ({ 
   isOpen,
   onClose,

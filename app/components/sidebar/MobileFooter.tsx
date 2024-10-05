@@ -13,6 +13,18 @@ interface MobileFooterProps {
   currentUser: User
 }
 
+/**
+ * This component renders the mobile footer and the available actions.
+ * 
+ * The footer renders at the bottom of the window and displays
+ * a settings button,
+ * a button to navigate to conversations,
+ * a button to navigate to users,
+ * and a button to logout.
+ * 
+ * @param currentUser the authenticated user
+ * @returns component
+ */
 const MobileFooter: React.FC<MobileFooterProps> = ({
   currentUser
 }) => {
@@ -28,10 +40,10 @@ const MobileFooter: React.FC<MobileFooterProps> = ({
         <SettingsButton setModalIsOpen={setModalIsOpen} />
         {routes.map((route) => (
           <MobileItem 
-            key    ={route.label} 
-            href   ={route.href}
-            active ={route.active}
-            icon   ={route.icon}
+            key={route.label} 
+            href={route.href}
+            active={route.active}
+            icon={route.icon}
             onClick={route.onClick}
           />
         ))}

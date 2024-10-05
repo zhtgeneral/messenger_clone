@@ -18,10 +18,33 @@ import Modal     from "@/app/components/Modal"
 
 interface SettingsModalProps {
   currentUser: User
-  isOpen?    : boolean,
-  onClose    : () => void;
+  isOpen?: boolean,
+  onClose: () => void;
 }
 
+/**
+ * This component allows users to change their public info.
+ * @requires user needs to be authenticated
+ * @requires NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET upload preset from Cloudinary
+ * 
+ * It allows a user
+ * to change their name,
+ * to change their profile photo,
+ * or to reset their profile photo to anonymous
+ * and displays their currently up-to-date info.
+ * 
+ * Display name can be changed by text.
+ * 
+ * If a user edits their profile picture, it opens a 
+ * Cloudinary modal that handles image uploads.
+ * 
+ * At the bottom, it renders a cancel and confirm button.
+ * 
+ * @param currentUser the authenticated user
+ * @param isOpen determines if the modal renders
+ * @param onClose determines the behavior for closing the modal
+ * @returns component
+ */
 const SettingsModal: React.FC<SettingsModalProps> = ({
   currentUser,
   isOpen,
@@ -38,24 +61,41 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     formState:{
       errors
     }
-
   }  = useForm<FieldValues>({
     defaultValues: {
-      name : currentUser?.name,
+      name: currentUser?.name,
       image: currentUser?.image
     }
   })
 
   const image = watch('image');
-  const handleUpload = (result: any) => {
+
+  function handleUpload(result: any): void {
     setValue('image', result?.info?.secure_url, {
       shouldValidate: true
     });
   }
-  const removeImage = () => {
-    setValue('image', null)
+
+  function removeImage(): void {
+    setValue('image', null);
   }
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  
+  /**
+   * This helper function handles updating a user's info.
+   * 
+   * First it sets state as loading.
+   * 
+   * Then it calls the `POST` method with the data to `/api/settings`
+   * where the user's info is updated.
+   * If successful, refresh the page and close the modal.
+   * Otherwise notify the user that an error has occured 
+   * with a toaster displaying 'Something went wrong'.
+   * 
+   * Then remove the loading state.
+   * 
+   * @param data the data of the updated user
+   */
+  function onSubmit(data): void {
     setIsLoading(true);
     axios.post('/api/settings', data)
     .then(() => {
@@ -63,15 +103,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       onClose();
     })
     .catch(() => toast.error('Something Went Wrong'))
-    .finally(() => setIsLoading(false))
+    .finally(() => setIsLoading(false));
   }
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='space-y-12'>
           <div className='border-b border-gray-900/10 pb-4'>
-            <h2 className='text-base font-semibold leading-7 text-gray-900'>Profile</h2>
-            <p className='mt-1 text-sm text-gray-600 leading-6'>Enter your public info</p>
+            <h2 className='text-base font-semibold leading-7 text-gray-900'>
+              Profile
+            </h2>
+            <p className='mt-1 text-sm text-gray-600 leading-6'>
+              Enter your public info
+            </p>
             <div className='mt-6 flex flex-col gap-y-8'> 
               <Input 
                 disabled={isLoading} 
@@ -143,4 +187,4 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     </Modal>
   )
 }
-export default SettingsModal
+export default SettingsModal;

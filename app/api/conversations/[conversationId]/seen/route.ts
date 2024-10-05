@@ -12,7 +12,7 @@ interface IParams {
  * @requires params needs to contain the `conversationId`.
  * 
  * It checks if the current user has an `id` and `email`.
- * If not, throw a `403` error for unauthorized.
+ * If not, throw a `401` error for unauthorized.
  * 
  * It finds the conversation from the backed.
  * It the conversation can't be found, it throws a `400` error for invalid id.
