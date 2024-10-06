@@ -101,7 +101,7 @@ Promise<NextResponse> {
     
     // mark message as seen
     await pusherServer
-    .trigger(conversationId!, 'message:update', updatedMessage.id)
+    .trigger(conversationId!, 'message:update', updatedMessage.id) 
     .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE'));
     
     return NextResponse.json(updatedMessage);

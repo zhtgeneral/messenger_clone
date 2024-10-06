@@ -39,7 +39,6 @@ export async function POST(request: Request) {
       name
     } = body;
 
-    // good luck on the integration tests that Im sure i'll totally not skip
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 })
     }
@@ -66,9 +65,11 @@ export async function POST(request: Request) {
           users: true
         }
       });
-      newConversation.users.forEach((user) => {
-        if (user.email)
-          pusherServer.trigger(user.email, 'conversation:new', newConversation.id)
+      // TODO improve performance by loading all promises then await all
+      newConversation.users.forEach(async (user) => {
+        if (user.email) {
+          await pusherServer.trigger(user.email, 'conversation:new', newConversation.id);
+        }
       })
       return NextResponse.json(newConversation);
     }
@@ -115,9 +116,11 @@ export async function POST(request: Request) {
     })
 
     // display new conversations on the sidebar
+    // TODO improve performance by loading all promises then await all
     newConversation.users.forEach(async (user) => {
-      if (user.email)
-        await pusherServer.trigger(user.email, 'conversation:new', newConversation.id)
+      if (user.email) {
+        await pusherServer.trigger(user.email, 'conversation:new', newConversation.id);
+      }
     })
 
     return NextResponse.json(newConversation);

@@ -1,59 +1,46 @@
-import authOptions from "@/app/libs/authOptions";
+import getSession from "@/app/actions/getSession";
 import { pusherServer } from "@/app/libs/pusher";
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 
-// https://pusher.com/docs/channels/server_api/authenticating-users/
-// https://pusher.com/docs/channels/using_channels/presence-channels/
+/**
+ * This API endpoint handles authorizing channels to authenticated users.
+ * @requires PusherClient object needs to be created and call this endpoint.
+ * 
+ * It checks if the current user is logged in. 
+ * If not return a `401` response for 'Unauthorized'.
+ * 
+ * Otherwise it gets the entries from the request 
+ * using `application/x-www-form-urlencoded` format
+ * and authorizes the current user to recieve updates from channels.
+ * 
+ * If any other error occurs, console log it under `ERROR_PUSHER_AUTH_POST`
+ * and return a `500` response for 'Internal error'.
+ * 
+ * @link https://pusher.com/docs/channels/server_api/authorizing-users/
+ * 
+ * @param request the request called by PusherClient
+ * @returns a `200` response with the authResponse
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getSession(); 
+    if (!session?.user?.email) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
 
-// ends up causing error because NextRequest is needed, not NextApiRequest
-export async function POST(
-  request: NextRequest,
-  response: NextResponse
-) {
-  const session = await getServerSession(
-    request as unknown as NextApiRequest, 
-    response as unknown as NextApiResponse, 
-    authOptions
-  );
-  if (!session?.user?.email) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    const rawBody = await request.text();
+    const body = Object.fromEntries(new URLSearchParams(rawBody));
+  
+    const socketId = body.socket_id;
+    const channel = body.channel_name;
+    const data = {
+      user_id: session.user.email
+    };
+    const authResponse = pusherServer.authorizeChannel(socketId, channel, data);
+    return NextResponse.json(authResponse);
+  } catch (error: unknown) {
+    console.log(error + "ERROR_PUSHER_AUTH_POST");
+    return new NextResponse("Internal error", { status: 500 });
   }
-
-  const body = await request.json();
-  const socketId = body.socket_id;
-  const channel = body.channel_name;
-  const data = {
-    user_id: session.user.email
-  }
-  const authResponse = pusherServer.authorizeChannel(socketId, channel, data);
-  return NextResponse.json(authResponse);
 }
-
-
-export async function GET(
-  request: NextRequest,
-  response: NextResponse
-) {
-  const session = await getServerSession(
-    request as unknown as NextApiRequest, 
-    response as unknown as NextApiResponse, 
-    authOptions
-  )
-  if (!session?.user?.email) {
-    return new NextResponse('Unauthorized', { status: 401 });
-  }
-
-  const body = await request.json();
-  const socketId = body.socket_id;
-  const channel = body.channel_name;
-  const data = {
-    user_id: session.user.email
-  }
-  const authResponse = pusherServer.authorizeChannel(socketId, channel, data)
-  return NextResponse.json(authResponse);
-}
-
-// USE PAGES API ROUTE

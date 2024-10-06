@@ -4,7 +4,7 @@ import { Channel, Members } from "pusher-js";
 import { pusherClient } from "../libs/pusher";
 
 /**
- * This function lets zustand keep track of the channel related callbacks
+ * This function lets zustand keep track of prescence channels
  * 
  * @requires pusherClient needs to be set up first
  * 
@@ -14,17 +14,19 @@ import { pusherClient } from "../libs/pusher";
  * 
  * Add handlers to Pusher so that:
  * 
- * Whenever a subsciber subscribes to a channel, zustand handles the new subscriber.
+ * Whenever a subscriber is present, zustand handles all the members.
  * 
- * Whenever a member gets added, zustand handles adding the member.
+ * Whenever a member gets added to prescence, zustand handles adding the member.
  * 
- * Whenever a mamber gets removed, zustand handles removing the member.
+ * Whenever a mamber gets removed from prescence, zustand handles removing the member.
+ * 
+ * @link https://pusher.com/docs/channels/using_channels/presence-channels/
  * 
  * Then clear the activeChannel so it can no longer be accessed.
  */
 export default function useActiveChannel() {
   const {set, add, remove} = useActiveList();
-  const [activeChannel, setActiveChannel] = useState<Channel | null>(null)
+  const [activeChannel, setActiveChannel] = useState<Channel | null>(null);
   
   useEffect(() => {
     let channel = activeChannel;
@@ -38,7 +40,7 @@ export default function useActiveChannel() {
       set(initialMembers);
     })
 
-    channel.bind('pusher:member_added'  , (member: Record<string, any>) => add   (member.id));
+    channel.bind('pusher:member_added', (member: Record<string, any>) => add(member.id));
     channel.bind('pusher:member_removed', (member: Record<string, any>) => remove(member.id));
     
     return () => {
@@ -47,5 +49,5 @@ export default function useActiveChannel() {
         setActiveChannel(null);
       }
     }
-  }, [activeChannel, set, add, remove])
+  }, [activeChannel, set, add, remove]);
 }
