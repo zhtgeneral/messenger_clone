@@ -39,64 +39,86 @@ declare namespace Cypress {
   interface cy {}
   interface Chainable {
     /**
-     * Registers a new user from user's view at '/'
+     * Registers a new user from user's view at `/`
+     * @requires app needs to be built 
+     * @requires email needs to be an email not seen in the database
      *
-     * @param name     - The name of the person
-     * @param email    - The email of the person
-     * @param password - The password of the person
+     * @param name The name of the person
+     * @param email The email of the person
+     * @param password The password of the person
      */
-    signup     (name: string, email: string, password: string): void;
+    signup(name: string, email: string, password: string): void;
     /**
-     * Registers a new user from user's view at '/' but leaves a field blank
+     * Registers a new user from user's view at `/` but leaves a field blank
+     * @requires app needs to be built
      *
-     * @param name     - The name of the person
-     * @param email    - The email of the person
-     * @param password - The password of the person
-     * @param empty    - The field to leave blank
+     * @param name The name of the person
+     * @param email The email of the person
+     * @param password The password of the person
+     * @param empty The field to leave blank
      */
     signupEmpty(name: string, email: string, password: string, empty: string): void;
     /**
-     * Logs the test user in at '/'
+     * Logs the test user in at `/`
+     * @requires app needs to be built
+     * @requires user needs to have valid account in database.
      *
-     * @param email    - The email of the person
-     * @param password - The password of the person
+     * @param email The email of the user
+     * @param password The password of the user
      */
     login(email: string, password: string): void;
-    /** Navigates to '/conversations' by first logging in with test account*/ 
+    /** 
+     * Navigates to `/conversations` by first logging in with test account
+     * @requires app needs to have route `/conversations`
+     */ 
     gotoConversations(viewPort: string): void;
   }
 }
 
-Cypress.Commands.add('signup', (name: string, email: string, password: string) => {
+Cypress.Commands.add('signup', (
+  name: string, 
+  email: string, 
+  password: string
+): void => {
   cy.visit('/');
   cy.contains('Create an account').click();
-  cy.get('input[id="name"]')    .type(name);
-  cy.get('input[id="email"]')   .type(email);
+  cy.get('input[id="name"]').type(name);
+  cy.get('input[id="email"]').type(email);
   cy.get('input[id="password"]').type(password);
   cy.get('button[type="submit"]').click();
 })
 
-Cypress.Commands.add('signupEmpty', (name: string, email: string, password: string, empty: string) => {
+Cypress.Commands.add('signupEmpty', (
+  name: string, 
+  email: string, 
+  _password: string, 
+  empty: string
+): void => {
   cy.visit('/');
   cy.contains('Create an account').click();
-  cy.get('input[id="name"]'    ).type((empty == 'name'    )? 'a{backspace}': name); 
-  cy.get('input[id="email"]'   ).type((empty == 'email'   )? 'a{backspace}': email); 
+  cy.get('input[id="name"]').type((empty == 'name')? 'a{backspace}': name); 
+  cy.get('input[id="email"]').type((empty == 'email')? 'a{backspace}': email); 
   cy.get('input[id="password"]').type((empty == 'password')? 'a{backspace}': name); 
   cy.get('button[type="submit"]').click();
 })
 
-Cypress.Commands.add('login', (email: string, password: string) => {
+Cypress.Commands.add('login', (
+  email: string,
+  password: string
+): void => {
   cy.intercept('GET', `${Cypress.env('NEXT_PUBLIC_DOMAIN')}/api/auth/session`).as('auth')
   cy.visit('/')
-  cy.get('input[id="email"]'    ).click().type(email);
-  cy.get('input[id="password"]' ).click().type(password);
+  cy.get('input[id="email"]').click().type(email);
+  cy.get('input[id="password"]').click().type(password);
   cy.get('button[type="submit"]').click(); 
-  cy.wait('@auth')
+  cy.wait('@auth');
 })
 
-Cypress.Commands.add('gotoConversations', (viewPort: string): void => {
-  const testEmail    = Cypress.env('TEST_EMAIL')
-  const testPassword = Cypress.env('TEST_PASSWORD')
-  cy.login(testEmail, testPassword)
-  cy.get(`a#${viewPort}Item[href="/conversations"]`).click()
+Cypress.Commands.add('gotoConversations', (
+  viewPort: string
+): void => {
+  const testEmail = Cypress.env('TEST_EMAIL');
+  const testPassword = Cypress.env('TEST_PASSWORD');
+  cy.login(testEmail, testPassword);
+  cy.get(`a#${viewPort}Item[href="/conversations"]`).click();
 })
