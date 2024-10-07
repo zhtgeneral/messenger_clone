@@ -24,6 +24,30 @@ interface ProfileDrawerProps {
   onClose: () => void;
 }
 
+/**
+ * TODO refactor
+ * This component displays actions and info of the users in the conversation.
+ * 
+ * If the conversation is 1 on 1, it renders 
+ * the profile picture of the other user, and their active status.
+ * 
+ * Otherwise it renders the group profile pictures,
+ * the conversation name, and the number of users.
+ * 
+ * It renders a delete button that lets a user delete the conversation.
+ * 
+ * It renders each of the users emails for 1 on 1 conversations.
+ * 
+ * The drawer opens with a smooth animation.
+ * 
+ * The background of the drawer is dimmed.
+ * 
+ * When the user clicks on the `x` button or outside the drawer,
+ * it should close with an animation.
+ * 
+ * @param param0 
+ * @returns 
+ */
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   data,
   isOpen,
@@ -40,6 +64,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     return data.name || otherUser.name
   }, [data, otherUser])
 
+  // TODO display the user as active using Pusher Prescence channels
   const statusText = useMemo(() => {
     if (data.isGroup) 
       return `${data.users.length} members`

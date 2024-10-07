@@ -2,20 +2,32 @@ import clsx from "clsx"
 import Link from "next/link"
 
 interface MobileItemProps {
-  href    : string,
-  active? : boolean,
-  icon    : any,
+  href: string,
+  active?: boolean,
+  icon: any,
   onClick?: () => void
 }
 
+/**
+ * This component displays the actions on the mobile footer.
+ * 
+ * When the mobile item is clicked, it triggers the `onClick`
+ * @param href the link to redirect to
+ * @param active optional determines if the item is highlighted
+ * @param icon the icon displayed on the item
+ * @param onClick optional the behaviour of the item when clicked
+ * @returns component
+ */
 const MobileItem: React.FC<MobileItemProps> = ({
   href,
   active, 
   icon: Icon,
   onClick,
 }) => {
-  const handleClick = () => {
-    if (onClick) return onClick()
+  function handleClick() {
+    if (onClick) {
+      return onClick();
+    }
   }
   return (
     <Link 
@@ -32,4 +44,4 @@ const MobileItem: React.FC<MobileItemProps> = ({
   )
 }
 
-export default MobileItem
+export default MobileItem;

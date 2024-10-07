@@ -5,21 +5,38 @@ import toast from "react-hot-toast";
 import { FiAlertTriangle } from 'react-icons/fi'
 
 import { DialogTitle } from "@headlessui/react";
-import Button          from "@/app/components/Button";
-import Modal           from "@/app/components/Modal";
+import Button from "@/app/components/Button";
+import Modal from "@/app/components/Modal";
 import useConversation from "@/app/hooks/useConversation";
 
 interface ConfirmModalProps {
-  isOpen?  : boolean;
-  onClose  : () => void;
+  isOpen?: boolean;
+  onClose: () => void;
 }
 
+/**
+ * This component renders a modal that lets the user delete a conversation.
+ * 
+ * It renders a warning icon and message.
+ * 
+ * It renders a cancel and delete button.
+ * 
+ * When the delete button is clicked, it deletes the conversation 
+ * and sends the user to `/conversations`.
+ * 
+ * It allows the user to close the modal by 
+ * clicking on the `x` button, outside the modal, or the cancel button.
+ * 
+ * @param isOpen determines if the modal gets rendered
+ * @param onClose the behaviour of closing the modal 
+ * @returns component
+ */
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const router                    = useRouter();
-  const {conversationId}          = useConversation();
+  const router = useRouter();
+  const { conversationId } = useConversation();
   const [isLoading, setIsLoading] = useState(false);
 
   const onDelete = useCallback(() => {
@@ -28,11 +45,13 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     .then(() => {
       onClose();
       router.push('/conversations');
-      router.refresh()
+      router.refresh();
     })
     .catch(() => toast.error('Something went wrong'))
-    .finally(() => setIsLoading(false))
-  }, [conversationId, router, onClose])
+    .finally(() => setIsLoading(false));
+  }, [conversationId, router, onClose]);
+
+  const deleteConfirmMessage = 'Are you sure you want to delete this conversation? This action cannot be undone.';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -45,13 +64,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             Delete conversation
           </DialogTitle>
           <div className="mt-2">
-            <p>
-              Are you sure you want to delete this conversation? This action cannot be undone.
-            </p>
+            <p>{deleteConfirmMessage}</p>
           </div>
         </div>
       </div>
-      {/* <div className='mt-5 sm:mt-4 sm:flex sm:flex-row-reverse'> */}
       <div className='mt-5 sm:mt-4 flex flex-row-reverse'>
         <Button disabled={isLoading} onClick={onDelete} danger>
           Delete

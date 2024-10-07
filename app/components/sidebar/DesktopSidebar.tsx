@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import { User } from "@prisma/client";
 import useRoutes from "@/app/hooks/useRoutes";
-import DesktopItem from "@/app/components/DesktopItem";
-import SettingsModal from "@/app/components/sidebar/SettingsModal"
-import SettingsButton from "@/app/components/sidebar/SettingsButton";
+import DesktopItem from "@/app/components/sidebar/items/DesktopItem";
+import SettingsModal from "@/app/components/sidebar/settings/SettingsModal"
+import SettingsButton from "@/app/components/sidebar/settings/SettingsButton";
 
 interface DesktopSidebarProps {
   currentUser: User

@@ -14,4 +14,4 @@ const ActiveStatus = () => {
   )
 }
 
-export default ActiveStatus
+export default ActiveStatus;

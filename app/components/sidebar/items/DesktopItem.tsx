@@ -2,13 +2,25 @@ import clsx from "clsx";
 import Link from "next/link";
 
 interface DesktopItemProps {
-  href    : string,
-  label   : string,
-  icon    : any,
-  active? : boolean,
+  href: string,
+  label: string,
+  icon: any,
+  active?: boolean,
   onClick?: () => void
 }
 
+/**
+ * This component renders the actions for desktop sidebar.
+ * 
+ * When this item is clicked, it triggers redirects the user to `href` and performs `onClick`.
+ * 
+ * @param href the link to redirect the user to
+ * @param label the label of the item
+ * @param icon the icon to display on the item
+ * @param active optional determines if the item is highlighted
+ * @param active optional behaviour of item when clicked on
+ * @returns 
+ */
 const DesktopItem: React.FC<DesktopItemProps> = ({
   href,   
   label,  
@@ -16,8 +28,10 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
   active,
   onClick
 }) => {
-  const handleClick = () => {
-    if (onClick) return onClick();
+  function handleClick()  {
+    if (onClick) {
+      return onClick();
+    }
   }
   return (
     <li onClick={handleClick}>
@@ -35,5 +49,5 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
     </li>
   )
 }
-export default DesktopItem
+export default DesktopItem;
 

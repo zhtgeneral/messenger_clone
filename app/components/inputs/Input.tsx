@@ -4,16 +4,24 @@ import clsx from "clsx";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 
 interface InputProps {
-  label    : string;
-  id       : string;
-  type?    : string;
+  label: string;
+  id: string;
+  type?: string;
   required?: boolean;
   disabled?: boolean;
-  register : UseFormRegister<FieldValues>;
-  errors   : FieldErrors
+  register: UseFormRegister<FieldValues>;
+  errors: FieldErrors
 }
 
-const Input: React.FC<InputProps> = ({label, id, type, disabled, required, register, errors}) => {
+const Input: React.FC<InputProps> = ({
+  label, 
+  id, 
+  type, 
+  disabled, 
+  required, 
+  register, 
+  errors
+}) => {
   return (
     <div>
       <label className='block text-sm font-medium leading-6 text-gray-900' htmlFor={id}>

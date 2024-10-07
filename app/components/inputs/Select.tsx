@@ -4,13 +4,22 @@ import ReactSelect from "react-select";
 
 interface SelectProps {
   disabled?: boolean;
-  label    : string;
-  onChange :  (value: Record<string, any>) => void;
-  options  : Record<string, any>[];
-  value    : Record<string, any>
+  label: string;
+  onChange:  (value: Record<string, any>) => void;
+  options: Record<string, any>[];
+  value: Record<string, any>
 }
 
-
+/**
+ * This component renders a selector that allows the user to select from a dropdown.
+ * 
+ * @param disabled optional determines if the select is displayed as diabled 
+ * @param label the label of the select
+ * @param onChange the behaviour of the select when an option is selected
+ * @param options the set of possible values to select from
+ * @param value the values that correspond to the selectable items
+ * @returns component
+ */
 const Select: React.FC<SelectProps> = ({
   disabled,
   label,

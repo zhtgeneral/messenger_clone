@@ -5,9 +5,9 @@ import { useState } from "react"
 import { User }        from "@prisma/client";
 import useConversation from "@/app/hooks/useConversation";
 import useRoutes       from "@/app/hooks/useRoutes";
-import MobileItem      from "@/app/components/MobileItem";
-import SettingsModal   from "@/app/components/sidebar/SettingsModal";
-import SettingsButton  from '@/app/components/sidebar/SettingsButton';
+import MobileItem      from "@/app/components/sidebar/items/MobileItem";
+import SettingsModal   from "@/app/components/sidebar/settings/SettingsModal";
+import SettingsButton  from '@/app/components/sidebar/settings/SettingsButton';
 
 interface MobileFooterProps {
   currentUser: User

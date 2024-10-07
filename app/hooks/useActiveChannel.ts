@@ -4,12 +4,13 @@ import { Channel, Members } from "pusher-js";
 import { pusherClient } from "../libs/pusher";
 
 /**
- * This function lets zustand keep track of prescence channels
+ * This function lets zustand keep track of authorized users in prescence channels
  * 
  * @requires pusherClient needs to be set up first
  * 
  * It sets the active channel using the name `presence-messenger` (is the name required by Pusher account?)
  * and marks an activeChannel using `useState`.
+ * 
  * While an active channel exists,
  * 
  * Add handlers to Pusher so that:
@@ -18,7 +19,7 @@ import { pusherClient } from "../libs/pusher";
  * 
  * Whenever a member gets added to prescence, zustand handles adding the member.
  * 
- * Whenever a mamber gets removed from prescence, zustand handles removing the member.
+ * Whenever a member gets removed from prescence, zustand handles removing the member.
  * 
  * @link https://pusher.com/docs/channels/using_channels/presence-channels/
  * 

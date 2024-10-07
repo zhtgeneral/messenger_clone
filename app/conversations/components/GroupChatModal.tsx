@@ -7,17 +7,37 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { User } from "@prisma/client";
-import Button   from "@/app/components/Button";
-import Modal    from "@/app/components/Modal"
-import Input    from "@/app/components/inputs/Input";
-import Select   from "@/app/components/inputs/Select";
+import Button from "@/app/components/Button";
+import Modal from "@/app/components/Modal"
+import Input from "@/app/components/inputs/Input";
+import Select from "@/app/components/inputs/Select";
 
 interface GroupChatModalProps {
-  users  : User[]
+  users : User[],
   isOpen?: boolean,
   onClose: () => void;
 }
 
+/**
+ * This component lets a user create a 1 on 1 or group chat.
+ * 
+ * It renders an input for the name of the group chat.
+ * 
+ * It renders a selector for the people in the chat.
+ * 
+ * It renders a cancel and create button.
+ * When the cancel button is clicked, it calls `onClose` and closes the modal.
+ * When the create button is pressed, it creates a group chat to by sending a POST request to `/api/conversations`
+ * 
+ * It renders the moval on a background that is dimmed.
+ * 
+ * It allows the user to exit by clicking on the `x` button in the top right,
+ * clicking outside the modal, or pressing the ESC key.
+ * @param users the users that can be selected for the conversation
+ * @param isOpen determines if the modal is rendered
+ * @param onClose the behaviour of when the modal is closed
+ * @returns component
+ */
 const GroupChatModal: React.FC<GroupChatModalProps> = ({
   users,
   isOpen,
@@ -40,19 +60,18 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
     }
   })
 
-  const members = watch('members')
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const members = watch('members');
+  function onSubmit(data: any) {
     setIsLoading(true);
     axios.post('/api/conversations', {
       ...data,
       isGroup: true,
-    })
-     .then(() => {
-        router.refresh()
-        onClose()
+    }).then(() => {
+        router.refresh();
+        onClose();
       })
      .catch(() => toast.error('Something went wrong'))
-     .finally(() => setIsLoading(false))
+     .finally(() => setIsLoading(false));
   }
 
   return (
@@ -103,4 +122,4 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
   )
 }
 
-export default GroupChatModal
+export default GroupChatModal;

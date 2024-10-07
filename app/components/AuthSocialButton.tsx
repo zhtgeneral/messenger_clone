@@ -12,7 +12,7 @@ interface AuthSocialButtonProps {
  * 
  * @param icon The icon displayed for this social login method
  * @param onClick the social login method
- * @returns 
+ * @returns component
  */
 const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
   icon: Icon, 
