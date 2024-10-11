@@ -6,9 +6,14 @@ import { useMemo } from "react";
 import { signOut } from "next-auth/react";
 import { BiLogOut } from "react-icons/bi";
 
-
+/**
+ * This hook gets the routes used for the sidebar.
+ * 
+ * The routes are `/conversations`, `/users`, and `/#` for logout.
+ * @returns react memo
+ */
 export default function useRoutes() {
-  const pathname           = usePathname();
+  const pathname  = usePathname();
   const { conversationId } = useConversation();
 
   const routes = useMemo(() => [
@@ -30,7 +35,6 @@ export default function useRoutes() {
       onClick: () => signOut(),
       icon  : BiLogOut ,
     }
-  ], [pathname, conversationId])
-
-  return routes
+  ], [pathname, conversationId]);
+  return routes;
 }
