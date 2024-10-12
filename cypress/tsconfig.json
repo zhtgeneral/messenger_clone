@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node"]
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    "types": ["cypress", "node"],
+    "module": "NodeNext",
+    "moduleResolution":"NodeNext"
   },
   "include": ["**/*.ts"]
 }

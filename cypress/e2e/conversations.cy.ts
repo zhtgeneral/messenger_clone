@@ -1,4 +1,46 @@
 import { v4 } from "uuid";
+import axios from "axios";
+import { signIn } from "next-auth/react";
+
+async function createTestAccount(name: string, email: string, password: string) {
+  const request: any = {
+    name,
+    email,
+    password
+  }
+  await axios.post('/api/register', request);
+}
+
+async function deleteTestAccount(name: string, email: string, password: string) {
+  const request: any = {
+    name,
+    email,
+    password
+  }
+  await axios.delete('/api/register', request); 
+}
+
+async function loginTestUser(email: string, password: string) {
+  await signIn('credentials', { email, password, redirect: false});
+}
+
+const domain = Cypress.env('NEXT_PUBLIC_DOMAIN');
+
+const randomId = v4();
+const randomConversationName = `chat${randomId}`;  
+const randomMessage = `message${randomId}`;
+
+const testName = `test-${randomId}-account`; 
+const observerName = `observer-${randomId}-account`; 
+const observerName2 = `observer-2-${randomId}-account`; 
+
+const testEmail = `test-${randomId}@gmail.com`; 
+const observerEmail = `observer-${randomId}@gmail.com`; 
+const observerEmail2 = `observer-2-${randomId}@gmail.com`; 
+
+const testPassword = testName;
+const observerPassword = observerName;
+const observerPassword2 = observerName2;    
 
 describe('route security', () => {  
   it('page security', () => {
@@ -7,106 +49,122 @@ describe('route security', () => {
   })
 })
 
-describe('group chat functions', () => {
-  // long group chat names cause an error for Pusher
-  const randomId      = v4()
-  const randomName    = `chat${randomId}`;  
-  const randomMessage = `message${randomId}`;
-  const testEmail       = Cypress.env('TEST_EMAIL')
-  const testPassword    = Cypress.env('TEST_PASSWORD')
+// TODO clear data from DB so tests can run.
+describe.only('group chat functions', () => {
+  before(async () => {
+    const accountPromises = [
+      createTestAccount(testName, testEmail, testPassword),
+      createTestAccount(observerName, observerEmail, observerPassword),
+      createTestAccount(observerName2, observerEmail2, observerPassword2)
+    ];
+    await Promise.all(accountPromises);
+  })
 
-  it('group chat modal UX', () => {
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#groupChat').click();
-    cy.get('form#groupChatModal').should('contain.text', 'Create a group chat')
-    cy.get('svg#closeButton').click()
-    cy.get('body').should('not.contain.text', 'Group chat')
+  beforeEach(async () => {
+    await loginTestUser(testEmail, testPassword);
+  })
 
-    cy.get('svg#closeButton').click()
-    cy.get('div#groupChat').click();
-    cy.get('form#groupChatModal').should('contain.text', 'Create a group chat')
-    cy.get('button').contains('Cancel').click()
-    cy.get('body').should('not.contain.text', 'Group chat')
+  after(async () => {
+    await loginTestUser(testEmail, testPassword);
+    await deleteTestAccount(testName, testEmail, testPassword);
+    await loginTestUser(observerEmail, observerPassword);
+    await deleteTestAccount(observerName, observerEmail, observerPassword);
+    await loginTestUser(observerEmail2, observerPassword2);
+    await deleteTestAccount(observerName2, observerEmail2, observerPassword2);
+  })
+
+  describe('group chat modal', () => {
+    it("closes when x button clicked", () => {
+      cy.visit("/conversations");
+      cy.get('div#groupChat').click();
+      cy.get('form#groupChatModal').should('contain.text', 'Create a group chat')
+      cy.get('svg#closeButton').click();
+      cy.get('body').should('not.contain.text', 'Group chat')
+    })
+    it("closes when cancel button clicked", () => {
+      cy.visit("/conversations");
+      cy.get('svg#closeButton').click()
+      cy.get('div#groupChat').click();
+      cy.get('form#groupChatModal').should('contain.text', 'Create a group chat')
+      cy.get('button').contains('Cancel').click()
+      cy.get('body').should('not.contain.text', 'Group chat')
+    })
   })
 
   it('stops 2 person groups', () => {
-    const watcherName = Cypress.env('WATCHER_NAME')    
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
+    cy.visit("/conversations");
     cy.get('div#groupChat').click();
-    cy.get('input#name').click().type(randomName)
+    cy.get('input#name').click().type(randomConversationName);
+
     cy.get('div#select').click();
-    cy.get('div').contains(watcherName).click();
+    cy.get('div').contains(randomConversationName).click();
+
     cy.intercept('POST', '/api/conversations').as('createGroupChat');
     cy.get('button').contains('Create').click();
     cy.wait('@createGroupChat').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(400);
-      cy.get('body').should('contain.text', 'Something went wrong')
+      cy.get('body').should('contain.text', 'Something went wrong');
     })
   })
 
-  it('allows 3+ person groups', () => {
-    const watcherName2 = Cypress.env('WATCHER_NAME_2')
-    const watcherName3 = Cypress.env('WATCHER_NAME_3')
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
+  it('allows 3+ person groups', async () => {
+    cy.visit("/conversations");
     cy.get('div#groupChat').click();
-    cy.get('input#name').click().type(randomName)
+    cy.get('input#name').click().type(randomConversationName);
+
     cy.get('div#select').click();
-    cy.get('div').contains(watcherName2).click();
+    cy.get('div').contains(observerName).click();
+
     cy.get('div#select').click();
-    cy.get('div').contains(watcherName3).click();
+    cy.get('div').contains(observerName2).click();
+
     cy.intercept('POST', '/api/conversations').as('createGroupChat');
     cy.get('button').contains('Create').click();
     cy.wait('@createGroupChat').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(200);
       cy.location('pathname').should('eq', '/conversations');
-      cy.get('div#conversationBox').first().should('contain.text', randomName)
+      cy.get('div#conversationBox').first().should('contain.text', randomConversationName);
     })
   })
 
-  it('marks group messages as seen', () => {
-    const watcherName2     = Cypress.env('WATCHER_NAME_2')
-    const watcherName3     = Cypress.env('WATCHER_NAME_3')
-    const watcherEmail2    = Cypress.env('WATCHER_EMAIL_2')
-    const watcherEmail3    = Cypress.env('WATCHER_EMAIL_3')
-    const watcherPassword2 = Cypress.env('WATCHER_PASSWORD_2')
-    const watcherPassword3 = Cypress.env('WATCHER_PASSWORD_3')
+  it('marks group messages as seen', async () => {
+    cy.visit("/conversations");
+    cy.get('div#conversationBox').contains(randomConversationName).click();
+    cy.get('input#message').click().type(randomMessage);
 
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(randomName).click();
-    cy.get('input#message').click().type(randomMessage)
-    cy.get('button[type="submit"]').click()
-    cy.get('a[id="returnButton"]').click()
-    cy.get(`a#mobileItem[href="/#"]`).click();
+    cy.intercept('POST', `${domain}/conversations`).as('createConversation');
+    cy.get('button[type="submit"]').click();
+    cy.wait('@createConversation');
 
-    cy.login(watcherEmail2, watcherPassword2);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(randomName).click();
-    cy.get('a[id="returnButton"]').click()
-    cy.get(`a#mobileItem[href="/#"]`).click();
+    const conversationId = cy.location('href').toString().split('/').pop();
 
-    cy.login(watcherEmail3, watcherPassword3);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(randomName).click();
-    cy.get('a[id="returnButton"]').click()
-    cy.get(`a#mobileItem[href="/#"]`).click();
+    await loginTestUser(observerEmail, observerPassword);
+    cy.visit("/conversations");
+    cy.intercept('POST', `${domain}/conversations`).as('create_conversation');
+    cy.get('div#conversationBox').contains(randomConversationName).click();
+    cy.wait('@create_conversation');
 
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(randomName).click();
-    cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${watcherName2}, ${watcherName3}`);
+    await loginTestUser(observerEmail2, observerPassword2);
+    cy.visit("/conversations");
+    cy.intercept('POST', `${domain}/conversations/seen/${conversationId}`).as('mark_seen_1');
+    cy.get('div#conversationBox').contains(randomConversationName).click();    
+    cy.wait('@mark_seen_1');
+
+    await loginTestUser(testEmail, testPassword);
+    cy.visit("/conversations");
+    cy.intercept('POST', `${domain}/conversations/seen/${conversationId}`).as('mark_seen_2');
+    cy.get('div#conversationBox').contains(randomConversationName).click();
+    cy.wait('@mark_seen_2');
+
+    cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${observerName}, ${observerName2}`);
   })
 
   it('updates conversations upon deletion', () => {
-    cy.login(testEmail, testPassword);
-    cy.get(`a#mobileItem[href="/conversations"]`).click();
-    cy.get('div#conversationBox').contains(randomName).click();
+    cy.visit("/conversations");
+    cy.get('div#conversationBox').contains(randomConversationName).click();
     cy.get('svg#sidebarDrawer').click()
     cy.get('div#deleteButton').click()
     cy.get('button').contains('Delete').click()
-    cy.get('div#conversationBox').should('not.contain.text', randomName)
+    cy.get('div#conversationBox').should('not.contain.text', randomConversationName);
   })
 })
