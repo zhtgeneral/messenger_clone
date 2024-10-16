@@ -23,7 +23,8 @@ import { pusherServer } from "@/app/libs/pusher";
  * If no previous conversation involving the 2 users is found, create a new conversation
  * and send updates for each subscriber on channel `conversation:new`.
  * 
- * If any other error occurs, throw a `500` error for internal error.
+ * If any other error occurs, throw a `500` error for internal error
+ * and console log it under `CONVERSATION_POST_ERROR`
  * 
  * @param request the request with `userId`, `isGroup`, `members`, and `name` in the body
  * @returns a `200` response with the new conversation
@@ -125,6 +126,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newConversation);
   } catch (error: any) {
+    console.log(error, 'CONVERSATION_POST_ERROR');
     return new NextResponse('Internal Error', { status: 500 })
   }
 }

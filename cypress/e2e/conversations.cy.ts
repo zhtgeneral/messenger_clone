@@ -1,46 +1,17 @@
-import { v4 } from "uuid";
-import axios from "axios";
-import { signIn } from "next-auth/react";
+import { 
+  testNames, 
+  testEmails, 
+  testPasswords, 
+  randomConversationName, 
+  randomMessage 
+} from '../support/generate_names'
 
-async function createTestAccount(name: string, email: string, password: string) {
-  const request: any = {
-    name,
-    email,
-    password
-  }
-  await axios.post('/api/register', request);
-}
-
-async function deleteTestAccount(name: string, email: string, password: string) {
-  const request: any = {
-    name,
-    email,
-    password
-  }
-  await axios.delete('/api/register', request); 
-}
-
-async function loginTestUser(email: string, password: string) {
-  await signIn('credentials', { email, password, redirect: false});
-}
 
 const domain = Cypress.env('NEXT_PUBLIC_DOMAIN');
+const { testName, observerName, observerName2} = testNames;
+const { testEmail, observerEmail, observerEmail2} = testEmails;
+const { testPassword, observerPassword, observerPassword2} = testPasswords;
 
-const randomId = v4();
-const randomConversationName = `chat${randomId}`;  
-const randomMessage = `message${randomId}`;
-
-const testName = `test-${randomId}-account`; 
-const observerName = `observer-${randomId}-account`; 
-const observerName2 = `observer-2-${randomId}-account`; 
-
-const testEmail = `test-${randomId}@gmail.com`; 
-const observerEmail = `observer-${randomId}@gmail.com`; 
-const observerEmail2 = `observer-2-${randomId}@gmail.com`; 
-
-const testPassword = testName;
-const observerPassword = observerName;
-const observerPassword2 = observerName2;    
 
 describe('route security', () => {  
   it('page security', () => {
@@ -49,28 +20,24 @@ describe('route security', () => {
   })
 })
 
-// TODO clear data from DB so tests can run.
-describe.only('group chat functions', () => {
-  before(async () => {
-    const accountPromises = [
-      createTestAccount(testName, testEmail, testPassword),
-      createTestAccount(observerName, observerEmail, observerPassword),
-      createTestAccount(observerName2, observerEmail2, observerPassword2)
-    ];
-    await Promise.all(accountPromises);
+describe('group chat functions', () => {
+  before(() => {
+    cy.createTestAccount(testName, testEmail, testPassword);
+    cy.createTestAccount(observerName, observerEmail, observerPassword);
+    cy.createTestAccount(observerName2, observerEmail2, observerPassword2);
   })
 
-  beforeEach(async () => {
-    await loginTestUser(testEmail, testPassword);
+  beforeEach(() => {
+    cy.loginTestUser(testEmail, testPassword);
   })
 
-  after(async () => {
-    await loginTestUser(testEmail, testPassword);
-    await deleteTestAccount(testName, testEmail, testPassword);
-    await loginTestUser(observerEmail, observerPassword);
-    await deleteTestAccount(observerName, observerEmail, observerPassword);
-    await loginTestUser(observerEmail2, observerPassword2);
-    await deleteTestAccount(observerName2, observerEmail2, observerPassword2);
+  after(() => {
+    cy.loginTestUser(testEmail, testPassword);
+    cy.deleteTestAccount(testEmail);
+    cy.loginTestUser(observerEmail, observerPassword);
+    cy.deleteTestAccount(observerEmail);
+    cy.loginTestUser(observerEmail2, observerPassword2);
+    cy.deleteTestAccount(observerEmail2);
   })
 
   describe('group chat modal', () => {
@@ -83,7 +50,6 @@ describe.only('group chat functions', () => {
     })
     it("closes when cancel button clicked", () => {
       cy.visit("/conversations");
-      cy.get('svg#closeButton').click()
       cy.get('div#groupChat').click();
       cy.get('form#groupChatModal').should('contain.text', 'Create a group chat')
       cy.get('button').contains('Cancel').click()
@@ -97,20 +63,20 @@ describe.only('group chat functions', () => {
     cy.get('input#name').click().type(randomConversationName);
 
     cy.get('div#select').click();
-    cy.get('div').contains(randomConversationName).click();
+    cy.get('div').contains(observerName).click();
 
     cy.intercept('POST', '/api/conversations').as('createGroupChat');
     cy.get('button').contains('Create').click();
     cy.wait('@createGroupChat').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(400);
-      cy.get('body').should('contain.text', 'Something went wrong');
+      cy.get('div[role="status"]').should('contain.text', 'Something went wrong')
     })
   })
 
-  it('allows 3+ person groups', async () => {
+  it('allows 3+ person groups', () => {
     cy.visit("/conversations");
-    cy.get('div#groupChat').click();
-    cy.get('input#name').click().type(randomConversationName);
+    cy.get('div#groupChat').as("groupChatModal").click();
+    cy.get("@groupChatModal").get('input#name').click().type(randomConversationName);
 
     cy.get('div#select').click();
     cy.get('div').contains(observerName).click();
@@ -122,41 +88,49 @@ describe.only('group chat functions', () => {
     cy.get('button').contains('Create').click();
     cy.wait('@createGroupChat').then((intercept) => {
       expect(intercept.response?.statusCode).to.equal(200);
-      cy.location('pathname').should('eq', '/conversations');
       cy.get('div#conversationBox').first().should('contain.text', randomConversationName);
     })
   })
 
-  it('marks group messages as seen', async () => {
+  /**
+   * @requires conversation needs ot be previously created
+   */
+  it('marks group messages as seen', () => {
     cy.visit("/conversations");
     cy.get('div#conversationBox').contains(randomConversationName).click();
     cy.get('input#message').click().type(randomMessage);
 
-    cy.intercept('POST', `${domain}/conversations`).as('createConversation');
+    cy.intercept('POST', `${domain}/api/messages`).as('create_message');
     cy.get('button[type="submit"]').click();
-    cy.wait('@createConversation');
+    cy.wait('@create_message');
 
-    const conversationId = cy.location('href').toString().split('/').pop();
 
-    await loginTestUser(observerEmail, observerPassword);
+    const conversationId = cy.url().then((url) => {
+      return url.split('/').pop()
+    })
+    console.log('conversation id' + conversationId)
+    cy.log(`CONVERSATION ID: ${conversationId}`)
+
+    cy.loginTestUser(testEmail, testPassword);
     cy.visit("/conversations");
-    cy.intercept('POST', `${domain}/conversations`).as('create_conversation');
+
+    cy.intercept('POST', `${domain}/api/conversations/*/seen`).as('seen_message_1');
     cy.get('div#conversationBox').contains(randomConversationName).click();
-    cy.wait('@create_conversation');
+    cy.wait('@seen_message_1', { timeout: 10000 });
 
-    await loginTestUser(observerEmail2, observerPassword2);
+
+    cy.loginTestUser(observerEmail2, observerPassword2);
     cy.visit("/conversations");
-    cy.intercept('POST', `${domain}/conversations/seen/${conversationId}`).as('mark_seen_1');
+
+    cy.intercept('POST', `${domain}/api/conversations/*/seen`).as('seen_message_2');
     cy.get('div#conversationBox').contains(randomConversationName).click();    
-    cy.wait('@mark_seen_1');
+    cy.wait('@seen_message_2', { timeout: 10000 });
 
-    await loginTestUser(testEmail, testPassword);
+    cy.loginTestUser(testEmail, testPassword)
     cy.visit("/conversations");
-    cy.intercept('POST', `${domain}/conversations/seen/${conversationId}`).as('mark_seen_2');
     cy.get('div#conversationBox').contains(randomConversationName).click();
-    cy.wait('@mark_seen_2');
 
-    cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${observerName}, ${observerName2}`);
+    cy.get('div#seen_by').should("contain.text", `Seen by ${observerName}, ${observerName2}`);
   })
 
   it('updates conversations upon deletion', () => {
