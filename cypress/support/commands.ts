@@ -73,11 +73,16 @@ Cypress.Commands.addAll({
       password
     });
   },
+  // deleteTestAccount(email: string) {
+  //   cy.request('DELETE', '/api/register', {
+  //     data: {
+  //       email
+  //     }
+  //   });
+  // },
   deleteTestAccount(email: string) {
     cy.request('DELETE', '/api/register', {
-      data: {
-        email
-      }
+      email
     });
   },
   loginTestUser(email: string, password: string) {

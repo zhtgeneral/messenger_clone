@@ -29,6 +29,7 @@ describe('group chat functions', () => {
 
   beforeEach(() => {
     cy.loginTestUser(testEmail, testPassword);
+    cy.visit("/conversations", { timeout: 30000 });
   })
 
   after(() => {
@@ -58,7 +59,6 @@ describe('group chat functions', () => {
   })
 
   it('stops 2 person groups', () => {
-    cy.visit("/conversations");
     cy.get('div#groupChat').click();
     cy.get('input#name').click().type(randomConversationName);
 
@@ -74,7 +74,6 @@ describe('group chat functions', () => {
   })
 
   it('allows 3+ person groups', () => {
-    cy.visit("/conversations");
     cy.get('div#groupChat').as("groupChatModal").click();
     cy.get("@groupChatModal").get('input#name').click().type(randomConversationName);
 
@@ -96,7 +95,6 @@ describe('group chat functions', () => {
    * @requires conversation needs ot be previously created
    */
   it('marks group messages as seen', () => {
-    cy.visit("/conversations");
     cy.get('div#conversationBox').contains(randomConversationName).click();
     cy.get('input#message').click().type(randomMessage);
 
@@ -105,13 +103,7 @@ describe('group chat functions', () => {
     cy.wait('@create_message');
 
 
-    const conversationId = cy.url().then((url) => {
-      return url.split('/').pop()
-    })
-    console.log('conversation id' + conversationId)
-    cy.log(`CONVERSATION ID: ${conversationId}`)
-
-    cy.loginTestUser(testEmail, testPassword);
+    cy.loginTestUser(observerEmail, observerPassword);
     cy.visit("/conversations");
 
     cy.intercept('POST', `${domain}/api/conversations/*/seen`).as('seen_message_1');
@@ -126,19 +118,22 @@ describe('group chat functions', () => {
     cy.get('div#conversationBox').contains(randomConversationName).click();    
     cy.wait('@seen_message_2', { timeout: 10000 });
 
-    cy.loginTestUser(testEmail, testPassword)
+
+    cy.loginTestUser(testEmail, testPassword);
     cy.visit("/conversations");
     cy.get('div#conversationBox').contains(randomConversationName).click();
 
     cy.get('div#seen_by').should("contain.text", `Seen by ${observerName}, ${observerName2}`);
   })
 
+  /**
+   * @requires conversation has to be created
+   */
   it('updates conversations upon deletion', () => {
-    cy.visit("/conversations");
     cy.get('div#conversationBox').contains(randomConversationName).click();
-    cy.get('svg#sidebarDrawer').click()
-    cy.get('div#deleteButton').click()
-    cy.get('button').contains('Delete').click()
-    cy.get('div#conversationBox').should('not.contain.text', randomConversationName);
+    cy.get('svg#sidebarDrawer').click();
+    cy.get('div#deleteButton').click();
+    cy.get('button').contains('Delete').click();
+    cy.get('div#conversations').should('not.contain.text', randomConversationName);
   })
 })
