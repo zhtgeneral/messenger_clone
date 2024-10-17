@@ -1,48 +1,51 @@
+import { testEmails, testNames, testPasswords } from "../support/generate_names";
+
 describe('settings functions', () => {
-  const testName     = Cypress.env('TEST_NAME')
-  const testEmail    = Cypress.env('TEST_EMAIL')
-  const testPassword = Cypress.env('TEST_PASSWORD')
+  const settingsAPI = 'api/settings'
+
+  const { testName } = testNames;
+  const { testEmail } = testEmails;
+  const { testPassword } = testPasswords;
+
+  before(() => {
+    cy.createTestAccount(testName, testEmail, testPassword);
+  })
 
   beforeEach(() => {
-    cy.login(testEmail, testPassword);
-    cy.get('div#settingsButton').last().click()
+    cy.loginTestUser(testEmail, testPassword), 
+    cy.visit('/', { timeout: 30000});
+    cy.get('div#settingsButton').last().click();
   })
 
-  it('modal UX', () => {
-    cy.get('button').contains('Cancel').click();
-    cy.get('div#settingsButton').last().click()
-
-    cy.get('button#closeButton').click();
-    cy.get('div#settingsButton').last().click()
+  after(() => {
+    cy.deleteTestAccount(testEmail);
   })
 
-  it('update name', () => {
-    const newName = testName+'1';
-    const testDeleteQuery = '{backspace}'.repeat(testName.length)
-    const newDeleteQuery  = '{backspace}'.repeat(newName.length)
-    cy.get('input#name').click()
-    .type(testDeleteQuery)
-    .type(newName)
-
-    const settingsAPI = 'api/settings'
-    cy.intercept('POST', settingsAPI).as('UpdateName')
-
-    cy.get('button').contains('Save').click()
-    cy.wait('@UpdateName')
-
-    cy.get('div#settingsButton').last().click()
-    cy.get('input#name').should('have.value', newName)
-
-    cy.get('input#name').click()
-    .type(newDeleteQuery)
-    .type(testName)
-
-    cy.get('button').contains('Save').click()
-    cy.wait('@UpdateName')
-
-    cy.get('div#settingsButton').last().click()
-    cy.get('input#name').should('have.value', testName)
+  describe("modal interactions", () => {
+    it('lets the user close the modal by clicking the cancel button', () => {
+      cy.get('button').contains('Cancel').click();
+      cy.get('div#settingsButton').last().click();
+    })
+    it('lets the user close the modal by clicking the x button', () => {
+      cy.get('button#closeButton').click();
+      cy.get('div#settingsButton').last().click();
+    })
   })
 
-  // handle updating image manually
+  describe('updating user info', () => {
+    it('allows user to update name', () => {
+      const newName = testName + '8888';
+      cy.get('input#name').click().type('8888');
+
+  
+      cy.intercept('POST', settingsAPI).as('update_name')
+      cy.get('button').contains('Save').click();
+      cy.wait('@update_name');
+  
+      cy.get('div#settingsButton').last().click();
+      cy.get('input#name').should('have.value', newName);
+    })
+
+    // Handle updating user profile picture manually
+  })
 })
