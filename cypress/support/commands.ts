@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import { signIn } from "next-auth/react";
-import { v4 } from "uuid";
 
 declare global {
   namespace Cypress {
@@ -73,13 +72,6 @@ Cypress.Commands.addAll({
       password
     });
   },
-  // deleteTestAccount(email: string) {
-  //   cy.request('DELETE', '/api/register', {
-  //     data: {
-  //       email
-  //     }
-  //   });
-  // },
   deleteTestAccount(email: string) {
     cy.request('DELETE', '/api/register', {
       email
@@ -87,5 +79,5 @@ Cypress.Commands.addAll({
   },
   loginTestUser(email: string, password: string) {
     cy.wrap(null).then(() => signIn('credentials', { email, password, redirect: false}));
-  }
+  },
 })
