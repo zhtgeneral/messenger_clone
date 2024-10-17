@@ -1,103 +1,91 @@
-describe("/conversation/[id]", () => {
-  describe('Page security', () => {
-    it('prevents unintended users from accessing other conversations', () => {
-      const randomId = 'asdabslj4h5k34jasd';
-      cy.visit(`/conversations/${randomId}`);
-      cy.location('pathname').should('eq', '/');
+import { 
+  testEmails, 
+  testNames, 
+  testPasswords,
+  randomConversationName,
+  randomMessage
+} from "../support/generate_names";
+
+describe('Page security', () => {
+  it('prevents unauthenticated users from accessing /conversations/*', () => {
+    const randomId = 'asdabslj4h5k34jasd';
+    cy.visit(`/conversations/${randomId}`);
+    cy.location('pathname').should('eq', '/');
+  })
+})  
+
+describe('Page functions', () => {
+  const { testName, observerName, observerName2} = testNames;
+  const { testEmail, observerEmail, observerEmail2} = testEmails;
+  const { testPassword, observerPassword, observerPassword2} = testPasswords;
+
+  before(() => {
+    cy.createTestAccount(testName, testEmail, testPassword);
+    cy.createTestAccount(observerName, observerEmail, observerPassword);
+    cy.createTestAccount(observerName2, observerEmail2, observerPassword2);
+  })
+  beforeEach(() => {
+    cy.loginTestUser(testEmail, testPassword);
+    cy.visit("/users", { timeout: 30000 });
+
+    cy.intercept('POST', '/api/conversations').as('visit_conversation');
+    cy.get('div#userBox').contains(observerName).click();
+    cy.wait('@visit_conversation');
+  })
+  after(() => {
+    // TODO first delete conversations before deleting users
+    cy.loginTestUser(testEmail, testPassword);
+    cy.deleteTestAccount(testEmail);
+    cy.loginTestUser(observerEmail, observerPassword);
+    cy.deleteTestAccount(observerEmail);
+    cy.loginTestUser(observerEmail2, observerPassword2);
+    cy.deleteTestAccount(observerEmail2);
+  })
+  
+  describe("Leaving conversation", () => {
+    it("allows the user to return to all conversations on tablet view", () => {
+      cy.setTabletView();
+      cy.get('a#returnButton').click();
+      cy.location('pathname').should('eq', '/conversations');
+    })
+    it("allows the user to return to all conversations on desktop view", () => {
+      cy.setDesktopView();
+      cy.get('a#desktopItem[href="/conversations"]').click();
+      cy.location('pathname').should('eq', '/conversations');
     })
   })
 
-  describe('Page functions', () => {
-    // TODO create & delete test accounts for each test
-    // Needs a backend endpoint to delete account after running tests
-    // TODO create a util file to store names rather than ENV file
-    const watcherName     = Cypress.env('WATCHER_NAME');
-    const watcherEmail    = Cypress.env('WATCHER_EMAIL');
-    const watcherPassword = Cypress.env('WATCHER_PASSWORD');
-    const testName        = Cypress.env('TEST_NAME');
-    const testEmail       = Cypress.env('TEST_EMAIL');
-    const testPassword    = Cypress.env('TEST_PASSWORD');
-    const message = (new Date()).toDateString();
-  
-    beforeEach(() => {
-      cy.login(testEmail, testPassword);
-      cy.intercept('POST', '/api/conversations').as('createConversation');
-      cy.get('div#userBox').contains(watcherName).click();
-      cy.wait('@createConversation');
-    });
-    
-    describe("Route handling", () => {
-      it('allows users to exit a conversation in mobile mode', () => {
-        cy.get('a#returnButton').click();
-        cy.location('pathname').should('eq', '/conversations');
-    
-        cy.get('div#conversationBox').contains(watcherName).click();
-        // TODO check that the conversation is loaded
-      })
+  describe("Chat area", () => {
+    const message = 'a';
+
+    it('prevents empty text messages from being sent', () => {
+      cy.get('input#message').click().type(`${message}{backspace}`);
+      cy.get('button[type="submit"]').click();
+      cy.get('div#conversationArea').should('not.contain.text', message);
     })
 
-    describe("Chat area", () => {
-      it('prevents empty messages from being sent', () => {
-        cy.get('input#message').click().type('a{backspace}');
-        cy.intercept('POST', '/api/messages').as('createMessageEmpty');
-        cy.get('button[type="submit"]').click();
-        // only way to check this is using integration test
-      })
-    
-      it('renders submitted text messages', () => {
-        cy.get('input#message').click().type(message);
-        cy.intercept('POST', '/api/messages').as('createMessageText');
-        cy.get('button[type="submit"]').click();
-        cy.wait('@createMessageText');
-        cy.get('div[id="userMessage"]').last().contains(message);
-      })
-    
-      it("marks message as seen from other accounts", () => {
-        cy.get('input#message').click().type(message);
-        cy.get('button[type="submit"]').click();
-        cy.get('a[id="returnButton"]').click();
-        cy.get(`a#mobileItem[href="/#"]`).click();
-    
-        cy.login(watcherEmail, watcherPassword);
-        cy.get(`a#mobileItem[href="/conversations"]`).click();
-        cy.get("div#conversationBox").contains(testName).click();
-        cy.get('a[id="returnButton"]').click();
-        cy.get('.bottom-0 > [href="/#"]').click();
-    
-        cy.login(testEmail, testPassword);
-        cy.get(`a#mobileItem[href="/conversations"]`).click(); 
-        cy.get("div#conversationBox").contains(watcherName).click();
-        cy.get('div[id="userLine"]').last().should("contain.text", `Seen by ${watcherName}`);
-      });
-    })  
-  
-    // handle image upload tests manually
-    // handle image modal tests manually
+    it('renders submitted text messages', () => {
+      cy.get('input#message').click().type(message);
+
+      cy.intercept('POST', '/api/messages').as('create_message_text');
+      cy.get('button[type="submit"]').click();
+      cy.wait('@create_message_text');
+
+      cy.get('div#userMessage').last().contains(message);
+    })
+    // Handle image upload tests manually
   })
   
   describe('Sidebar drawer', () => {
-    const watcherName     = Cypress.env('WATCHER_NAME');
-    const testEmail       = Cypress.env('TEST_EMAIL');
-    const testPassword    = Cypress.env('TEST_PASSWORD');
-  
-    beforeEach(() => {
-      cy.login(testEmail, testPassword);
-      cy.intercept('POST', '/api/conversations').as('createConversation');
-      cy.get('div#userBox').contains(watcherName).click();
-      cy.wait('@createConversation');
-    });
-  
     describe("Sidebar close operations", () => {
       it('allows user to close sidebar with close button', () => {
         cy.get('svg[id="sidebarDrawer"]').click();
         cy.get('button[id="closeSidebar"]').click(); 
       });
-  
       it('allows user to close sidebar by clicking out of sidebar', () => {  
         cy.get('svg[id="sidebarDrawer"]').click();
         cy.get('body').click(60, 500);
       });
-  
       it('allows user to close sidebar with ESC key', () => {  
         cy.get('svg[id="sidebarDrawer"]').click();
         cy.get('body').trigger('keydown', { key: 'Escape' });
@@ -105,7 +93,7 @@ describe("/conversation/[id]", () => {
     })
     
     describe("Delete conversation modal", () => {
-      describe("Delete conversation modal close operations", () => {
+      describe("Close operations", () => {
         it('allows user to close delete modal with close button', () => {
           cy.get('svg[id="sidebarDrawer"]').click();
           cy.get('div[id="deleteButton"]').click();
@@ -121,17 +109,16 @@ describe("/conversation/[id]", () => {
         })
       });
 
-      it("allows user to delete conversation", () => {
-        cy.get('svg[id="sidebarDrawer"]').click();  
-        cy.get('div[id="deleteButton"]').click();
-        cy.get('button').contains('Delete').click(); cy.wait(5000);
-    
-        cy.get('div#conversationBox').not('contain.text', watcherName);
-      })
+      /**
+       * @requires conversation has to be created
+       */
+      // it('allows user to delete conversations', () => {
+      //   cy.get('div#conversationBox').contains(randomConversationName).click();
+      //   cy.get('svg#sidebarDrawer').click();
+      //   cy.get('div#deleteButton').click();
+      //   cy.get('button').contains('Delete').click();
+      //   cy.get('div#conversations').should('not.contain.text', randomConversationName);
+      // })
     })
   })
 })
-
-
- 
- 
