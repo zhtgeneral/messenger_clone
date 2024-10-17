@@ -1,41 +1,43 @@
+import { testEmails, testNames, testPasswords } from "../support/generate_names";
+
 describe('page security', () => {
-  it('page security', () => {
-    cy.visit('/users')
+  it('prevents unauthenticated users from accessing /users', () => {
+    cy.visit('/users');
     cy.location('pathname').should('eq', '/');
   })
 })
 
 describe('page functions', () => {
-  const testEmail       = Cypress.env('TEST_EMAIL')
-  const testPassword    = Cypress.env('TEST_PASSWORD')
+  const conversationAPI = 'api/conversations'
+
+  const { testName, observerName } = testNames;
+  const { testEmail, observerEmail } = testEmails;
+  const { testPassword, observerPassword } = testPasswords;  
+
+  before(() => {
+    cy.createTestAccount(testName, testEmail, testPassword);
+    cy.createTestAccount(observerName, observerEmail, observerPassword);
+  })
 
   beforeEach(() => {
-    cy.login(testEmail, testPassword);
+    cy.loginTestUser(testEmail, testPassword);
+    cy.visit('/users', { timeout: 30000 });
   });
 
-  it('create conversation', () => {
-    const conversationAPI = 'api/conversations'
-    cy.intercept('POST', conversationAPI).as('CreateConversations')
-    cy.get('div#userBox').first().click()
-    cy.wait('@CreateConversations').then((intercept) => {
-      expect(intercept).to.exist
-      expect(intercept.response).to.exist
+  after(() => {
+    cy.visit('/', { timeout: 30000 });
+    cy.loginTestUser(testEmail, testPassword);
+    cy.deleteTestAccount(testEmail);
+    cy.loginTestUser(observerEmail, observerPassword);
+    cy.deleteTestAccount(observerEmail);
+  })
 
-      // TypeScript type assertion
-      const intercept_t = intercept as { 
-        response: { 
-          statusCode: number;
-           body: { 
-            id: string 
-          }
-        } 
-      };
-
-      expect(intercept_t.response.statusCode).to.equal(200)
-      expect(intercept_t.response.body).to.exist
-      expect(intercept_t.response.body.id).to.exist
-
-      const conversationId = intercept_t.response.body.id
+  it('allows users to create conversations by clicking on other users profiles', () => {
+    cy.intercept('POST', conversationAPI).as('create_conversation');
+    cy.get('div#userBox').first().click();
+    cy.wait('@create_conversation').then((intercept) => {
+      expect(intercept.response?.statusCode).to.equal(200);
+      const conversationId = intercept.response.body.id;
       cy.location('pathname').should('eq', `/conversations/${conversationId}`);
     })
   })

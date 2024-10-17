@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 declare global {
   namespace Cypress {
@@ -44,6 +44,18 @@ declare global {
        * @param password password of user
        */
       loginTestUser(email: string, password: string);
+      /**
+       * This helper function sets the viewport used for testing to 768x1024px
+       */
+      setTabletView();
+      /**
+       * This helper function sets the viewport used for testing to 360x800 px
+       */
+      setPhoneView();
+      /**
+       * This helper function sets the viewport used for testing to 1920x1080px
+       */
+      setDesktopView();
     }
   }
 }
@@ -79,5 +91,14 @@ Cypress.Commands.addAll({
   },
   loginTestUser(email: string, password: string) {
     cy.wrap(null).then(() => signIn('credentials', { email, password, redirect: false}));
+  },
+  setTabletView() {
+    cy.viewport(768, 1024);
+  },
+  setPhoneView() {
+    cy.viewport(300, 800);
+  },
+  setDesktopView() {
+    cy.viewport(1920, 1080);
   },
 })

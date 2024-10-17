@@ -14,7 +14,7 @@ const { testPassword, observerPassword, observerPassword2} = testPasswords;
 
 
 describe('route security', () => {  
-  it('page security', () => {
+  it('prevents unauthenticated users from accessing /conversations', () => {
     cy.visit('/conversations')
     cy.location('pathname').should('eq', '/');
   })
