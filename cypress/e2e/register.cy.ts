@@ -1,44 +1,57 @@
-import { v4 } from 'uuid';
+import { testNames, testEmails, testPasswords } from "../support/generate_names";
 
 describe('register functions', () => {
-  const randomId = v4();  
+  const registerAPI = '/api/register';
 
-  const registerAPI    = '/api/register';
-  const randomName     = 'test' + randomId;
-  const randomEmail    = `${randomName}@gmail.com`; 
-  const randomPassword = randomName;
+  const { testName } = testNames;
+  const { testEmail } = testEmails;
+  const { testPassword } = testPasswords;
 
+  describe("Wrong register", () => {
+    it('fails when any entry is blank and alerts user', () => {
+      const missingFields = ['name', 'email', 'password'];
+  
+      cy.intercept('POST', registerAPI).as('register');
+      for (const missingField of missingFields) {
+        cy.signupEmpty(testName, testEmail, testPassword, missingField);
+        cy.wait('@register').then((intercept) => {
+          expect(intercept.response?.statusCode).to.equal(400);
+        });
+        cy.get('div[role="status"]').as("toaster").should('contain.text', 'Something went wrong');
+      }
+    })
+  })
 
-  it('fails when any entry is blank', () => {
-    const missingFields = ['name', 'email', 'password'];
-
-    cy.intercept('POST', registerAPI).as('register');
-    missingFields.forEach(missingField => {
-      cy.signupEmpty(randomName, randomEmail, randomPassword, missingField);
+  describe('Correct register', () => {
+    after(() => {
+      cy.deleteTestAccount(testEmail);
+    })
+    it('redirects the user to /users after creating account', () => {
+      cy.intercept('POST', registerAPI).as('register');
+      cy.signup(testName, testEmail, testPassword);
       cy.wait('@register').then((intercept) => {
-        expect(intercept.response?.statusCode).to.equal(400);
+        expect(intercept.response?.statusCode).to.equal(200);
       });
-      cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
-    });
+      cy.location('pathname').should('eq', '/users');
+    })
   })
 
-  it('register UX', () => {
-    cy.intercept('POST', registerAPI).as('register');
-    cy.signup(randomName, randomEmail, randomPassword);
-    cy.wait('@register').then((intercept) => {
-      expect(intercept.response?.statusCode).to.equal(200);
-    });
-    cy.location('pathname').should('eq', '/users');
+  describe("Duplicate Account", () => {
+    before(() => {
+      cy.createTestAccount(testName, testEmail, testPassword);
+    })
+    after(() => {
+      cy.loginTestUser(testEmail, testPassword);
+      cy.deleteTestAccount(testEmail);
+    })
+    it('blocks duplicate users and alerts user', () => {
+      cy.intercept('POST', registerAPI).as('register_duplicate');
+      cy.signup(testName, testEmail, testPassword);
+      cy.wait('@register_duplicate').then((intercept) => {
+        expect(intercept.response?.statusCode).to.equal(500);      
+      });
+      cy.get('div[role="status"]').as("toaster").should('contain.text', 'Something went wrong');
+    })
   })
-  it('blocks duplicate users', () => {
-    const sameName     = randomName;
-    const sameEmail    = randomEmail;
-    const samePassword = randomPassword;
-    cy.intercept('POST', registerAPI).as('register');
-    cy.signup(sameName, sameEmail, samePassword);
-    cy.wait('@register').then((intercept) => {
-      expect(intercept.response?.statusCode).to.equal(500);      
-    });
-    cy.get('div[role="status"]').should('contain.text', 'Something went wrong');
-  })
+  
 })
