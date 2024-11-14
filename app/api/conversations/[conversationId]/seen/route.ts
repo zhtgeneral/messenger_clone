@@ -90,6 +90,7 @@ Promise<NextResponse> {
     })
 
     // mark message as seen in real time on sidebar
+    // TODO fix conversation bar not displaying for other side
     await pusherServer
     .trigger(currentUser.email, 'conversation:update', conversationId)
     .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'));
