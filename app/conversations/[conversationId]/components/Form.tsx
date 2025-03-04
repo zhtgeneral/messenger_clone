@@ -1,7 +1,7 @@
 'use client'
 
 import axios from "axios"
-import {CldUploadButton} from 'next-cloudinary'
+import { CldUploadButton } from 'next-cloudinary'
 import { FieldValues, useForm } from "react-hook-form"
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2"
 
@@ -19,10 +19,8 @@ import useConversation from "@/app/hooks/useConversation"
  * It renders a button that allows the user to send the message.
  * 
  * When the send button is clicked, the message is sent to the backend.
- * 
- * @returns component
  */
-const Form = () => {
+export default function Form() {
   const {conversationId} = useConversation();
   const {
     register,
@@ -76,5 +74,3 @@ const Form = () => {
     </div>
   )
 }
-
-export default Form;

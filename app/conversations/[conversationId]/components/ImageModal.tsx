@@ -1,7 +1,7 @@
 'use client'
 
 import Modal from "@/app/components/Modal";
-import Image from 'next/image'
+import Image from 'next/image';
 
 interface ImageModalProps {
   isOpen?: boolean,
@@ -15,13 +15,12 @@ interface ImageModalProps {
  * @param isOpen determines if the modal renders
  * @param onClose the behaviour of closing the modal
  * @param src the Cloudinary link of the sent image
- * @returns component
  */
-const ImageModal: React.FC<ImageModalProps> = ({
+export default function ImageModal({
   isOpen,
   onClose,
   src
-}) => {
+}: ImageModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <Image 
@@ -34,5 +33,3 @@ const ImageModal: React.FC<ImageModalProps> = ({
     </Modal>
   )
 }
-
-export default ImageModal;

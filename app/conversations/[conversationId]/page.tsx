@@ -1,5 +1,5 @@
 import EmptyState from "@/app/components/EmptyState"
-import Header from "@/app/conversations/[conversationId]/components/Header"
+import Header from "@/app/conversations/[conversationId]/components/HeaderController"
 import Body from "@/app/conversations/[conversationId]/components/Body"
 import Form from "@/app/conversations/[conversationId]/components/Form"
 import getMessages from "@/app/actions/getMessages"

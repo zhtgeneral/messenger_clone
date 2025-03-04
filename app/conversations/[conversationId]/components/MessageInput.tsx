@@ -13,22 +13,16 @@ interface MessageInputProps {
 /**
  * This component renders the input that a user uses to send text messages.
  * 
- * @param id id of the component used for querying in testing 
- * @param register the handler that observes the value of this input
- * @param errors optional errors that occur in the form
- * @param type optional type that does nothing really
- * @param required optional determines if the field is required
- * @param placeholder optional placeholder message
- * @returns component
+ * @param id - the id of the component used for querying in testing 
  */
-const MessageInput: React.FC<MessageInputProps> = ({
+export default function MessageInput({
   id,
   register,
   errors,
   type,
   required,
   placeholder
-}) => {
+}: MessageInputProps) {
   return (
     <div className='relative w-full'>
       <input 
@@ -42,5 +36,3 @@ const MessageInput: React.FC<MessageInputProps> = ({
     </div>
   )
 }
-
-export default MessageInput;

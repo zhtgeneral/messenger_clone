@@ -1,19 +1,21 @@
 'use client'
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
 
-import Avatar        from "@/app/components/Avatar";
-import useOtherUser  from "@/app/hooks/useOtherUser";
-import ProfileDrawer from "@/app/conversations/[conversationId]/components/ProfileDrawer";
-import AvatarGroup   from "@/app/components/AvatarGroup";
-import { Conversation, User } from "@prisma/client"
+import Avatar from "@/app/components/Avatar";
+import AvatarGroup from "@/app/components/AvatarGroup";
+import ProfileDrawer from "@/app/conversations/[conversationId]/components/Drawer/ProfileDrawer";
+import { Conversation, User } from "@prisma/client";
 
-interface HeaderProps {
+interface HeaderPresenterProps {
   conversation: Conversation & {
     users: User[]
-  }
+  },
+  drawerOpen?: boolean,
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  statusText?: string,
+  otherUser: User
 }
 
 /**
@@ -25,23 +27,18 @@ interface HeaderProps {
  * Otherwise it renders the conversation name and the number of members in the group.
  * 
  * It renders a 3 dots button that opens a drawer that allows a user to delete the conversation.
- * 
- * @param conversation the conversation where the header is displayed
- * @returns component
  */
-const Header: React.FC<HeaderProps> = ({
-  conversation
-}) => {
-  const otherUser = useOtherUser(conversation);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const statusText = useMemo((): string => {
-    return (conversation.isGroup)? `${conversation.users.length} members`: 'Active';
-  }, [conversation]);
+export default function HeaderPresenter({
+  conversation,
+  drawerOpen = false,
+  setDrawerOpen,
+  statusText,
+  otherUser
+}: HeaderPresenterProps) {
   return (
     <>
       <ProfileDrawer 
-        data={conversation} 
+        conversation={conversation} 
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
@@ -76,5 +73,3 @@ const Header: React.FC<HeaderProps> = ({
     </>
   )
 }
-
-export default Header;

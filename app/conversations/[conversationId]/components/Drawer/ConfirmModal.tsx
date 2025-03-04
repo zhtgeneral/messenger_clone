@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
-import { FiAlertTriangle } from 'react-icons/fi'
+import { FiAlertTriangle } from 'react-icons/fi';
 
-import { DialogTitle } from "@headlessui/react";
 import Button from "@/app/components/Button";
 import Modal from "@/app/components/Modal";
 import useConversation from "@/app/hooks/useConversation";
+import { DialogTitle } from "@headlessui/react";
 
 interface ConfirmModalProps {
   isOpen?: boolean;
@@ -31,12 +31,13 @@ interface ConfirmModalProps {
  * @param onClose the behaviour of closing the modal 
  * @returns component
  */
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+export default function ConfirmModal({
   isOpen,
   onClose,
-}) => {
+}: ConfirmModalProps) {
   const router = useRouter();
   const { conversationId } = useConversation();
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const onDelete = useCallback(() => {
@@ -79,5 +80,3 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     </Modal>
   );
 };
-
-export default ConfirmModal;

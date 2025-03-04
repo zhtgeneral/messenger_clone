@@ -24,28 +24,33 @@ interface BodyProps {
  * When the user leaves the conversation, it makes the user unsubscribe from the updates.
  
  * @param initialMessages the initial messages that get rendered
- * @returns component
  */
-const Body: React.FC<BodyProps> = ({
+export default function Body({
   initialMessages
-}) => {
+}: BodyProps) {
   const [messages, setMessages] = useState(initialMessages);
   const {conversationId} = useConversation();
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    axios.post(`/api/conversations/${conversationId}/seen`)
+    axios.post(`/api/conversations/${conversationId}/seen`);
   }, [conversationId]);
 
   useEffect(() => {
     pusherClient.subscribe(conversationId);
-    pusherClient.bind('messages:new', messageHandler);
-    pusherClient.bind('message:update', updateMessageHandler);
+    pusherClient.bind('messages:new', displayNewMessage);
+    pusherClient.bind('message:update', markMessageSeen);
     bottomRef?.current?.scrollIntoView();
 
-    // display new messages
-    async function messageHandler(messageId: string) {
+    
+    /**
+     * This function is called whenever a channel gets a `messages:new` event.
+     * 
+     * It makes a POST request to /api/conversations/:conversationId/seen
+     * and displays the new message in the body component.
+     */
+    async function displayNewMessage(messageId: string) {
       await axios.post(`/api/conversations/${conversationId}/seen`);
       const response = await axios.get(`/api/messages/${messageId}`);
       setMessages((current): FullMessageType[] => {
@@ -57,8 +62,13 @@ const Body: React.FC<BodyProps> = ({
       bottomRef?.current?.scrollIntoView();
     }
 
-    // marks message as seen
-    async function updateMessageHandler(newMessageId: string) {
+    /**
+     * This function is called whenever a channel gets a `messages:seen` event.
+     * 
+     * It maks a GET request to /api/messages/:newMessageId
+     * and replaces the seen message with the one with updated status.
+     */
+    async function markMessageSeen(newMessageId: string) {
       const response = await axios.get(`/api/messages/${newMessageId}`);
       const newMessage = response.data!;
       setMessages((current): FullMessageType[] => current.map((currentMessage) => {
@@ -68,10 +78,11 @@ const Body: React.FC<BodyProps> = ({
         return currentMessage;
       }))
     }
+    
     return () => {
       pusherClient.unsubscribe(conversationId);
-      pusherClient.unbind('messages:new', messageHandler);
-      pusherClient.unbind('message:update', updateMessageHandler);
+      pusherClient.unbind('messages:new', displayNewMessage);
+      pusherClient.unbind('message:update', markMessageSeen);
     }
   }, [conversationId]);
 
@@ -87,5 +98,3 @@ const Body: React.FC<BodyProps> = ({
     </div>
   )
 }
-
-export default Body;
