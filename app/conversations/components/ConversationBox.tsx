@@ -1,23 +1,20 @@
 'use client'
 
 import clsx from "clsx";
-import { useCallback, useMemo } from "react";
-import {format} from 'date-fns'
+import { format } from 'date-fns';
 import { useSession } from "next-auth/react";
-import { useRouter }  from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
 import Avatar from "@/app/components/Avatar";
-import useOtherUser from "@/app/hooks/useOtherUser";
-import { User } from "@prisma/client";
 import AvatarGroup from "@/app/components/AvatarGroup";
-import { 
-  FullConversationType, 
-  FullMessageType 
-} from "@/app/types"
+import useOtherUser from "@/app/hooks/useOtherUser";
+import { FullConversationType, FullMessageType } from "@/app/types";
+import { User } from "@prisma/client";
 
 interface ConversationBoxProps {
   conversation: FullConversationType,
-  selected?: boolean
+  isSelected?: boolean
 }
 
 /**
@@ -32,10 +29,10 @@ interface ConversationBoxProps {
  * @param selected optional determines if the conversation is highlighted
  * @returns component
  */
-const ConversationBox: React.FC<ConversationBoxProps> = ({
+export default function ConversationBox({
   conversation,
-  selected
-}) => {
+  isSelected
+}: ConversationBoxProps) {
   const session = useSession();
   const router = useRouter();
   const otherUser = useOtherUser(conversation);
@@ -73,13 +70,13 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 
   return(
     <div 
+      id="conversationBox"
       onClick={handleClick} 
       className={
         clsx('w-full relative flex items-center space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer p-2',
-          selected? 'bg-neutral-100' : 'bg-white'
+          isSelected? 'bg-neutral-100' : 'bg-white'
         )
       }
-      id="conversationBox"
     > 
       {conversation.isGroup? (
         <AvatarGroup users={conversation.users}/>
@@ -108,5 +105,3 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     </div>
   )
 }
-
-export default ConversationBox
