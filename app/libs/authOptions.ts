@@ -1,13 +1,10 @@
-// https://next-auth.js.org/getting-started/example
-
+import prisma from '@/app/libs/prismadb'
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import bcrypt from 'bcrypt'
 import { AuthOptions } from "next-auth"
-import { PrismaAdapter }   from "@next-auth/prisma-adapter"
-import GithubProvider      from "next-auth/providers/github"
-import GoogleProvider      from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-
-import prisma from '@/app/libs/prismadb' 
+import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
 
 /**
  * Creates the auth options used for logging users in.
@@ -29,22 +26,23 @@ import prisma from '@/app/libs/prismadb'
  * @requires GOOGLE_CLIENT_ID variable from env file
  * @requires GOOGLE_CLIENT_SECRET variable from env file (gotten from GCC)
  * 
+ * @link https://next-auth.js.org/getting-started/example
  */
 const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
-      clientId    : process.env.GITHUB_ID     as string,
+      clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
     GoogleProvider({
-      clientId    : process.env.GOOGLE_CLIENT_ID     as string,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email   : {label: 'email'   , type: 'text'},
+        email: {label: 'email', type: 'text'},
         password: {label: 'password', type: 'password'}
       },
       async authorize(credentials) {
@@ -59,7 +57,7 @@ const authOptions: AuthOptions = {
         if (!user || !user?.hashedPassword) {
           throw new Error('Invalid Credentials');
         }
-        const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword)
+        const isCorrectPassword = await bcrypt.compare(credentials.password, user.hashedPassword);
         if (!isCorrectPassword) {
           throw new Error('Invalid Credentials');
         }
@@ -73,4 +71,4 @@ const authOptions: AuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET as string,
 }
-export default authOptions
+export default authOptions;

@@ -2,13 +2,16 @@ import { Channel, Members } from "pusher-js";
 import { pusherClient } from "../libs/pusher";
 import useActiveList from "./useActiveList";
 import React from "react";
+import { useSession } from "next-auth/react";
 
 /**
- * This function lets zustand keep track of authorized users in prescence channels
+ * This function lets zustand keep track of present members in prescence channels.
  * 
- * @requires pusherClient needs to be set up first
+ * @requires AuthContext needs to wrap this hook
+ * @requires pusherClient needs to be created and send auth request to correct location.
+ * @requires pusherServer needs to be able to sign the auth token at the correct location.
  * 
- * It sets the subscribes to channel using the name `presence-messenger`
+ * `PusherClient` subscribes to presence channels using the name `presence-messenger`
  * and marks an activeChannel using `useState`.
  * 
  * If an active channel exists, it listen to the events
@@ -21,9 +24,19 @@ import React from "react";
  */
 export default function useActiveChannel() {
   const { set, add, remove } = useActiveList();
+  const session = useSession();
+
   const [activeChannel, setActiveChannel] = React.useState<Channel | null>(null);
   
   React.useEffect(() => {
+    if (!session?.data?.user?.email) {
+      if (activeChannel) {
+        pusherClient.unsubscribe("presence-messenger");
+        setActiveChannel(null);
+      }
+      return; 
+    }
+
     let channel = activeChannel;
     if (!channel) {
       channel = pusherClient.subscribe('presence-messenger');
@@ -51,5 +64,5 @@ export default function useActiveChannel() {
         setActiveChannel(null);
       }
     }
-  }, [activeChannel, set, add, remove]);  
+  }, [activeChannel, set, add, remove, session]);  
 }

@@ -1,47 +1,43 @@
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
-import axios from "axios";
 
-import { User }     from "@prisma/client"
-import Avatar       from "@/app/components/Avatar";
-import LoadingModal from "@/app/components/LoadingModal";
-
-
+import { User } from "@prisma/client";
+import UserBoxPresenter from "./UserBoxPresenter";
 
 interface UserboxProps {
-  data: User
+  user: User
 }
 
-const Userbox: React.FC<UserboxProps> = ({
-  data
-}) => {
-  const router                    = useRouter();
+/**
+ * This component renders a single user as a box.
+ * 
+ * When clicked, it creates a new conversation with the user 
+ * if there is no conversation yet.
+ */
+export default function Userbox({
+  user
+}: UserboxProps) {
+  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
+
   const handleClick = useCallback(() => {
     setIsLoading(true);
     axios.post('/api/conversations', {
-      userId: data.id
+      userId: user.id
     })
     .then((data) => {
       router.push(`/conversations/${data.data.id}`)
     })
-    .finally(() => setIsLoading(false))
-  }, [data, router])
+    .finally(() => setIsLoading(false));
+  }, [user, router]);
+
   return (
-    <>
-      {isLoading && <LoadingModal />}
-      <div id="userBox" onClick={handleClick} className='w-full relative flex items-center space-x-2 bg-white p-2 hover:bg-neutral-100 rounded-lg transition cursor-pointer'>
-        <Avatar user={data}/>
-        <div className='min-w-0 flex-1'>
-          <div className='focus:outline-none'>
-            <div className='flex justify-between items-center mb-1'>
-              <p className='text-xs font-medium text-gray-900 overflow-hidden'>{data.name}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <UserBoxPresenter 
+      user={user}
+      isLoading={isLoading}
+      handleClick={handleClick}    
+    />
   )
 }
-
-export default Userbox

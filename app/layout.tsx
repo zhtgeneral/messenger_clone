@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import PresenceContext from "./context/PresenceContext";
+import AuthContext from "./context/AuthContext";
 import ToasterContext from "./context/ToasterContext";
-import AuthContext from './context/AuthContext';
-import ActiveStatus from "./components/ActiveStatus";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +20,6 @@ export const metadata: Metadata = {
  * It allows NextAuth sessions to be accessed globally using `AuthContext`.
  * 
  * It allows Pusher's active channels to be accessed globally using `ActiveStatus`.
- * 
- * @param children the app that gains access to the above utilities.
- * @returns 
  */
 export default function RootLayout({
   children,
@@ -34,7 +31,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ToasterContext />
         <AuthContext>
-        <ActiveStatus />
+          <PresenceContext />
           {children}
         </AuthContext>
       </body>
