@@ -8,6 +8,10 @@ This project is end-to-end tested and tests mobile and desktop scenarios.
 
 The UI is responsive for mobile and desktops.
 
+### Details
+
+This page explains how Pusher works more in detail [here](/app/libs/pusher.md).
+
 ### How to recreate
 
 #### Third party steps
@@ -83,12 +87,12 @@ Pusher:
   - Bind on `pusher:member_removed` and update global store of members
   - On cleanup unsubscribe from `prescence-<name>` 
     - Note useEffect and useState can prevent duplicates
-  - Call this when app renders ([example](./app/components/ActiveStatus.tsx))
+  - Call this as context only when the user exists ([example](./app/context/PresenceContext.tsx))
 - Setup Authorized channels using PusherServer (required for prescence channels):
   - Setup `channelAuthorization endpoint` (for example) `/api/pusher/auth`
   - Create a POST method
-    - Authenticate using next auth
-    - Call authorizeChannel with `socketId`, `channel`, and `data: { user_id:"" }` ([example](./app/api/pusher/auth/route.ts))
+    - Check for session using next auth
+    - Call authorizeChannel with `socketId`, `channel`, and `data: { user_id: <id> }` ([example](./app/api/pusher/auth/route.ts))
 - Listen to events using PusherClient ([example](./app/conversations/components/ConversationList.tsx), [example](./app/conversations/[conversationId]/components/Body.tsx)):
   - subscribe to a channel (gets access to certain resources)
   - bind to events using event names (listens to events)
