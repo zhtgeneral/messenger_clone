@@ -10,11 +10,12 @@ import { ClipLoader } from 'react-spinners'
  * The spinner appears above all the elements and applies an opaque filter over the screen.
  * @returns component
  */
-const LoadingModal = () => {
+export default function LoadingModal() {
   return (
     <Transition show as={Fragment}>
       <Dialog as='div' className='relative z-50' onClose={() => {}}>
-        <TransitionChild as={Fragment}
+        <TransitionChild 
+          as={Fragment}
           enter="ease-out duration-300" enterFrom='opacity-0' enterTo='opacity-100'
           leave='ease-in duration-200' leaveFrom='opacity-100' leaveTo='opacity-0'
         >
@@ -31,5 +32,3 @@ const LoadingModal = () => {
     </Transition>
   )
 }
-
-export default LoadingModal

@@ -21,9 +21,9 @@ interface AvatarGroupProps {
  * @param users the users which to display the first 3 profile pictures
  * @returns component
  */
-const AvatarGroup: React.FC<AvatarGroupProps> = ({
+export default function AvatarGroup({
   users
-}) => {
+}: AvatarGroupProps) {
   const slicedUsers = users.slice(0, 3)
   const positionMap = {
     0: 'top-0 left-[12px]',
@@ -50,5 +50,3 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
     </div>
   )
 }
-
-export default AvatarGroup

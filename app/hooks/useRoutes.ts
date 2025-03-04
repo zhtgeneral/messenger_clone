@@ -1,10 +1,10 @@
-import { usePathname } from "next/navigation"
-import useConversation from "./useConversation";
+import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import { BiLogOut } from "react-icons/bi";
 import { HiUsers } from "react-icons/hi2";
 import { IoChatbubbles } from "react-icons/io5";
-import { useMemo } from "react";
-import { signOut } from "next-auth/react";
-import { BiLogOut } from "react-icons/bi";
+import useConversation from "./useConversation";
 
 /**
  * This hook gets the routes used for the sidebar.

@@ -14,10 +14,10 @@ interface AuthSocialButtonProps {
  * @param onClick the social login method
  * @returns component
  */
-const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
+export default function AuthSocialButton({
   icon: Icon, 
   onClick
-}) => {
+}: AuthSocialButtonProps) {
   return (
     <button 
       type='button' 
@@ -28,5 +28,3 @@ const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
     </button>
   )
 }
-
-export default AuthSocialButton

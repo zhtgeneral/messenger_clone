@@ -1,27 +1,22 @@
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import React from "react";
 
 /**
- * This hook determines if a conversation is open using NextJS params
- * 
- * If a conversation exists, return the id of the conversation and `isOpen=true` in a memo.
- * 
- * Otherwise return `''` and `isopen=false` in a memo.
- * 
- * @returns react memo
+ * This hook gives access `isOpen` and `conversationId` through Next.js params.
  */
 export default function useConversation() {
   const params = useParams();
-  const conversationId = useMemo(() => {
+
+  const conversationId = React.useMemo(() => {
     if (!params?.conversationId) {
       return '';
     }
     return params.conversationId as string;
   }, [params?.conversationId]);
 
-  const isOpen = useMemo(() => conversationId as unknown as boolean, [conversationId]);
+  const isOpen = React.useMemo(() => conversationId as unknown as boolean, [conversationId]);
 
-  return useMemo(() => ({
+  return React.useMemo(() => ({
     isOpen,
     conversationId
   }), [isOpen, conversationId]);

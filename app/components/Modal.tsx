@@ -2,7 +2,6 @@
 
 import React, { Fragment } from 'react';
 import { IoClose } from 'react-icons/io5';
-
 import { 
   Dialog, 
   DialogPanel, 
@@ -11,8 +10,8 @@ import {
 } from '@headlessui/react';
 
 interface ModalProps {
-  isOpen?  : boolean;
-  onClose  : () => void;
+  isOpen?: boolean;
+  onClose: () => void;
   children?: React.ReactNode;
 }
 
@@ -24,21 +23,21 @@ interface ModalProps {
  * 
  * Clicking on the `x` in the top right 
  * or clicking the backgound closes the modal.
- * 
- * @param isOpen determines if the modal should render
- * @param onClose behavior for closing the modal
- * @param children child components to render inside the modal
- * @returns component
  */
-const Modal: React.FC<ModalProps> = ({ 
+export default function Modal({ 
   isOpen,
   onClose,
   children
-}) => {
+}: ModalProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog as='div' className='relative z-50' onClose={onClose}>
-        <TransitionChild as={Fragment} 
+      <Dialog 
+        as='div' 
+        className='relative z-50' 
+        onClose={onClose}
+      >
+        <TransitionChild 
+          as={Fragment} 
           enter='ease-out duration-300' enterTo='opacity-100' 
           leave='ease-in duration-200' leaveFrom='opacity-100' leaveTo='opacity-0'
         > 
@@ -52,26 +51,20 @@ const Modal: React.FC<ModalProps> = ({
             >
               <DialogPanel id="modal"
                 className={`
-                relative 
-                transform
-                overflow-hidden 
-                rounded-lg 
-                bg-white
-                px-4 
-                py-4
-                text-left
-                shadow-xs 
-                transition-all
-                w-full 
-                sm:my-8 
-                sm:w-full 
-                sm:max-w-lg 
-                sm:p-6 
-                max-h-[80vh] 
-                max-w-[80vh]
-                `}>
+                  relative transform overflow-hidden text-left
+                  rounded-lg shadow-xs bg-white
+                  transition-all w-full px-4 py-4
+                  sm:my-8 sm:w-full sm:max-w-lg sm:p-6 
+                  max-h-[80vh] max-w-[80vh]
+                `}
+              >
                 <div className='absolute right-0 top-0 hidden pr-4 pt-4 sm:block z-10'>
-                  <button id="closeButton" type='button' className='rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2' onClick={onClose}>
+                  <button 
+                    id="closeButton" 
+                    type='button' 
+                    onClick={onClose}
+                    className='rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2' 
+                  >
                     <span className='sr-only'>Close</span>
                     <IoClose className='w-6 h-6' id="closeButton"/>
                   </button>
@@ -87,5 +80,3 @@ const Modal: React.FC<ModalProps> = ({
     </Transition>
   );
 };
-
-export default Modal;

@@ -7,11 +7,9 @@ import useActiveChannel from "../hooks/useActiveChannel"
  * 
  * @returns component 
  */
-const ActiveStatus = () => {
+export default function ActiveStatus() {
   useActiveChannel();
   return (
     null
   )
 }
-
-export default ActiveStatus;

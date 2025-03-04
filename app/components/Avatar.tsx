@@ -25,9 +25,9 @@ interface AvatarProps {
  * @param user the user of which to display the profile picture 
  * @returns component
  */
-const Avatar: React.FC<AvatarProps> = ({
+export default function Avatar({
   user
-}) => {
+}: AvatarProps) {
   const { members } = useActiveList();
   const isActive = members.indexOf(user?.email!) != -1;
 
@@ -48,5 +48,3 @@ const Avatar: React.FC<AvatarProps> = ({
     </div>
   )
 }
-
-export default Avatar;
