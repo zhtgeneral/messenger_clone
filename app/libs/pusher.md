@@ -1,8 +1,8 @@
 # Here is how Pusher works:
   
-The app loads the context `ActiveStatus` and calls the hook `useActiveChannel` ([context](/app/components/ActiveStatus.tsx), [hook](/app/hooks/useActiveChannel.ts)).
+The app loads the context `ActiveStatus` and calls the hook `useActiveChannel` ([context](/app/context/PresenceContext.tsx), [hook](/app/hooks/useActiveChannel.ts)).
 
-If the user is logged in, `PusherClient` subscribes to `"presence-messenger"` and in doing so asks for an auth token at `/api/pusher/auth` ([api route](/app/api/pusher/auth/route.ts)).
+If the user is logged in, `PusherClient` subscribes to `"presence-messenger"` and in doing so asks for an auth token at `/api/pusher/auth` ([api route](/app/api/pusher/auth/route.ts), [client object](/app/libs/pusher.ts)).
 
 `PusherServer` signs the request for `PusherClient` and passes the data for the user only if the user is logged in. If the user is not logged in, `PusherClient`'s auth token recieves a 403 `Forbidden` response and the presence channel is not created.
 
