@@ -77,12 +77,15 @@ export default function ConversationList({
     async function updateConversationSidebar(conversationId: string) {
       const response = await axios.get(`/api/conversations/${conversationId}`);
       const conversation = response.data;
-      setSidebarConversations((current): FullConversationType[] => current.map((currentConversation) => {
-        if (currentConversation.id == conversation.id) {
-          return {...currentConversation, messages: conversation.messages};
-        }
-        return currentConversation;
-      }))
+      setSidebarConversations((existingConversations) => {
+        return existingConversations.map((c) => {
+          if (c.id === conversationId) {
+            return {...c, messages: conversation.messages};
+          }
+          return c;
+        }) 
+      })
+      console.log(`updated conversation on conversation list ${JSON.stringify(sidebarConversations, null, 2)}`); // conversations are updated in the list
     }
     /**
      * This function deletes the conversation from the sidebar and takes the user to `/conversations`.
@@ -102,7 +105,7 @@ export default function ConversationList({
       pusherClient.unbind('conversation:update', updateConversationSidebar);
       pusherClient.unbind('conversation:delete', deleteConversationSidebar);
     }
-  }, [email, conversationId, router]);
+  }, [email, conversationId, router, sidebarConversations]);
 
   return (
     <>

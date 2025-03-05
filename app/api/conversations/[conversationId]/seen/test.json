@@ -1,0 +1,247 @@
+[
+  {
+    "id": "67c7adadb9e6e374508e45e5",
+    "createdAt": "2025-03-05T01:49:33.509Z",
+    "lastMessageAt": "2025-03-05T01:55:28.098Z",
+    "name": null,
+    "isGroup": null,
+    "messageIds": [],
+    "userIds": [
+      "67c64e9a72ec5ae6ba9e4c8a",
+      "67c64f0372ec5ae6ba9e4c8d"
+    ],
+    "users": [
+      {
+        "id": "67c64e9a72ec5ae6ba9e4c8a",
+        "name": "hi",
+        "email": "hi@mail.com",
+        "emailVerified": null,
+        "image": "https://res.cloudinary.com/delv2gjka/image/upload/v1741134690/mlbcospdyaa3wyuseo8w.png",
+        "hashedPassword": "$2b$12$P/LRAN./cfxoReR/mE4cJufWYLqJoifvJ00vAFi8p0ixPg4nUwzWq",
+        "createdAt": "2025-03-04T00:51:38.007Z",
+        "updatedAt": "2025-03-05T00:31:34.753Z",
+        "conversationIds": [
+          "67c64ed872ec5ae6ba9e4c8b",
+          "67c64f1a72ec5ae6ba9e4c8e",
+          "67c66a3572ec5ae6ba9e4c93",
+          "67c79ef0b9e6e374508e45e0",
+          "67c7a02db9e6e374508e45e1",
+          "67c7adadb9e6e374508e45e5"
+        ],
+        "seenMessageIds": [
+          "67c64ee072ec5ae6ba9e4c8c",
+          "67c65f0f72ec5ae6ba9e4c8f",
+          "67c65f2f72ec5ae6ba9e4c90",
+          "67c663bd72ec5ae6ba9e4c91",
+          "67c663ca72ec5ae6ba9e4c92",
+          "67c7adc2b9e6e374508e45e6",
+          "67c7adc7b9e6e374508e45e7",
+          "67c7adccb9e6e374508e45e8",
+          "67c7ade7b9e6e374508e45e9",
+          "67c7af0fb9e6e374508e45ea"
+        ]
+      },
+      {
+        "id": "67c64f0372ec5ae6ba9e4c8d",
+        "name": "test",
+        "email": "test@mail.com",
+        "emailVerified": null,
+        "image": null,
+        "hashedPassword": "$2b$12$I6Oo.h2Y9qDV3NPY9sRUAuFD8ZvOxbsVdJuoHh0yT3pl7uzDK63vm",
+        "createdAt": "2025-03-04T00:53:23.237Z",
+        "updatedAt": "2025-03-04T00:53:23.237Z",
+        "conversationIds": [
+          "67c64f1a72ec5ae6ba9e4c8e",
+          "67c66a3572ec5ae6ba9e4c93",
+          "67c79ef0b9e6e374508e45e0",
+          "67c7a02db9e6e374508e45e1",
+          "67c7a186b9e6e374508e45e2",
+          "67c7a1f8b9e6e374508e45e3",
+          "67c7a2aeb9e6e374508e45e4",
+          "67c7adadb9e6e374508e45e5"
+        ],
+        "seenMessageIds": [
+          "67c65f0f72ec5ae6ba9e4c8f",
+          "67c65f2f72ec5ae6ba9e4c90",
+          "67c663bd72ec5ae6ba9e4c91",
+          "67c663ca72ec5ae6ba9e4c92",
+          "67c66ee572ec5ae6ba9e4c94",
+          "67c7adccb9e6e374508e45e8",
+          "67c7ade7b9e6e374508e45e9",
+          "67c7af0fb9e6e374508e45ea"
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "id": "67c7adc2b9e6e374508e45e6",
+        "body": "hi",
+        "image": null,
+        "createdAt": "2025-03-05T01:49:54.789Z",
+        "seenIds": [
+          "67c64e9a72ec5ae6ba9e4c8a"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64e9a72ec5ae6ba9e4c8a"
+      },
+      {
+        "body": "hi",
+        "image": null,
+        "createdAt": "2025-03-05T01:49:59.423Z",
+        "seenIds": [
+          "67c64e9a72ec5ae6ba9e4c8a"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64e9a72ec5ae6ba9e4c8a"
+      },
+      {
+        "id": "67c7adccb9e6e374508e45e8",
+        "body": "hi",
+        "image": null,
+        "createdAt": "2025-03-05T01:50:04.558Z",
+        "seenIds": [
+          "67c64e9a72ec5ae6ba9e4c8a",
+          "67c64f0372ec5ae6ba9e4c8d"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64e9a72ec5ae6ba9e4c8a"
+      },
+      {
+        "id": "67c7ade7b9e6e374508e45e9",
+        "body": "hello",
+        "image": null,
+        "createdAt": "2025-03-05T01:50:31.078Z",
+        "seenIds": [
+          "67c64f0372ec5ae6ba9e4c8d",
+          "67c64e9a72ec5ae6ba9e4c8a"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64f0372ec5ae6ba9e4c8d"
+      },
+      {
+        "id": "67c7af0fb9e6e374508e45ea",
+        "body": "update",
+        "image": null,
+        "createdAt": "2025-03-05T01:55:27.771Z",
+        "seenIds": [
+          "67c64e9a72ec5ae6ba9e4c8a",
+          "67c64f0372ec5ae6ba9e4c8d"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64e9a72ec5ae6ba9e4c8a"
+      },
+      {
+        "id": "67c7b390b9e6e374508e45eb",
+        "body": "my message not seen",
+        "image": null,
+        "createdAt": "2025-03-05T02:14:40.426Z",
+        "seenIds": [
+          "67c64f0372ec5ae6ba9e4c8d"
+        ],
+        "conversationId": "67c7adadb9e6e374508e45e5",
+        "senderId": "67c64f0372ec5ae6ba9e4c8d"
+      }
+    ]
+  },
+  {
+    "id": "67c7a186b9e6e374508e45e2",
+    "createdAt": "2025-03-05T00:57:42.162Z",
+    "lastMessageAt": "2025-03-05T00:57:42.162Z",
+    "name": "group chat",
+    "isGroup": true,
+    "messageIds": [],
+    "userIds": [
+      "671072197de17a379d6f2a34",
+      "6710721a7de17a379d6f2a35",
+      "6710721b7de17a379d6f2a36",
+      "67c64f0372ec5ae6ba9e4c8d"
+    ],
+    "users": [
+      {
+        "id": "671072197de17a379d6f2a34",
+        "name": "test-cbe64ebc-86d7-49d3-866e-5d35691dbcfd-account",
+        "email": "test-cbe64ebc-86d7-49d3-866e-5d35691dbcfd@gmail.com",
+        "emailVerified": null,
+        "image": null,
+        "hashedPassword": "$2b$12$J2GTQzaTKA.eBJBQv62bme9yat80fr65rTGgxOgofLLWd93zVr8ma",
+        "createdAt": "2024-10-17T02:10:33.902Z",
+        "updatedAt": "2024-10-17T02:10:33.902Z",
+        "conversationIds": [
+          "671072217de17a379d6f2a37",
+          "67c7a186b9e6e374508e45e2",
+          "67c7a1f8b9e6e374508e45e3",
+          "67c7a2aeb9e6e374508e45e4"
+        ],
+        "seenMessageIds": [
+          "6710725a7de17a379d6f2a38"
+        ]
+      },
+      {
+        "id": "6710721a7de17a379d6f2a35",
+        "name": "observer-cbe64ebc-86d7-49d3-866e-5d35691dbcfd-account",
+        "email": "observer-cbe64ebc-86d7-49d3-866e-5d35691dbcfd@gmail.com",
+        "emailVerified": null,
+        "image": null,
+        "hashedPassword": "$2b$12$SmiuxKjvGrf/Eyjtt0GaUuDHO9.laOKERHKc8.UXXtY2V7zsK1WZ6",
+        "createdAt": "2024-10-17T02:10:34.632Z",
+        "updatedAt": "2024-10-17T02:10:34.632Z",
+        "conversationIds": [
+          "671072217de17a379d6f2a37",
+          "67c7a186b9e6e374508e45e2",
+          "67c7a1f8b9e6e374508e45e3",
+          "67c7a2aeb9e6e374508e45e4"
+        ],
+        "seenMessageIds": []
+      },
+      {
+        "id": "6710721b7de17a379d6f2a36",
+        "name": "observer-2-cbe64ebc-86d7-49d3-866e-5d35691dbcfd-account",
+        "email": "observer-2-cbe64ebc-86d7-49d3-866e-5d35691dbcfd@gmail.com",
+        "emailVerified": null,
+        "image": null,
+        "hashedPassword": "$2b$12$tA51vOtIGwX8LoeI65rrAO/qqpaSgmg1sV2H3ItASd7//kvR8t7b.",
+        "createdAt": "2024-10-17T02:10:35.003Z",
+        "updatedAt": "2024-10-17T02:10:35.003Z",
+        "conversationIds": [
+          "67c64ed872ec5ae6ba9e4c8b",
+          "67c66a3572ec5ae6ba9e4c93",
+          "67c7a186b9e6e374508e45e2",
+          "67c7a1f8b9e6e374508e45e3",
+          "67c7a2aeb9e6e374508e45e4"
+        ],
+        "seenMessageIds": []
+      },
+      {
+        "id": "67c64f0372ec5ae6ba9e4c8d",
+        "name": "test",
+        "email": "test@mail.com",
+        "emailVerified": null,
+        "image": null,
+        "hashedPassword": "$2b$12$I6Oo.h2Y9qDV3NPY9sRUAuFD8ZvOxbsVdJuoHh0yT3pl7uzDK63vm",
+        "createdAt": "2025-03-04T00:53:23.237Z",
+        "updatedAt": "2025-03-04T00:53:23.237Z",
+        "conversationIds": [
+          "67c64f1a72ec5ae6ba9e4c8e",
+          "67c66a3572ec5ae6ba9e4c93",
+          "67c79ef0b9e6e374508e45e0",
+          "67c7a02db9e6e374508e45e1",
+          "67c7a186b9e6e374508e45e2",
+          "67c7a1f8b9e6e374508e45e3",
+          "67c7a2aeb9e6e374508e45e4",
+          "67c7adadb9e6e374508e45e5"
+        ],
+        "seenMessageIds": [
+          "67c65f0f72ec5ae6ba9e4c8f",
+          "67c65f2f72ec5ae6ba9e4c90",
+          "67c663bd72ec5ae6ba9e4c91",
+          "67c663ca72ec5ae6ba9e4c92",
+          "67c66ee572ec5ae6ba9e4c94",
+          "67c7adccb9e6e374508e45e8",
+          "67c7ade7b9e6e374508e45e9",
+          "67c7af0fb9e6e374508e45ea"
+        ]
+      }
+    ],
+    "messages": []
+  }
+]

@@ -1,9 +1,10 @@
-'use client'
+"use client"
 
+import { useState } from "react";
+
+import Image from 'next/image';
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
-import Image from 'next/image';
-import { useState } from "react";
 
 import Avatar from "@/app/components/Avatar";
 import ImageModal from "@/app/conversations/[conversationId]/components/ImageModal";
@@ -17,7 +18,7 @@ interface MessageBoxProps {
 interface MessageProps {
   message: FullMessageType,
   displayDate: string,
-  seenList?: string,
+  otherSeenList?: string,
   isLast?: boolean,
   imageModalOpen: boolean,
   setImageModelOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -49,8 +50,8 @@ export default function MessageBox({
   const [imageModalOpen, setImageModelOpen] = useState(false);
 
   const isOwn = session?.data?.user?.email == message?.sender?.email;  
-  const seenList = (message.seen || [])
-  .filter((user) => user.email != message?.sender?.email)
+  const otherSeenList = (message.seen || [])
+  .filter((user) => user.email !== message?.sender?.email)
   .map((user) => user.name)
   .join(', ');
 
@@ -62,7 +63,7 @@ export default function MessageBox({
         <OwnMessage 
           message={message} 
           displayDate={displayDate} 
-          seenList={seenList} 
+          otherSeenList={otherSeenList} 
           isLast={isLast}
           imageModalOpen={imageModalOpen} 
           setImageModelOpen={setImageModelOpen}
@@ -89,7 +90,7 @@ export default function MessageBox({
 function OwnMessage({
   message,
   displayDate,
-  seenList,
+  otherSeenList,
   isLast = false,
   imageModalOpen,
   setImageModelOpen
@@ -131,8 +132,8 @@ function OwnMessage({
             </div>
           )}
         </div>
-        {isLast && seenList && seenList.length > 0 && (
-          <div id="seen_by" className='text-xs font-light text-gray-500'>{`Seen by ${seenList}`}</div>
+        {isLast && otherSeenList && otherSeenList.length > 0 && (
+          <div id="seen_by" className='text-xs font-light text-gray-500'>{`Seen by ${otherSeenList}`}</div>
         )}
       </div>
     </div>

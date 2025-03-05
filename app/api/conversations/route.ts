@@ -1,8 +1,15 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import { Conversation, User } from "@prisma/client";
 import { NextResponse } from "next/server";
-import prisma from '@/app/libs/prismadb' 
+
+import getCurrentUser from "@/app/actions/getCurrentUser";
+import prisma from '@/app/libs/prismadb'
 import { pusherServer } from "@/app/libs/pusher";
 
+const debugging = false;
+
+type ConversationWithUsers = Conversation & {
+  users: User[]
+}
 
 /**
  * This API handles creating new conversations.
@@ -27,7 +34,6 @@ import { pusherServer } from "@/app/libs/pusher";
  * and console log it under `CONVERSATION_POST_ERROR`
  * 
  * @param request the request with `userId`, `isGroup`, `members`, and `name` in the body
- * @returns a `200` response with the new conversation
  */
 export async function POST(request: Request) {
   try {
@@ -43,38 +49,21 @@ export async function POST(request: Request) {
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    if (isGroup && (!members || members.length < 2 || !name)) {
-      return new NextResponse('Invalid Data', { status: 400 });
-    }
     if (isGroup) {
-      const newConversation = await prisma.conversation.create({
-        data: {
-          name,
-          isGroup,
-          users: {
-            connect: [
-              ...members.map((member: {value: string}) => ({
-                id: member.value
-              })),
-              {
-                id: currentUser.id
-              }
-            ]
-          }
-        },
-        include: {
-          users: true
-        }
-      });
-      // TODO improve performance by loading all promises then await all
-      newConversation.users.forEach(async (user) => {
-        if (user.email) {
-          await pusherServer.trigger(user.email, 'conversation:new', newConversation.id);
-        }
-      })
-      return NextResponse.json(newConversation);
+      if (!members || members.length < 2) {
+        return new NextResponse('Group conversations require at least 2 members', { status: 400 });
+      }
+      if (!name) {
+        return new NextResponse('Group conversations require name', { status: 400 });
+      }
+
+      const newGroupConversation = await handleGroupChat(name, members, currentUser.id);
+
+      await notifyMembersNewConversation(newGroupConversation);
+
+      return NextResponse.json(newGroupConversation);
     }
-    
+
     const existingConversations = await prisma.conversation.findMany({
       where: {
         OR: [
@@ -93,7 +82,6 @@ export async function POST(request: Request) {
     })
 
     const singleConversation = existingConversations[0];
-
     if (singleConversation) {
       return NextResponse.json(singleConversation);
     }
@@ -116,17 +104,46 @@ export async function POST(request: Request) {
       }
     })
 
-    // display new conversations on the sidebar
-    // TODO improve performance by loading all promises then await all
-    newConversation.users.forEach(async (user) => {
-      if (user.email) {
-        await pusherServer.trigger(user.email, 'conversation:new', newConversation.id);
-      }
-    })
-
+    await notifyMembersNewConversation(newConversation);
+    
     return NextResponse.json(newConversation);
   } catch (error: any) {
-    console.log(error, 'CONVERSATION_POST_ERROR');
+    console.log(error, 'POST /api/conversations CONVERSATIONS_CREATE_ERROR');
     return new NextResponse('Internal Error', { status: 500 });
   }
+}
+
+/**
+ * For every member, update their sidebar for new conversation.
+ */
+async function notifyMembersNewConversation(newConversation: ConversationWithUsers) {
+  const notifyConversationPromises = newConversation.users.map((user) => {
+    if (user.email) {
+      pusherServer.trigger(user.email, 'conversation:new', newConversation.id);
+    }
+  })
+  await Promise.all(notifyConversationPromises); 
+}
+
+async function handleGroupChat(name: string, members: any[], userId: string) {
+  const newConversation = await prisma.conversation.create({
+    data: {
+      name: name,
+      isGroup: true,
+      users: {
+        connect: [
+          ...members.map((member: { value: string }) => ({
+            id: member.value
+          })),
+          {
+            id: userId
+          }
+        ]
+      }
+    },
+    include: {
+      users: true
+    }
+  });
+  return newConversation;
 }

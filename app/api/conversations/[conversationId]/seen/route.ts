@@ -1,7 +1,13 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import { Conversation, Message, User } from "@prisma/client";
 import { NextResponse } from "next/server";
+
+import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from '@/app/libs/prismadb';
 import { pusherServer } from "@/app/libs/pusher";
+
+type ConversationWithUsers = Conversation & {
+  users: User[]
+}
 
 interface IParams {
   conversationId?: string
@@ -40,14 +46,17 @@ interface IParams {
  */
 export async function POST(
   _request: Request,
-  {params}: {params: IParams}):
-Promise<NextResponse> {
+  { params }: { params: IParams }
+): Promise<NextResponse> {
   try {
-    const currentUser = await getCurrentUser();
-    const { conversationId } = params;
-
+    const currentUser = await getCurrentUser();    
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
+    }
+    
+    const { conversationId } = params;
+    if (!conversationId) {
+      return new NextResponse('conversationId must be on params', { status: 400 });
     }
 
     const conversation = await prisma.conversation.findUnique({
@@ -63,17 +72,16 @@ Promise<NextResponse> {
         users: true
       }
     });
-
     if (!conversation) {
-      return new NextResponse('Invalid ID', { status: 400 });
+      return new NextResponse('unknown conversation', { status: 404 });
     }
 
-    const lastMessage = conversation.messages[conversation.messages.length - 1]
+    const lastMessage = conversation.messages.at(-1);
     if (!lastMessage) {
       return NextResponse.json(conversation);
     }
 
-    const updatedMessage = await prisma.message.update({
+    const seenMessage = await prisma.message.update({
       where: {
         id: lastMessage.id
       },
@@ -90,25 +98,28 @@ Promise<NextResponse> {
       }
     });
 
-    // mark message as seen in real time on sidebar
-    // TODO fix conversation bar not displaying for other side
-    await pusherServer
-    .trigger(currentUser.email, 'conversation:update', conversationId)
-    .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_CONVERSATION'));
-
-    // excluding the current user
-    if (lastMessage.seenIds.indexOf(currentUser.id) != -1) {
-      return NextResponse.json(lastMessage);
-    }
+    const notifications = [
+      notifySelfCaughtUpOnConversation(conversation, currentUser),
+      notifyReadersSeenMessage(conversation, seenMessage)
+    ];
+    await Promise.all(notifications);    
     
-    // mark message as seen
-    await pusherServer
-    .trigger(conversationId!, 'message:update', updatedMessage.id) 
-    .catch((error) => console.log(error, 'ERROR_MESSAGES_SEEN_UPDATE_MESSAGE'));
-    
-    return NextResponse.json(updatedMessage);
+    return NextResponse.json(seenMessage);
   } catch (error: any) {
     console.log(error, 'ERROR_MESSAGES_SEEN');
     return new NextResponse('Internal Error,', { status: 500 });
   }
+}
+
+/**
+ * For the current user, mark conversation as caught up.
+ */
+async function notifySelfCaughtUpOnConversation(updatedConversation: ConversationWithUsers, user: User) {
+  if (user.email) {
+    await pusherServer.trigger(user.email, 'conversation:update', updatedConversation.id);
+  }
+}
+
+async function notifyReadersSeenMessage(conversation: ConversationWithUsers, seenMessage: Message) {
+  await pusherServer.trigger(conversation.id, 'message:update', seenMessage.id);
 }

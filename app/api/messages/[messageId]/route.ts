@@ -1,5 +1,6 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
+
+import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from '@/app/libs/prismadb';
 
 interface IParams {
@@ -42,7 +43,7 @@ export async function GET(
     });
     return NextResponse.json(message);
   } catch (error: any) {
-    console.log(error, 'ERROR_MESSAGES_GET')
+    console.log(error, 'GET /api/messages/:id ERROR_MESSAGES_GET')
     return new NextResponse('Internal Error', { status: 500 })
   }
 }

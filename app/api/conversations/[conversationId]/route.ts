@@ -1,7 +1,13 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import { Conversation, User } from "@prisma/client";
 import { NextResponse } from "next/server";
+
+import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from '@/app/libs/prismadb';
 import { pusherServer } from "@/app/libs/pusher";
+
+type ConversationWithUsers = Conversation & {
+  users: User[]
+}
 
 interface IParams {
   conversationId?: string;
@@ -9,20 +15,24 @@ interface IParams {
 
 /**
  * This API endpoint handles the deletion of conversations.
- * @requires params needs to contain conversationId on the url.
  * 
- * It checks if the user has an `id` and `email`. If not, throw a `401` error for unauthorized.
+ * @requires user must be logged in.
+ * @requires params needs to contain conversationId.
  * 
- * It checks if the conversation exists. If not, throw an `400` error for invalid id.
+ * It checks if the user has an `id` and `email`. 
+ * If not, throw a `401` error for unauthorized.
  * 
- * If the above is satisfied, delete the conversation from the backend.
- * Then notify each of the observers on channel `conversation:delete`.
+ * It checks if the conversationId exists on the params. 
+ * If not, throw an `400` error for invalid id.
+ * 
+ * If an existing conversation cannot be retrieved, 
+ * throw a `404` error for unknown `conversationId`.
+ * 
+ * Otherwise delete the conversation and notify every member on their sidebar.
  * 
  * If any error occurs elsewhere, throw a `500` error for internal error.
  * 
- * @param _request a request (unused)
- * @param params the params that holds the `conversationId`
- * @returns a `200` response with the deleted conversation
+ * @note _request parameter stays unused 
  */
 export async function DELETE(
   _request: Request, 
@@ -35,6 +45,10 @@ export async function DELETE(
     }
     
     const { conversationId } = params;
+    if (!conversationId) {
+      return new NextResponse('conversationId must be on params', { status: 400 });
+    }
+
     const existingConversation = await prisma.conversation.findUnique({
       where: {
         id: conversationId
@@ -44,7 +58,7 @@ export async function DELETE(
       }
     });
     if (!existingConversation) {
-      return new NextResponse('Invalid ID', {status: 400})
+      return new NextResponse('unknown conversationId', { status: 404 });
     }
 
     const deletedConversation = await prisma.conversation.deleteMany({
@@ -56,13 +70,7 @@ export async function DELETE(
       }
     });
 
-    // observers get notified of deleted conversations in real time
-    // TODO fix performance problem by adding all promises and awaiting all.
-    existingConversation.users.forEach(async (user) => {
-      if (user.email) {
-        await pusherServer.trigger(user.email, 'conversation:delete', existingConversation.id);
-      }
-    })
+    await notifyMemebersDeleteConversation(existingConversation);
 
     return NextResponse.json(deletedConversation);
   } catch (error: any) {
@@ -74,19 +82,23 @@ export async function DELETE(
 /**
  * This API endpoint handles getting a conversation.
  * 
- * @requires params needs to contain the conversation id on the url.
+ * @requires user must be logged in.
+ * @requires params needs to contain conversationId.
  * 
  * It checks if the current user has an `id` and `email`.
  * If not, throw a `401` error for unauthorized.
  * 
- * Otherwise, find the conversation from the backend and return it.
- * If an error occurs at reading the backend specifically, log the error.
+ * It checks if conversationId is on the params.
+ * If not, throw a `400` error invalid id.
+ * 
+ * It a conversation cannot be retrieved, 
+ * throw a `404` error for not found.
+ * 
+ * Otherwise, find the conversation from the database and return it.
  * 
  * If an error occurs anywhere else, throw a `500` error for internal error.
  * 
- * @param _request unused request
- * @param params the params on the url that contain `conversationId`
- * @returns a `200` response with the conversation 
+ * @note _request parameter stays unused 
  */
 export async function GET(
   _request: Request,
@@ -97,19 +109,40 @@ export async function GET(
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+
+    const { conversationId } = params;
+    if (!conversationId) {
+      return new NextResponse('conversationId must be on params', { status: 400 });
+    }
     
     const conversation = await prisma.conversation.findUnique({
       where: {
-        id: params.conversationId
+        id: conversationId
       },
       include: {
         users: true,
         messages: true
       }
-    }).catch((error) => console.log(error, 'ERROR_CONVERSATION_GET_PRISMA'));
+    });
+    if (!conversation) {
+      return new NextResponse('unknown conversation', { status: 404 });
+    }
+    
     return NextResponse.json(conversation);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log(error, 'ERROR_CONVERSATION_GET')
     return new NextResponse('Internal Error', { status: 500 });
   }
+}
+
+/**
+ * For every member update their sidebar for deleted conversation.
+ */
+async function notifyMemebersDeleteConversation(existingConversation: ConversationWithUsers) {
+  const deleteNotificationPromises = existingConversation.users.map((user) => {
+    if (user.email) {
+      pusherServer.trigger(user.email, 'conversation:delete', existingConversation.id);
+    }
+  })
+  await Promise.all(deleteNotificationPromises); 
 }

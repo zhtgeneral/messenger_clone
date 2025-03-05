@@ -1,5 +1,6 @@
-import { useParams } from "next/navigation";
 import React from "react";
+
+import { useParams } from "next/navigation";
 
 /**
  * This hook gives access `isOpen` and `conversationId` through Next.js params.

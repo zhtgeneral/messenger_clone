@@ -1,14 +1,14 @@
-'use client'
+"use client"
+
+import React from "react"
 
 import axios from "axios"
 import { find } from "lodash"
 
 import MessageBox from "@/app/conversations/[conversationId]/components/MessageBox"
 import useConversation from "@/app/hooks/useConversation"
-import { pusherClient } from '@/app/libs/pusher'
 import { FullMessageType } from "@/app/types"
-import React from "react"
-
+import { pusherClient } from '@/app/libs/pusher'
 
 interface BodyProps {
   initialMessages: FullMessageType[];
@@ -28,7 +28,7 @@ interface BodyProps {
 export default function Body({
   initialMessages
 }: BodyProps) {
-  const {conversationId} = useConversation();
+  const { conversationId } = useConversation();
   
   const [messages, setMessages] = React.useState(initialMessages);
 
@@ -54,11 +54,11 @@ export default function Body({
     async function displayNewMessage(messageId: string) {
       await axios.post(`/api/conversations/${conversationId}/seen`);
       const response = await axios.get(`/api/messages/${messageId}`);
-      setMessages((current): FullMessageType[] => {
-        if (find(current, {id: messageId})) {
-          return current;
+      setMessages((existingMessages) => {
+        if (find(existingMessages, { id: messageId })) {
+          return existingMessages;
         }
-        return [...current, response.data!];
+        return [...existingMessages, response.data!];
       })
       bottomRef?.current?.scrollIntoView();
     }
@@ -72,12 +72,11 @@ export default function Body({
     async function markMessageSeen(newMessageId: string) {
       const response = await axios.get(`/api/messages/${newMessageId}`);
       const newMessage = response.data!;
-      setMessages((current): FullMessageType[] => current.map((currentMessage) => {
-        if (currentMessage.id == newMessage.id) {
-          return newMessage;
-        }
-        return currentMessage;
-      }))
+      setMessages((existingMessages) => 
+        existingMessages.map((m) => 
+          (m.id == newMessage.id)? newMessage: m
+        )
+      )
     }
     
     return () => {

@@ -1,16 +1,16 @@
 'use client'
 
+import React from "react";
+
 import clsx from "clsx";
 import { format } from 'date-fns';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
 
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import useOtherUser from "@/app/hooks/useOtherUser";
-import { FullConversationType, FullMessageType } from "@/app/types";
-import { User } from "@prisma/client";
+import { FullConversationType } from "@/app/types";
 
 interface ConversationBoxProps {
   conversation: FullConversationType,
@@ -27,7 +27,6 @@ interface ConversationBoxProps {
  * 
  * @param conversation the conversation to be rendered
  * @param selected optional determines if the conversation is highlighted
- * @returns component
  */
 export default function ConversationBox({
   conversation,
@@ -37,28 +36,31 @@ export default function ConversationBox({
   const router = useRouter();
   const otherUser = useOtherUser(conversation);
 
-  const handleClick = useCallback(() => {
+  const handleClick = React.useCallback(() => {
     router.push(`/conversations/${conversation.id}`);
   }, [router, conversation.id]);
 
-  const lastMessage = useMemo((): FullMessageType => {
-    const messages = conversation.messages || [];
-    return messages[messages.length - 1];
+  const lastMessage = React.useMemo(() => {
+    const messages = conversation.messages;
+    return messages.at(-1)!;
   }, [conversation.messages]);
 
-  const userEmail = useMemo((): string | null | undefined => {
-    return session.data?.user?.email;
+  const userEmail: string = React.useMemo(() => {
+    return session.data?.user?.email || "";
   }, [session.data?.user?.email]);
 
-  const hasSeen = useMemo((): boolean => {
+  /**
+   * If the current user has seen the most recent message, this flag is true.
+   */
+  const hasSeen = React.useMemo(() => {
     if (!lastMessage || !userEmail) {
       return false;
     }
-    const seenArray = lastMessage.seen || [];
-    return seenArray.filter((user: User) => user.email == userEmail).length != 0;
+    const seenArray = lastMessage.seen || []
+    return seenArray.some((s) => s.email === userEmail);
   }, [lastMessage, userEmail]);
 
-  const lastMessageText = useMemo(() => {
+  const lastMessageText = React.useMemo(() => {
     if (lastMessage?.image) {
       return 'Sent an image';
     }
