@@ -15,8 +15,6 @@ import { User } from "@prisma/client";
  * Otherwise it returns the user.
  * 
  * If any error occurs, return `null`.
- * 
- * @returns 
  */
 export default async function getCurrentUser(): Promise<User | null> {
   try {

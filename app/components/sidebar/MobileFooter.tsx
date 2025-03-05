@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from "react"
-
-import { User }        from "@prisma/client";
+import MobileItem from "@/app/components/sidebar/items/MobileItem";
+import SettingsButton from '@/app/components/sidebar/settings/SettingsButton';
+import SettingsModal from "@/app/components/sidebar/settings/SettingsModal";
 import useConversation from "@/app/hooks/useConversation";
-import useRoutes       from "@/app/hooks/useRoutes";
-import MobileItem      from "@/app/components/sidebar/items/MobileItem";
-import SettingsModal   from "@/app/components/sidebar/settings/SettingsModal";
-import SettingsButton  from '@/app/components/sidebar/settings/SettingsButton';
+import useRoutes from "@/app/hooks/useRoutes";
+import { User } from "@prisma/client";
+import React from "react";
 
 interface MobileFooterProps {
   currentUser: User
@@ -23,14 +22,15 @@ interface MobileFooterProps {
  * and a button to logout.
  * 
  * @param currentUser the authenticated user
- * @returns component
  */
-const MobileFooter: React.FC<MobileFooterProps> = ({
+export default function MobileFooter({
   currentUser
-}) => {
-  const  routes  = useRoutes();
-  const {isOpen} = useConversation();
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+}: MobileFooterProps) {
+  const  routes = useRoutes();
+  const { isOpen } = useConversation();
+
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+
   if (isOpen) return null;
 
   return (
@@ -51,4 +51,3 @@ const MobileFooter: React.FC<MobileFooterProps> = ({
     </>
   )
 }
-export default MobileFooter

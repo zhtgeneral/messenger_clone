@@ -1,7 +1,7 @@
 'use client'
 
 import { format } from "date-fns";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment } from "react";
 
 import ConfirmModal from "@/app/conversations/[conversationId]/components/Drawer/ConfirmModal";
 import useActiveList from "@/app/hooks/useActiveList";
@@ -13,6 +13,7 @@ import {
   TransitionChild
 } from '@headlessui/react';
 import { Conversation, User } from "@prisma/client";
+import React from "react";
 import ProfileDrawerContent from "./ProfileDrawerContent";
 
 interface ProfileDrawerProps {
@@ -41,13 +42,13 @@ export default function ProfileDrawer({
   const otherUser = useOtherUser(conversation);
   const { members } = useActiveList();
   
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
 
-  const title = useMemo(() => {
+  const title = React.useMemo(() => {
     return conversation.name || otherUser.name
   }, [conversation, otherUser])
 
-  const statusText = useMemo((): string => {
+  const statusText = React.useMemo((): string => {
     if (conversation.isGroup) {
       return `${conversation.users.length} members`;
     }
@@ -55,7 +56,7 @@ export default function ProfileDrawer({
     return (otherUserOnline)? 'Online': "Offline";
   }, [conversation, otherUser, members]);
 
-  const joinedDate = useMemo(() => {
+  const joinedDate = React.useMemo(() => {
     return format(new Date(otherUser.createdAt), 'PP')
   }, [otherUser])
 

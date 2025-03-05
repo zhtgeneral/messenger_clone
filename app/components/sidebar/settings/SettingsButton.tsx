@@ -13,9 +13,9 @@ interface SettingsButtonProps {
  * @param setModalIsOpen determines if the settings modal should open
  * @returns component
  */
-const SettingsButton: React.FC<SettingsButtonProps> = ({
+export default function SettingsButton({
   setModalIsOpen
-}) => {
+}: SettingsButtonProps) {
   return (
     <div id="settingsButton" onClick={() => setModalIsOpen(true)} 
       className='cursor-pointer hover:opacity-75 transition px-3 lg:px-0 lg:py-1'>
@@ -23,5 +23,3 @@ const SettingsButton: React.FC<SettingsButtonProps> = ({
     </div>
   )
 }
-
-export default SettingsButton

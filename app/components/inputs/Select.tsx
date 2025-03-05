@@ -20,13 +20,13 @@ interface SelectProps {
  * @param value the values that correspond to the selectable items
  * @returns component
  */
-const Select: React.FC<SelectProps> = ({
+export default function Select({
   disabled,
   label,
   onChange,
   options,
   value,
-}) => {
+}: SelectProps) {
   return (
     <div className="z-[100000]">
       <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -54,4 +54,3 @@ const Select: React.FC<SelectProps> = ({
     </div>
   );
 };
-export default Select

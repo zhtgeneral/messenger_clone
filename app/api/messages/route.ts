@@ -32,7 +32,7 @@ import { pusherServer } from '@/app/libs/pusher'
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const currentUser = await getCurrentUser();
-    const body        = await request.json();
+    const body = await request.json();
     const {
       message,
       image,
@@ -93,9 +93,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // observers get notifications for new messages in real time
     await pusherServer
     .trigger(conversationId, 'messages:new', newMessage.id)
-    .catch((error) => 
-      console.log(error, 'ERROR_MESSAGES_RENDER')
-    )
+    .catch((error) => console.log(error, 'ERROR_MESSAGES_RENDER'));
 
     // observers get notifications on the sidebar in real time
     // TODO improve performance by adding promises and awaiting all at oonce.
@@ -106,6 +104,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json(newMessage);
   } catch (error: any) {
     console.log(error, 'ERROR_MESSAGES_POST')
-    return new NextResponse('Internal Error', {status: 500})
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

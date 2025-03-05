@@ -32,7 +32,7 @@ import { pusherServer } from "@/app/libs/pusher";
 export async function POST(request: Request) {
   try {
     const currentUser = await getCurrentUser();
-    const body        = await request.json();
+    const body = await request.json();
     const {
       userId,
       isGroup,
@@ -41,10 +41,10 @@ export async function POST(request: Request) {
     } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     if (isGroup && (!members || members.length < 2 || !name)) {
-      return new NextResponse('Invalid Data', { status: 400 })
+      return new NextResponse('Invalid Data', { status: 400 });
     }
     if (isGroup) {
       const newConversation = await prisma.conversation.create({
@@ -127,6 +127,6 @@ export async function POST(request: Request) {
     return NextResponse.json(newConversation);
   } catch (error: any) {
     console.log(error, 'CONVERSATION_POST_ERROR');
-    return new NextResponse('Internal Error', { status: 500 })
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

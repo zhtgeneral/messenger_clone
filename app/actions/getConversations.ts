@@ -11,8 +11,6 @@ import { FullConversationType } from "@/app/types";
  * and return it.
  * 
  * If any error occurs, return an empty array.
- * 
- * @returns 
  */
 export default async function getConversations(): Promise<FullConversationType[]> {
   const currentUser = await getCurrentUser();

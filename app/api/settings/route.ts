@@ -21,10 +21,10 @@ export async function POST(request: Request) {
   try {
     const currentUser = await getCurrentUser();
     const body = await request.json();
-    const {name, image} = body;
+    const { name, image } = body;
     
     if (!currentUser) {
-      return new NextResponse('Unauthorized', {status: 401})
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const updatedUser = await prisma.user.update({
@@ -36,9 +36,9 @@ export async function POST(request: Request) {
         name: name
       }
     })
-    return NextResponse.json(updatedUser)
+    return NextResponse.json(updatedUser);
   } catch (error: any) {
     console.log(error, 'ERROR_SETTINGS')
-    return new NextResponse('Internal Error', {status: 500})
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }

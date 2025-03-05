@@ -1,6 +1,6 @@
 import getSession from "@/app/actions/getSession";
-import prisma from '@/app/libs/prismadb' 
-import { User } from "@prisma/client"
+import prisma from '@/app/libs/prismadb';
+import { User } from "@prisma/client";
 
 /**
  * This helper function gets all the users except the current one.
@@ -10,8 +10,6 @@ import { User } from "@prisma/client"
  * 
  * Otherwise it returns all the users minus the current user.
  * The users are in descending order by the created date.
- * 
- * @returns an array of users
  */
 export default async function getUsers(): Promise<User[]> {
   const session = await getSession();

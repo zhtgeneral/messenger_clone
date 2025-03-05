@@ -1,13 +1,13 @@
 'use client'
 
 import axios from "axios"
-import { useEffect, useRef, useState } from "react"
 import { find } from "lodash"
 
-import useConversation from "@/app/hooks/useConversation"
 import MessageBox from "@/app/conversations/[conversationId]/components/MessageBox"
-import { FullMessageType } from "@/app/types"
+import useConversation from "@/app/hooks/useConversation"
 import { pusherClient } from '@/app/libs/pusher'
+import { FullMessageType } from "@/app/types"
+import React from "react"
 
 
 interface BodyProps {
@@ -28,16 +28,17 @@ interface BodyProps {
 export default function Body({
   initialMessages
 }: BodyProps) {
-  const [messages, setMessages] = useState(initialMessages);
   const {conversationId} = useConversation();
+  
+  const [messages, setMessages] = React.useState(initialMessages);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const bottomRef = React.useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
   }, [conversationId]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     pusherClient.subscribe(conversationId);
     pusherClient.bind('messages:new', displayNewMessage);
     pusherClient.bind('message:update', markMessageSeen);

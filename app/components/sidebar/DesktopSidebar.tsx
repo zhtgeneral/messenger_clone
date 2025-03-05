@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from "react";
-
-import { User } from "@prisma/client";
-import useRoutes from "@/app/hooks/useRoutes";
 import DesktopItem from "@/app/components/sidebar/items/DesktopItem";
-import SettingsModal from "@/app/components/sidebar/settings/SettingsModal"
 import SettingsButton from "@/app/components/sidebar/settings/SettingsButton";
+import SettingsModal from "@/app/components/sidebar/settings/SettingsModal";
+import useRoutes from "@/app/hooks/useRoutes";
+import { User } from "@prisma/client";
+import React from "react";
 
 interface DesktopSidebarProps {
   currentUser: User
@@ -22,13 +21,13 @@ interface DesktopSidebarProps {
  * and a settings button.
  * 
  * @param currentUser the authenticated user
- * @returns component
  */
-const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
+export default function DesktopSidebar({
   currentUser
-}) => {
+}: DesktopSidebarProps) {
   const routes = useRoutes();
-  const [isOpen, setIsOpen] = useState(false);
+  
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <>
@@ -55,5 +54,3 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
     </>
   )
 }
-
-export default DesktopSidebar;

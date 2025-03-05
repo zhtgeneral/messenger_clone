@@ -31,7 +31,7 @@ export async function DELETE(
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     
     const { conversationId } = params;
@@ -42,7 +42,7 @@ export async function DELETE(
       include: {
         users: true
       }
-    })
+    });
     if (!existingConversation) {
       return new NextResponse('Invalid ID', {status: 400})
     }
@@ -54,20 +54,20 @@ export async function DELETE(
           hasSome: [currentUser.id]
         }
       }
-    })
+    });
 
     // observers get notified of deleted conversations in real time
     // TODO fix performance problem by adding all promises and awaiting all.
     existingConversation.users.forEach(async (user) => {
       if (user.email) {
-        await pusherServer.trigger(user.email, 'conversation:delete', existingConversation.id)
+        await pusherServer.trigger(user.email, 'conversation:delete', existingConversation.id);
       }
     })
 
     return NextResponse.json(deletedConversation);
   } catch (error: any) {
     console.log(error, 'ERROR_CONVERSATION_DELETE')
-    return new NextResponse('Internal Error', { status: 500 })
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }
 
@@ -95,7 +95,7 @@ export async function GET(
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     
     const conversation = await prisma.conversation.findUnique({
@@ -106,10 +106,10 @@ export async function GET(
         users: true,
         messages: true
       }
-    }).catch((error) => console.log(error, 'ERROR_CONVERSATION_GET_PRISMA'))
+    }).catch((error) => console.log(error, 'ERROR_CONVERSATION_GET_PRISMA'));
     return NextResponse.json(conversation);
   } catch (error: any) {
     console.log(error, 'ERROR_CONVERSATION_GET')
-    return new NextResponse('Internal Error', { status: 500 })
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

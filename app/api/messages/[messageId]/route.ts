@@ -18,9 +18,7 @@ interface IParams {
  * If any error occurs, throw a `500` error for internal error
  * and console log it under `ERROR_MESSAGES_GET`.
  * 
- * @param request 
  * @param params the params that contains the messageId
- * @returns 
  */
 export async function GET(
   _request: Request,
@@ -28,8 +26,9 @@ export async function GET(
 ): Promise<NextResponse> {
   try {
     const currentUser = await getCurrentUser();
+
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse('Unauthorized', {status: 401});
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     
     const message = await prisma.message.findUnique({
@@ -37,13 +36,13 @@ export async function GET(
         id: params.messageId
       },
       include: {
-        seen  : true,
+        seen: true,
         sender: true,
       }
-    })
+    });
     return NextResponse.json(message);
   } catch (error: any) {
     console.log(error, 'ERROR_MESSAGES_GET')
-    return new NextResponse('Internal Error', {status: 500})
+    return new NextResponse('Internal Error', { status: 500 })
   }
 }

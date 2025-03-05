@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from 'react-icons/fi';
 
@@ -8,6 +7,7 @@ import Button from "@/app/components/Button";
 import Modal from "@/app/components/Modal";
 import useConversation from "@/app/hooks/useConversation";
 import { DialogTitle } from "@headlessui/react";
+import React from "react";
 
 interface ConfirmModalProps {
   isOpen?: boolean;
@@ -38,9 +38,9 @@ export default function ConfirmModal({
   const router = useRouter();
   const { conversationId } = useConversation();
   
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const onDelete = useCallback(() => {
+  const onDelete = React.useCallback(() => {
     setIsLoading(true);
     axios.delete(`/api/conversations/${conversationId}`)
     .then(() => {

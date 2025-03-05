@@ -11,9 +11,8 @@ import MobileFooter from "@/app/components/sidebar/MobileFooter"
  * It renders the mobile footer depending on the conditions for `MobileFooter`.
  * 
  * @param children the app the displays next to the sidebar 
- * @returns component
  */
-async function Sidebar({ 
+export default async function Sidebar({ 
   children 
 }: { 
   children: React.ReactNode 
@@ -29,4 +28,3 @@ async function Sidebar({
     </div>
   )
 }
-export default Sidebar

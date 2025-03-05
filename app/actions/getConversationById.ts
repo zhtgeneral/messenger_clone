@@ -15,7 +15,6 @@ interface ConversationWithUsers extends Conversation {
  * If any error occurs, return null.
  * 
  * @param conversationId the conversation Id
- * @returns the conversation from the database
  */
 export default async function getConversationById(
   conversationId: string

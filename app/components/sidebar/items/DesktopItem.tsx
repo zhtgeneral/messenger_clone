@@ -21,13 +21,13 @@ interface DesktopItemProps {
  * @param active optional behaviour of item when clicked on
  * @returns 
  */
-const DesktopItem: React.FC<DesktopItemProps> = ({
+export default function DesktopItem({
   href,   
   label,  
   icon: Icon,
   active,
   onClick
-}) => {
+}: DesktopItemProps) {
   function handleClick()  {
     if (onClick) {
       return onClick();
@@ -49,5 +49,4 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
     </li>
   )
 }
-export default DesktopItem;
 

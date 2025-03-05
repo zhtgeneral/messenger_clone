@@ -45,8 +45,9 @@ Promise<NextResponse> {
   try {
     const currentUser = await getCurrentUser();
     const { conversationId } = params;
+
     if (!currentUser?.id || !currentUser?.email) {
-      return new NextResponse('Unauthorized', { status: 403 })
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const conversation = await prisma.conversation.findUnique({
@@ -61,10 +62,10 @@ Promise<NextResponse> {
         },
         users: true
       }
-    })
+    });
 
     if (!conversation) {
-      return new NextResponse('Invalid ID', { status: 400 })
+      return new NextResponse('Invalid ID', { status: 400 });
     }
 
     const lastMessage = conversation.messages[conversation.messages.length - 1]
@@ -87,7 +88,7 @@ Promise<NextResponse> {
           }
         }
       }
-    })
+    });
 
     // mark message as seen in real time on sidebar
     // TODO fix conversation bar not displaying for other side

@@ -9,7 +9,6 @@ import { FullMessageType } from "../types"
  * in ascending order by the date it was created.
  * 
  * @param conversationId the id of the conversation
- * @returns an array of messages
  */
 export default async function getMessages(
   conversationId: string
@@ -21,7 +20,7 @@ export default async function getMessages(
       },
       include: {
         sender: true,
-        seen  : true
+        seen: true
       },
       orderBy: {
         createdAt: 'asc'

@@ -1,26 +1,28 @@
 'use client'
 
-import { CldUploadButton } from "next-cloudinary";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import axios from "axios";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
-import { TiUser } from "react-icons/ti";
-import { MdEdit } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import { FieldValues, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { TiUser } from "react-icons/ti";
 
+import Button from "@/app/components/Button";
+import Input from "@/app/components/inputs/Input";
+import Modal from "@/app/components/Modal";
 import { User } from "@prisma/client";
-import Input    from "@/app/components/inputs/Input";
-import Button    from "@/app/components/Button";
-import Modal     from "@/app/components/Modal"
+import React from "react";
 
 interface SettingsModalProps {
   currentUser: User
   isOpen?: boolean,
   onClose: () => void;
 }
+
+// TODO improve buttons for reset image and edit image
 
 /**
  * This component allows users to change their public info.
@@ -43,16 +45,16 @@ interface SettingsModalProps {
  * @param currentUser the authenticated user
  * @param isOpen determines if the modal renders
  * @param onClose determines the behavior for closing the modal
- * @returns component
  */
-const SettingsModal: React.FC<SettingsModalProps> = ({
+export default function SettingsModal({
   currentUser,
   isOpen,
   onClose
-}) => {
-  const uploadPreset: string = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+}: SettingsModalProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -67,7 +69,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       image: currentUser?.image
     }
   })
-
+  const uploadPreset: string = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
   const image = watch('image');
 
   function handleUpload(result: any): void {
@@ -187,4 +189,3 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     </Modal>
   )
 }
-export default SettingsModal;
