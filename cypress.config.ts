@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-require('dotenv').config();
+require("dotenv").config();
 
 export default defineConfig({
   e2e: {
@@ -7,13 +7,22 @@ export default defineConfig({
       // implement node event listeners here
     },
     // baseUrl: process.env.NEXT_PUBLIC_DOMAIN
-    baseUrl: 'http://localhost:3000'
+    baseUrl: "http://localhost:3000",
   },
+
   env: {
-    ...process.env
+    ...process.env,
   },
+
   defaultCommandTimeout: 20000,
   pageLoadTimeout: 100000,
   responseTimeout: 10000,
   requestTimeout: 10000,
+
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
+    },
+  },
 });
