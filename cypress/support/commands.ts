@@ -64,17 +64,17 @@ Cypress.Commands.addAll({
   signup(name: string, email: string, password: string) {
     cy.visit('/');
     cy.contains('Create an account').click();
-    cy.get('input[id="name"]').type(name);
-    cy.get('input[id="email"]').type(email);
-    cy.get('input[id="password"]').type(password);
+    cy.get('input[id="name"]').type(name, { delay: 0 });
+    cy.get('input[id="email"]').type(email, { delay: 0 });
+    cy.get('input[id="password"]').type(password, { delay: 0 });
     cy.get('button[type="submit"]').click();
   },
   signupEmpty(name: string,  email: string, _password: string, empty: string) {
     cy.visit('/');
     cy.contains('Create an account').click();
-    cy.get('input[id="name"]').type((empty == 'name')? 'a{backspace}': name); 
-    cy.get('input[id="email"]').type((empty == 'email')? 'a{backspace}': email); 
-    cy.get('input[id="password"]').type((empty == 'password')? 'a{backspace}': name); 
+    cy.get('input[id="name"]').type((empty == 'name')? 'a{backspace}': name, { delay: 0 }); 
+    cy.get('input[id="email"]').type((empty == 'email')? 'a{backspace}': email, { delay: 0 }); 
+    cy.get('input[id="password"]').type((empty == 'password')? 'a{backspace}': name, { delay: 0 }); 
     cy.get('button[type="submit"]').click();
   },
   createTestAccount(name: string, email: string, password: string) {
