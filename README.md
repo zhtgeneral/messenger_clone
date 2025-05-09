@@ -8,6 +8,11 @@ This project is end-to-end tested and tests mobile and desktop scenarios.
 
 The UI is responsive for mobile and desktops.
 
+### How to run the app
+- `npm run dev` to open it in `localhost:3000`
+- `npx cypress open` to open the test editor
+- `npx cypress run` to run all tests
+
 ### Details
 
 This page explains how Pusher works more in detail [here](/app/libs/pusher.md).
