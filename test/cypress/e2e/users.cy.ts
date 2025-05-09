@@ -23,6 +23,7 @@ describe('page functions', () => {
     cy.visit('/users', { timeout: 30000 });
   });
   after('delete test accounts', () => {
+    cy.cleanup([testEmail, observerEmail], [testPassword, observerPassword]);
     cy.deleteTestAccount(testEmail, testPassword);
     cy.deleteTestAccount(observerEmail, observerPassword);
   })

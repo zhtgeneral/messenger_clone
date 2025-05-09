@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    "types": ["cypress", "node"],
+    "module": "NodeNext",
+    "moduleResolution":"NodeNext",
+    "baseUrl": "../",
+    "paths": {
+      "@/*": ["../*"], // Example alias (adjust if needed)
+      "cypress/*": ["./*"]  // Points to the new Cypress folder
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
+}
