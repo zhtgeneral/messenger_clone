@@ -1,7 +1,7 @@
 import EmptyState from "@/app/components/EmptyState"
-import Header from "@/app/conversations/[conversationId]/components/HeaderController"
-import Body from "@/app/conversations/[conversationId]/components/Body"
-import Form from "@/app/conversations/[conversationId]/components/Form"
+import Header from "@/app/(site)/conversations/[conversationId]/components/HeaderController"
+import Body from "@/app/(site)/conversations/[conversationId]/components/Body"
+import Form from "@/app/(site)/conversations/[conversationId]/components/Form"
 import getMessages from "@/app/actions/getMessages"
 import getConversationById from "@/app/actions/getConversationById"
 interface IParams {

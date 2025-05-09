@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { TiUserAdd } from "react-icons/ti";
 
 import Button from "@/app/components/Button";
-import ConversationBox from "@/app/conversations/components/ConversationBox";
-import GroupChatModal from "@/app/conversations/components/GroupChatModal";
+import ConversationBox from "@/app/(site)/conversations/components/ConversationBox";
+import GroupChatModal from "@/app/(site)/conversations/components/GroupChatModal";
 import useConversation from "@/app/hooks/useConversation";
 import { pusherClient } from "@/app/libs/pusher";
 import { FullConversationType } from "@/app/types";

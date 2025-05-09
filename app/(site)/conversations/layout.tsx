@@ -1,5 +1,5 @@
 import Sidebar from "@/app/components/sidebar/Sidebar"
-import ConversationList from "@/app/conversations/components/ConversationList"
+import ConversationList from "@/app/(site)/conversations/components/ConversationList"
 import getConversations from "@/app/actions/getConversations";
 import getUsers from "@/app/actions/getUsers";
 

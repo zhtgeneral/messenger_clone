@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { Fragment } from "react";
 
-import ConfirmModal from "@/app/conversations/[conversationId]/components/Drawer/ConfirmModal";
+import ConfirmModal from "@/app/(site)/conversations/[conversationId]/components/Drawer/ConfirmModal";
 import useActiveList from "@/app/hooks/useActiveList";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import {

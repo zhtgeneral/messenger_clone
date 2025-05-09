@@ -5,7 +5,7 @@ import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
 
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
-import ProfileDrawer from "@/app/conversations/[conversationId]/components/Drawer/ProfileDrawer";
+import ProfileDrawer from "@/app/(site)/conversations/[conversationId]/components/Drawer/ProfileDrawer";
 import { Conversation, User } from "@prisma/client";
 
 interface HeaderPresenterProps {

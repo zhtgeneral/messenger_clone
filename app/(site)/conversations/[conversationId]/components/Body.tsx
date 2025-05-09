@@ -5,7 +5,7 @@ import React from "react"
 import axios from "axios"
 import { find } from "lodash"
 
-import MessageBox from "@/app/conversations/[conversationId]/components/MessageBox"
+import MessageBox from "@/app/(site)/conversations/[conversationId]/components/MessageBox"
 import useConversation from "@/app/hooks/useConversation"
 import { FullMessageType } from "@/app/types"
 import { pusherClient } from '@/app/libs/pusher'

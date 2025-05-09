@@ -5,7 +5,7 @@ import { CldUploadButton } from 'next-cloudinary'
 import { FieldValues, useForm } from "react-hook-form"
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2"
 
-import MessageInput from "@/app/conversations/[conversationId]/components/MessageInput"
+import MessageInput from "@/app/(site)/conversations/[conversationId]/components/MessageInput"
 import useConversation from "@/app/hooks/useConversation"
 
 /**
