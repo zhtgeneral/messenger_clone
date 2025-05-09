@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { BsGithub, BsGoogle } from 'react-icons/bs';
 
 import AuthSocialButton from "@/app/components/AuthSocialButton";
 import Button from "@/app/components/Button";
@@ -183,8 +182,8 @@ export default function AuthForm() {
             </div>
           </div>
           <div className='mt-6 flex gap-2'>
-            <AuthSocialButton icon={BsGithub} onClick={() => socialAction('github')}/>
-            <AuthSocialButton icon={BsGoogle} onClick={() => socialAction('google')}/>
+            <AuthSocialButton type="GITHUB" onClick={() => socialAction('github')}/>
+            <AuthSocialButton type="GOOGLE" onClick={() => socialAction('google')}/>
           </div>
         </div>
         <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">

@@ -1,19 +1,6 @@
-import Avatar from '@/app/components/Avatar';
+import AuthForm from '@/app/components/AuthForm';
 import { User } from '@prisma/client';
 import type { Meta, StoryObj } from '@storybook/react';
-
-const mockUserCustomPfp: User = {
-  name: "test user",
-  id: "test id",
-  email: "test@mail.com",
-  emailVerified: new Date(),
-  image: "https://res.cloudinary.com/delv2gjka/image/upload/v1746820776/yxrmi9sbb1jo2wel0s39.png",
-  hashedPassword: "test hashed password",
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  conversationIds: [],
-  seenMessageIds: []
-}
 
 const mockUserDefaultPfp: User = {
   name: "test user",
@@ -28,9 +15,22 @@ const mockUserDefaultPfp: User = {
   seenMessageIds: []
 }
 
+const mockUserCustomPfp: User = {
+  name: "test user",
+  id: "test id",
+  email: "test@mail.com",
+  emailVerified: new Date(),
+  image: "https://res.cloudinary.com/delv2gjka/image/upload/v1746820776/yxrmi9sbb1jo2wel0s39.png",
+  hashedPassword: "test hashed password",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  conversationIds: [],
+  seenMessageIds: []
+}
+
 const meta = {
-  title: 'components/Avatar',
-  component: Avatar,
+  title: 'components/AuthForm',
+  component: AuthForm,
   args: {
   },
   decorators: [
@@ -39,23 +39,11 @@ const meta = {
     )
   ],
   
-} satisfies Meta<typeof Avatar>;
+} satisfies Meta<typeof AuthForm>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const NoUser: Story = {
-  args: {
-    user: undefined
-  }
-};
-export const DefaultPfp: Story = {
-  args: {
-    user: mockUserDefaultPfp
-  }
-};
-export const CustomPfp: Story = {
-  args: {
-    user: mockUserCustomPfp
-  }
+export const NoUsers: Story = {
+  args: {}
 };
