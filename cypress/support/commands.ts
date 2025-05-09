@@ -37,13 +37,22 @@ declare global {
        * This helper function deletes an account from the database
        * @param email email of the user to delete
        */
-      deleteTestAccount(email: string);
+      deleteTestAccount(email: string, password: string);
+      /**
+       * This function clears all the users from associated messages and conversations.
+       * @Note the users are not deleted by this operation.
+       */
+      cleanup(emails: string[], passwords: string[]): void;
       /**
        * This helper function logs a user in using authentication
        * @param email email of user
        * @param password password of user
        */
       loginTestUser(email: string, password: string);
+      /**
+       * This function logs the user out.
+       */
+      logout();
       /**
        * This helper function sets the viewport used for testing to 768x1024px
        */
@@ -78,19 +87,33 @@ Cypress.Commands.addAll({
     cy.get('button[type="submit"]').click();
   },
   createTestAccount(name: string, email: string, password: string) {
+    cy.visit('/');
+    cy.logout();
     cy.request('POST', '/api/register', {
       name,
       email,
       password
-    });
-  },
-  deleteTestAccount(email: string) {
-    cy.request('DELETE', '/api/register', {
-      email
-    });
+    }).then((response) => expect(response.status).to.eq(200));
   },
   loginTestUser(email: string, password: string) {
-    cy.wrap(null).then(() => signIn('credentials', { email, password, redirect: false}));
+    cy.wrap(null)
+    .then(() => signIn('credentials', { email, password, redirect: false }))
+    .then((response) => expect(response.status).to.eq(200));
+  },
+  logout() {
+    cy.request('POST', '/api/auth/signout').then((response) => expect(response.status).to.eq(200));
+  },
+  deleteTestAccount(email: string, password: string) {
+    cy.visit('/');
+    cy.loginTestUser(email, password);
+    cy.request('DELETE', '/api/register', { email }).then((response) => expect(response.status).to.eq(200));
+  },  
+  cleanup(emails: string[], passwords: string[]) {
+    cy.visit('/');
+    cy.request('POST', '/api/dev/cleanup', {
+      emails: emails,
+      passwords: passwords
+    }).then((response) => expect(response.status).to.eq(200));
   },
   setTabletView() {
     cy.viewport(768, 1024);

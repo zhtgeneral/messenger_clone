@@ -1,4 +1,8 @@
-import { testEmails, testNames, testPasswords } from "../support/generate_names";
+import { 
+  testEmails, 
+  testNames, 
+  testPasswords 
+} from "../support/generate_names";
 
 describe('Sidebar', () => {
 
@@ -9,16 +13,15 @@ describe('Sidebar', () => {
   before(() => {
     cy.createTestAccount(testName, testEmail, testPassword);
   }) 
-  beforeEach(() => {
+  beforeEach('login', () => {
     cy.loginTestUser(testEmail, testPassword);
     cy.visit('/', { timeout: 30000 });
   })
-  after(() => {
-    cy.loginTestUser(testEmail, testPassword);
-    cy.deleteTestAccount(testEmail);
+  after('delete test account', () => {
+    cy.deleteTestAccount(testEmail, testPassword);
   })
   describe('Tablet sidebar', () => {
-    beforeEach(() => {
+    beforeEach('set tablet view', () => {
       cy.setTabletView();
     });
     describe("Sidebar interactions", () => {
@@ -39,7 +42,7 @@ describe('Sidebar', () => {
   })
 
   describe('Desktop sidebar', () => {
-    beforeEach(() => {
+    beforeEach('set desktop view', () => {
       cy.setDesktopView();
     });
     describe("Sidebar interactions", () => {

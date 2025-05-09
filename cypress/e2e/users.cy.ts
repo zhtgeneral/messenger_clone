@@ -14,22 +14,17 @@ describe('page functions', () => {
   const { testEmail, observerEmail } = testEmails;
   const { testPassword, observerPassword } = testPasswords;  
 
-  before(() => {
+  before('create test accounts', () => {
     cy.createTestAccount(testName, testEmail, testPassword);
     cy.createTestAccount(observerName, observerEmail, observerPassword);
   })
-
-  beforeEach(() => {
+  beforeEach('login', () => {
     cy.loginTestUser(testEmail, testPassword);
     cy.visit('/users', { timeout: 30000 });
   });
-
-  after(() => {
-    cy.visit('/', { timeout: 30000 });
-    cy.loginTestUser(testEmail, testPassword);
-    cy.deleteTestAccount(testEmail);
-    cy.loginTestUser(observerEmail, observerPassword);
-    cy.deleteTestAccount(observerEmail);
+  after('delete test accounts', () => {
+    cy.deleteTestAccount(testEmail, testPassword);
+    cy.deleteTestAccount(observerEmail, observerPassword);
   })
 
   it('allows users to create conversations by clicking on other users profiles', () => {

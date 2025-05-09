@@ -1,4 +1,8 @@
-import { testNames, testEmails, testPasswords } from "../support/generate_names";
+import { 
+  testNames, 
+  testEmails, 
+  testPasswords
+} from "../support/generate_names";
 
 describe('register functions', () => {
   const registerAPI = '/api/register';
@@ -23,9 +27,10 @@ describe('register functions', () => {
   })
 
   describe('Correct register', () => {
-    after(() => {
-      cy.deleteTestAccount(testEmail);
+    after('delete test account', () => {
+      cy.deleteTestAccount(testEmail, testPassword);
     })
+
     it('redirects the user to /users after creating account', () => {
       cy.intercept('POST', registerAPI).as('register');
       cy.signup(testName, testEmail, testPassword);
@@ -37,13 +42,13 @@ describe('register functions', () => {
   })
 
   describe("Duplicate Account", () => {
-    before(() => {
+    before('create test account', () => {
       cy.createTestAccount(testName, testEmail, testPassword);
     })
-    after(() => {
-      cy.loginTestUser(testEmail, testPassword);
-      cy.deleteTestAccount(testEmail);
+    after('delete test account', () => {
+      cy.deleteTestAccount(testEmail, testPassword);
     })
+
     it('blocks duplicate users and alerts user', () => {
       cy.intercept('POST', registerAPI).as('register_duplicate');
       cy.signup(testName, testEmail, testPassword);
