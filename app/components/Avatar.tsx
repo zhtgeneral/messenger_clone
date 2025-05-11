@@ -39,7 +39,7 @@ export default function Avatar({
     <div className='relative'>
       <div className={className}>
         {user?.image? (
-          <Image alt='avatar' src={user?.image} fill sizes="5" />
+          <Image alt='avatar' src={user?.image} fill sizes="3" />
         ): (
           <div className="flex items-center justify-center h-full w-full bg-gray-200">
             <TiUser size={42} className="text-gray-500"/>

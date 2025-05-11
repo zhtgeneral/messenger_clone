@@ -36,16 +36,19 @@ export default function MobileFooter({
   return (
     <>
       <SettingsModal currentUser={currentUser} isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)} />
-      <div className='fixed justify-between w-full bottom-0 z-40 flex items-center bg-white border-t-[1px] lg:hidden'>
-        <SettingsButton setModalIsOpen={setModalIsOpen} />
+      <div className='fixed w-full bottom-0 z-40 flex items-center bg-white border-t-[1px] lg:hidden'>
+        <div className="flex-grow flex justify-center">
+          <SettingsButton setModalIsOpen={setModalIsOpen} />
+        </div>
         {routes.map((route) => (
-          <MobileItem 
-            key={route.label} 
-            href={route.href}
-            active={route.active}
-            icon={route.icon}
-            onClick={route.onClick}
-          />
+          <div key={route.label} className="flex-grow flex justify-center">
+            <MobileItem 
+              href={route.href}
+              active={route.active}
+              icon={route.icon}
+              onClick={route.onClick}
+            />
+          </div>
         ))}
       </div>
     </>
