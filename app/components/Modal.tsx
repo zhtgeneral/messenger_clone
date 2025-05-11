@@ -35,14 +35,17 @@ export default function Modal({
         as='div' 
         className='relative z-50' 
         onClose={onClose}
-      >
+      > 
+        {/* Modal background */}
         <TransitionChild 
           as={Fragment} 
           enter='ease-out duration-300' enterTo='opacity-100' 
           leave='ease-in duration-200' leaveFrom='opacity-100' leaveTo='opacity-0'
         > 
-        <div id="modalBackground" className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
+          <div id="modalBackground" className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
         </TransitionChild>
+
+        {/* Modal */}
         <div className='fixed inset-0 z-10'>
           <div className='flex min-h-full items-center justify-center m-4 text-center sm:p-0'>
             <TransitionChild as={Fragment} 
@@ -58,6 +61,7 @@ export default function Modal({
                   max-h-[80vh] max-w-[80vh]
                 `}
               >
+                {/* Close button */}
                 <div className='absolute right-0 top-0 hidden pr-4 pt-4 sm:block z-10'>
                   <button 
                     id="closeButton" 
@@ -69,9 +73,11 @@ export default function Modal({
                     <IoClose className='w-6 h-6' id="closeButton"/>
                   </button>
                 </div>
-                <div className="overflow-y-auto max-h-[70vh] pl-2 pr-4">
-                  {children}
-                </div>
+
+                {/* Modal content */}
+                  <div className="overflow-y-auto max-h-[70vh] px-4">
+                    {children}
+                  </div>
               </DialogPanel>
             </TransitionChild>
           </div>

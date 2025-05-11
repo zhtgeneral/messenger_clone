@@ -8,7 +8,8 @@ import { User } from "@prisma/client"
 import useActiveList from "../hooks/useActiveList";
 
 interface AvatarProps {
-  user?: User
+  user?: User  
+  size?: number
 }
 
 /**
@@ -26,16 +27,19 @@ interface AvatarProps {
  * @returns component
  */
 export default function Avatar({
-  user
+  user,
+  size = 11
 }: AvatarProps) {
   const { members } = useActiveList();
   const isActive = members.indexOf(user?.email!) != -1;
 
+  const className = `relative inline-block rounded-full overflow-hidden ring-1 ring-gray-200 w-${size} h-${size}`;
+
   return (
     <div className='relative'>
-      <div className='relative inline-block rounded-full overflow-hidden h-11 w-11'>
+      <div className={className}>
         {user?.image? (
-          <Image alt='avatar' src={user?.image} fill sizes='3' />
+          <Image alt='avatar' src={user?.image} fill sizes="5" />
         ): (
           <div className="flex items-center justify-center h-full w-full bg-gray-200">
             <TiUser size={42} className="text-gray-500"/>

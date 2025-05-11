@@ -1,6 +1,9 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import DesktopSidebar from "@/app/components/sidebar/DesktopSidebar"
-import MobileFooter from "@/app/components/sidebar/MobileFooter"
+import SidebarPresenter from "./SidebarPresenter";
+
+interface SidebarProps {
+  children?: React.ReactNode 
+}
 
 /**
  * This component gives context for the types of sidebars.
@@ -14,17 +17,11 @@ import MobileFooter from "@/app/components/sidebar/MobileFooter"
  */
 export default async function Sidebar({ 
   children 
-}: { 
-  children: React.ReactNode 
-}) {
+}: SidebarProps) {
   const currentUser = await getCurrentUser();
   return (
-    <div className="h-full" id="conversations">
-      <DesktopSidebar currentUser={currentUser!}/>
-      <MobileFooter currentUser={currentUser!}/>
-      <main className='lg:pl-20 h-full'>
-        {children}
-      </main>
-    </div>
+    <SidebarPresenter user={currentUser}>
+      {children}
+    </SidebarPresenter>
   )
 }

@@ -10,7 +10,8 @@ interface InputProps {
   required?: boolean;
   disabled?: boolean;
   register: UseFormRegister<FieldValues>;
-  errors: FieldErrors
+  errors: FieldErrors,
+  className?: string
 }
 
 export default function Input({
@@ -20,14 +21,15 @@ export default function Input({
   disabled, 
   required, 
   register, 
-  errors
+  errors,
+  className
 }: InputProps) {
   return (
-    <div>
+    <div className={className}>
       <label className='block text-sm font-medium leading-6 text-gray-900' htmlFor={id}>
         {label}
       </label>
-      <div className="mt-2">
+      <div className="mt-1">
         <input 
           id={id} 
           type={type} 
@@ -42,7 +44,7 @@ export default function Input({
               sm:text-sm sm:leading-6
             `,
           errors[id] && 'focus:ring-rose-500',
-          disabled   && 'cursor-default opacity-50'
+          disabled   && 'opacity-50 cursor-not-allowed'
         )}/>
 
       </div>

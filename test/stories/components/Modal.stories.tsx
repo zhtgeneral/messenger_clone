@@ -2,7 +2,6 @@
 import AuthForm from '@/app/components/AuthForm';
 import Modal from '@/app/components/Modal';
 import type { Meta, StoryObj } from '@storybook/react';
-import Image from 'next/image'
 
 const onClose = () => {};
 

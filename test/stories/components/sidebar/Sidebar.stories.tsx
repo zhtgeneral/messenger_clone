@@ -1,4 +1,6 @@
-import Avatar from '@/app/components/Avatar';
+
+import Sidebar from '@/app/components/sidebar/Sidebar';
+import SidebarPresenter from '@/app/components/sidebar/SidebarPresenter';
 import { User } from '@prisma/client';
 import type { Meta, StoryObj } from '@storybook/react';
 
@@ -29,45 +31,25 @@ const mockUserDefaultPfp: User = {
 }
 
 const meta = {
-  title: 'components/Avatar',
-  component: Avatar,
-  args: {
-  },
+  title: 'components/sidebar/Sidebar',
+  component: SidebarPresenter,
   decorators: [
     (Story) => (
       <Story/>
     )
-  ],
-  
-} satisfies Meta<typeof Avatar>;
+  ],  
+  args: {
+    user: mockUserCustomPfp
+  }
+} satisfies Meta<typeof SidebarPresenter>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const NoUser: Story = {
-  args: {
-    user: undefined
-  }
-};
-export const DefaultPfp: Story = {
+export const UserWithCustomPfp: Story = {};
+export const UserWithDefaultPfp: Story = {
   args: {
     user: mockUserDefaultPfp
   }
 };
-export const CustomPfp: Story = {
-  args: {
-    user: mockUserCustomPfp
-  }
-};
-export const LargeSizeDefaultPfp: Story = {
-  args: {
-    user: mockUserDefaultPfp,
-    size: 16
-  }
-};
-export const LargeSizeCustomPfp: Story = {
-  args: {
-    user: mockUserCustomPfp,
-    size: 16
-  }
-};
+

@@ -2,27 +2,22 @@
 
 import axios from "axios";
 import { CldUploadButton } from "next-cloudinary";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaTrash } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
-import { TiUser } from "react-icons/ti";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/inputs/Input";
 import Modal from "@/app/components/Modal";
 import { User } from "@prisma/client";
 import React from "react";
+import Avatar from '@/app/components/Avatar';
 
 interface SettingsModalProps {
   currentUser: User
   isOpen?: boolean,
   onClose: () => void;
 }
-
-// TODO improve buttons for reset image and edit image
 
 /**
  * This component allows users to change their public info.
@@ -66,6 +61,7 @@ export default function SettingsModal({
   }  = useForm<FieldValues>({
     defaultValues: {
       name: currentUser?.name,
+      email: currentUser?.email,
       image: currentUser?.image
     }
   })
@@ -108,83 +104,53 @@ export default function SettingsModal({
     .finally(() => setIsLoading(false));
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className='space-y-12'>
-          <div className='border-b border-gray-900/10 pb-4'>
-            <h2 className='text-base font-semibold leading-7 text-gray-900'>
-              Profile
-            </h2>
-            <p className='mt-1 text-sm text-gray-600 leading-6'>
-              Enter your public info
-            </p>
-            <div className='mt-6 flex flex-col gap-y-8'> 
-              <Input 
-                disabled={isLoading} 
-                label="Name" 
-                id="name" 
-                errors={errors} 
-                required
-                register={register}
-              />
-              <div>
-                <label className='block text-sm font-medium text-gray-900 leading-6'>
-                  Photo
-                </label>
-                <div className='mt-2 flex items-center gap-x-3'>
-                  {currentUser?.image? (
-                    <Image 
-                      width="48" height="48" 
-                      src={image || currentUser?.image}
-                      alt="avatar"
-                      className='rounded-full'
-                    />
-                  ): (
-                    <div className="flex items-center justify-center h-16 w-16 bg-gray-200 rounded-full">
-                      <TiUser size={42} className="text-gray-500"/>
-                    </div>
-                  )}
-                  <div className="ml-auto flex flex-col gap-2">
-                    <CldUploadButton
-                      options={{maxFiles: 1}}
-                      onSuccess={handleUpload}
-                      uploadPreset={uploadPreset}
-                    >
-                      <Button 
-                        disabled={isLoading}
-                        secondary
-                        type='button'
-                      >
-                        <div className="flex items-center justify-center">
-                          <div className='pr-2'>
-                            <MdEdit className='text-gray-500 hover:text-gray-600 w-4 h-4' />
-                          </div>
-                          <p className='text-xs'>Change Image</p>
-                        </div>                      
-                      </Button>
-                    </CldUploadButton>
-                    <Button type='button' disabled={isLoading} danger onClick={() => removeImage}>
-                      <div className="flex items-center justify-center">
-                        <div className='pr-2'>
-                          <FaTrash />
-                        </div>
-                        <p className='text-xs'>Reset Image</p>
-                      </div>
-                    </Button>
-                  </div>
-                </div>
+    <Modal isOpen={isOpen} onClose={onClose} >
+      <form onSubmit={handleSubmit(onSubmit)} className='px-8 py-4'>    
+        <h2 className='text-lg font-semibold leading-7 text-gray-900'>Profile</h2>
+        <p className='text-sm text-gray-600 leading-6'>Enter your user details</p>
+        <div className='mt-4 flex flex-col'> 
+          {/* Pfp input */}
+          <div>
+            <label className='block text-sm font-medium text-gray-900 leading-6'>Profile Picture</label>
+            <div className='flex items-center gap-x-3 py-1'>
+              <Avatar user={currentUser} size={16} />
+              <div className="ml-auto flex flex-col gap-y-1">
+                <CldUploadButton options={{ maxFiles: 1 }} onSuccess={handleUpload} uploadPreset={uploadPreset}>
+                  <Button disabled={isLoading} secondary type='button'>
+                    <div className="flex items-center justify-center text-sm">Upload</div>                      
+                  </Button>
+                </CldUploadButton>
+                <Button type='button' disabled={isLoading} danger onClick={() => removeImage}>
+                  <div className="flex items-center justify-center text-sm">Clear</div>
+                </Button>
               </div>
             </div>
           </div>
-          <div className='mt-0 flex items-center justify-end gap-x-6'>
-            <Button disabled={isLoading} secondary onClick={onClose}>
-              Cancel
-            </Button>
-            <Button disabled={isLoading} type='submit'>
-              Save
-            </Button>
-          </div>
-        </div>
+          {/* Name input */}
+          <Input 
+            disabled={isLoading} 
+            label="Name" 
+            id="name" 
+            errors={errors} 
+            required
+            register={register}
+          />          
+          {/* Email input */}
+          <Input 
+            disabled={true} 
+            label="Email" 
+            id="email" 
+            errors={errors} 
+            required
+            register={register}
+            className="pt-4"
+          />              
+        </div>        
+        {/* Save and Cancel buttons */}
+        <div className='flex flex-col items-center justify-end pt-8 gap-y-1'>
+          <Button disabled={isLoading} fullWidth={true} type='submit'>Save</Button>
+          <Button disabled={isLoading} secondary onClick={onClose} fullWidth={true}>Cancel</Button>
+        </div>    
       </form>
     </Modal>
   )
