@@ -9,9 +9,39 @@ This project is end-to-end tested and tests mobile and desktop scenarios.
 The UI is responsive for mobile and desktops.
 
 ### How to run the app
+
+- Fill out the environment variables by making a .env file with these variables filled in:
+
+```
+# the key for storing the data gotten from MongoDB
+DATABASE_URL="mongodb+srv://<owner>:<owner>@<name>.<key>.mongodb.net/<name>"
+
+# the domain of the app (change in deployment)
+NEXT_PUBLIC_DOMAIN='http://localhost:3000'
+# NextAuth secret from here https://next-auth.js.org/configuration/options
+NEXTAUTH_SECRET=<> # can be any string for secret
+
+# the keys for social logins
+GITHUB_ID=<>
+GITHUB_SECRET=<>
+
+GOOGLE_CLIENT_ID=<>
+GOOGLE_CLIENT_SECRET=<>
+
+# the keys for image uploads gotten from Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<>
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=<>
+
+# the key for real time updates gotten from Pusher
+NEXT_PUBLIC_PUSHER_APP_KEY=<>
+PUSHER_APP_ID=<>
+PUSHER_SECRET=<>
+```
+
 - `npm run dev` to open it in `localhost:3000`
-- `npx cypress open` to open the test editor
-- `npx cypress run` to run all tests
+- `npx cypress open` to open the e2e test editor
+- `npx cypress run` to run all e2e tests
+- `npm run storybook` to open component test editor
 
 ### Details
 
