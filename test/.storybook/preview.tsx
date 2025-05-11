@@ -13,6 +13,7 @@ const preview: Preview = {
       },
     },
   },
+  tags: ['autodocs'],
   decorators: [
     (Story) => (
       /** This context gives access to a mock router */

@@ -6,7 +6,8 @@
 .pnp.js
 .yarn/install-state.gz
 
-# testing
+# static testing files
+/test/storybook-static
 /coverage
 
 # next.js

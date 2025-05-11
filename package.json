@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006 --config-dir ./test/.storybook",
-    "build-storybook": "storybook build --config-dir ./test/.storybook"
+    "build-storybook": "storybook build --config-dir ./test/.storybook -o test/storybook-static"
   },
   "dependencies": {
     "@headlessui/react": "^2.0.4",
