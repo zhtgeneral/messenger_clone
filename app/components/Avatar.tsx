@@ -36,7 +36,7 @@ export default function Avatar({
   const className = `relative inline-block rounded-full overflow-hidden ring-1 ring-gray-200 w-${size} h-${size}`;
 
   return (
-    <div className='relative'>
+    <div className='relative flex items-center'>
       <div className={className}>
         {user?.image? (
           <Image alt='avatar' src={user?.image} fill sizes="3" />

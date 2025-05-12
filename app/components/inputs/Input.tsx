@@ -14,6 +14,15 @@ interface InputProps {
   className?: string
 }
 
+/**
+ * This component is a custom-styled input.
+ * 
+ * It displays text above the input through the prop `label`.
+ * 
+ * It allows additional styling with `className` prop.
+ * 
+ * `register` and `errors` are fields from react's `useForm` hook.
+ */
 export default function Input({
   label, 
   id, 

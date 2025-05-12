@@ -5,7 +5,7 @@ import ReactSelect from "react-select";
 interface SelectProps {
   disabled?: boolean;
   label: string;
-  onChange:  (value: Record<string, any>) => void;
+  onChange: (value: Record<string, any>) => void;
   options: Record<string, any>[];
   value: Record<string, any>
 }
