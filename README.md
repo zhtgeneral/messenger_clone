@@ -1,5 +1,16 @@
 # Messaging web app 💬🗨️
 
+### Sample
+![Home Page Desktop](/demo/Home%20Page.png).
+![People sidebar Desktop](/demo/People%20Sidebar.png).
+![Offline User Desktop](/demo/Empty%20Messages.png).
+![Seen messages Desktop](/demo/Seen%20Messages.png).
+![Image modal Desktop](/demo/Image%20Modal.png).
+![Edit profile Desktop](/demo/Edit%20Profile.png).
+![Info sidebar Desktop](/demo/Info%20Sidebar.png).
+![Delete modal Desktop](/demo/Delete%20Modal.png).
+![Group chat Mobile](/demo/Group%20Messages%20Mobile.png).
+
 ### What it does
 
 This web app allows users to create conversations and send messages and images in realtime.
